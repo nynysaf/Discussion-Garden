@@ -18,7 +18,8 @@
 - Audience submissions do **not** become garden nodes (decided 2026-09-30).
 - **One shared garden across both days.** Never scope, filter, or reset the garden by session/day. Sessions (`day_1`, `day_2`) only partition transcripts and exports; nodes store `origin_session_id` for provenance.
 - Recording is one continuous stream per day; save Deepgram final segments as rows. Don't build manual audio chunking.
-- **Captions are speech bubbles:** one sentence per bubble, colour-coded per Deepgram speaker, always with a "Voice N" text label (never colour alone). Grouping logic lives in pure helpers under `src/lib/captions/` and runs once on the host laptop; TVs only render broadcast bubbles. Keep the single-colour fallback toggle working.
+- **Captions are speech bubbles:** one sentence per bubble, colour-coded per Deepgram speaker, always with that voice's garden-animal emoji (never colour alone). **Voices are never named** — no names, roles, or initials on any screen or in screen-reader labels.
+- Deepgram connections always include `mip_opt_out=true` (no audio kept for training). Use Nova-3 English on the free credit; browser gets a 30s token from our server. Grouping logic lives in pure helpers under `src/lib/captions/` and runs once on the host laptop; TVs only render broadcast bubbles. Keep the single-colour fallback toggle working.
 - App boots in **Manual** mode; Hybrid is the expected festival mode.
 - TVs must never look frozen or blank: show Paused / Reconnecting states and re-fetch state after reconnect.
 - Verify third-party APIs (Deepgram, OpenAI, Supabase Realtime) against current docs instead of memory.
@@ -54,7 +55,7 @@
 - Follow `DESIGN_GUIDE.md`: use tokens, never hard-coded colors; respect contrast rules and `prefers-reduced-motion`.
 
 # Secrets & Public Repo
-- Assume the repo may be **public**; every commit is world-readable.
+- The GitHub repo is **public**; every commit is world-readable.
 - **Never commit:** `.env.local`, API keys (Deepgram, OpenAI), Supabase secret/service keys, DB passwords, tokens, real festival transcripts or audience submissions.
 - Only commit `.env.example` with empty placeholder values.
 - Before staging, scan for `sk-`, `dg_`/Deepgram keys, `service_role`, `sb_secret_`, connection strings with passwords, and pasted `.env` contents.

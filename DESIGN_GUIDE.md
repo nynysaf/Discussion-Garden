@@ -1,9 +1,9 @@
 # Discussion Garden — Visual Design Guide
 
-**Version:** 0.2.1 · 2026-09-30  
+**Version:** 0.2.2 · 2026-09-30  
 **Applies to:** all four views (`/admin`, `/captions`, `/audience`, `/room-feed`).  
 **Companion:** `prd-v0.2.md` · `dev-plan-v0.1.md`  
-**Changelog:** v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
+**Changelog:** v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
 
 > Tell your AI coding agent: **"Use these tokens as the single source of truth. Never hard-code colors or fonts; always reference the token."**
 
@@ -120,12 +120,12 @@ TVs are read from 3–6 m (10–20 ft) by people who can't interact with them.
 ┌──────────────────────────────────────────────────────────────────┐
 │ DISCUSSION GARDEN          [ LIVE QUESTION: "How might we…" ]    │  ~14%
 ├─────────────────────────────────────┬────────────────────────────┤
-│                                     │ ┃Voice 1                   │
-│                                     │ ┃ That's what I noticed.   │
-│          GARDEN CANVAS              │     ┃Voice 2               │
-│  (themes top · sprouts middle ·     │     ┃ Can you say more?    │
-│   seeds in the soil)                │ ┃Voice 1                   │  ~72%
-│                                     │ ┃ Sure — last spring we…   │
+│                                     │ ┃🐸 That's what I noticed. │
+│                                     │                            │
+│          GARDEN CANVAS              │     ┃🐦 Can you say more?  │
+│  (themes top · sprouts middle ·     │                            │
+│   seeds in the soil)                │ ┃🐸 Sure — last spring we… │  ~72%
+│                                     │                            │
 │                                     │                            │
 ├─────────────────────────────────────┴──────────────┬─────────────┤
 │ NOW 11:00 Topic A  ·  NEXT 12:30 Topic B  ·  …      │  QR  Join → │  ~14%
@@ -136,24 +136,27 @@ Captions get a tall right column because bubbles need vertical room. The schedul
 
 ### 5.2 Caption bubbles & speaker colours
 
-**Bubble anatomy:** rounded card (`16px` radius, slightly organic corner on the speaker side), light tinted background, a **6px coloured strip** on the left edge, a small label above the text ("Voice 1" in `font-caption`, ~0.45× caption size, semibold, ink at 70%), and the sentence in ink.
+**Bubble anatomy:** rounded card (`16px` radius, slightly organic corner on the speaker side), light tinted background, a **6px coloured strip** on the left edge, the voice's **animal emoji** at the start (≈0.9× caption size, vertically centred on the first line), and the sentence in ink. **No names or text labels** — voices are anonymous; the emoji is the non-colour cue. For screen readers, each bubble has `aria-label="Frog: <sentence>"` (animal name only).
 
 **Alignment:** alternate speakers get a slight indent (e.g. odd voices flush left, even voices indented ~8%) so turn-taking reads at a glance, like a conversation — without a two-sided phone-chat layout that wastes width.
 
 **Speaker palette** (tints = 22% colour on cream; ink text on every tint measures ≥ 11 : 1):
 
-| Voice slot | Strip colour | Bubble tint | Strip vs cream |
-| :--- | :--- | :--- | :--- |
-| 1 | `festival-forest` `#3B5B28` | `#D0D5C8` | 7.3 : 1 ✅ |
-| 2 | `festival-denim` `#4C6D8C` | `#D4D9DE` | 5.1 : 1 ✅ |
-| 3 | `festival-terracotta` `#C86A58` | `#EFD9D2` | 3.5 : 1 ✅ |
-| 4 | `festival-lavender` `#9682AF` | `#E4DEE6` | 3.2 : 1 ✅ |
-| 5 | `festival-ink` strip | `#F7E3C7` (marigold tint) | 16 : 1 ✅ |
-| 6 | `festival-ink` strip, dashed | `#E8F0DB` (pistachio tint) | 16 : 1 ✅ |
+| Voice | Emoji | Strip colour | Bubble tint | Strip vs cream |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | 🐸 Frog | `festival-forest` `#3B5B28` | `#D0D5C8` | 7.3 : 1 ✅ |
+| 2 | 🐦 Bird | `festival-denim` `#4C6D8C` | `#D4D9DE` | 5.1 : 1 ✅ |
+| 3 | 🐞 Ladybug | `festival-terracotta` `#C86A58` | `#EFD9D2` | 3.5 : 1 ✅ |
+| 4 | 🦋 Butterfly | `festival-lavender` `#9682AF` | `#E4DEE6` | 3.2 : 1 ✅ |
+| 5 | 🐝 Bee | `festival-ink` strip | `#F7E3C7` (marigold tint) | 16 : 1 ✅ |
+| 6 | 🐛 Caterpillar | `festival-ink` strip, dashed | `#E8F0DB` (pistachio tint) | 16 : 1 ✅ |
+| 7–12 | 🦔 Hedgehog · 🐌 Snail · 🦉 Owl · 🐇 Rabbit · 🐢 Turtle · 🐿️ Squirrel | colours 1–6 repeat | | |
 
-- Marigold and pistachio are too pale for strips on cream, so slots 5–6 use an ink strip (dashed for slot 6) with their tint as the bubble background.
-- Voice 7+ reuses slots from 1; the label keeps them distinct.
-- **Speaker colours off** (admin toggle): all bubbles use `festival-cream` with a `festival-green` border and no voice label — still one sentence per bubble.
+- Marigold and pistachio are too pale for strips on cream, so voices 5–6 use an ink strip (dashed for 6) with their tint as the bubble background.
+- Voices 7–12 reuse colours 1–6 but keep a unique animal. After 12, both repeat.
+- **Speaker colours off** (admin toggle): all bubbles use `festival-cream` with a `festival-green` border and no emoji — still one sentence per bubble.
+
+**Emoji rendering:** TV browsers (smart TVs, streaming sticks, Windows vs Android) draw emoji very differently, and some lack colour emoji entirely. Ship the 12 animals as **self-hosted SVG files** in `public/voices/` (from the open-source **Noto Emoji** set, Apache 2.0 licence — keep its licence file alongside) and render them as `<img>` so every screen looks identical. Don't depend on the system emoji font.
 - Add these as tokens: `--color-voice-1` … `--color-voice-6` and `--color-voice-1-tint` … `--color-voice-6-tint`.
 
 **Motion:** a new bubble fades + rises ~10px over 250ms; the column scrolls smoothly. Reduced motion: bubbles simply appear.
@@ -211,7 +214,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - Icons: thin rounded line icons (Lucide), 1.5px stroke.
 
 ## 9. Accessibility checklist
-- Captions: ink text on light tints, large, smooth scrolling (no jumping); every speaker bubble has a text label so voice isn't shown by colour alone.
+- Captions: ink text on light tints, large, smooth scrolling (no jumping); every speaker bubble shows its animal emoji so voice isn't shown by colour alone; screen-reader label uses the animal name only (never a person's name).
 - Full keyboard use on `/admin` and `/audience`; visible focus rings (`festival-forest`, 2px offset).
 - `prefers-reduced-motion` respected everywhere.
 - Status never color-only.

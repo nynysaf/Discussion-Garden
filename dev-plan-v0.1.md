@@ -40,7 +40,8 @@
 ## 2. Architecture decisions
 | Decision | Choice | Why |
 | :--- | :--- | :--- |
-| Repo | Standalone, **public while building** (Vercel Hobby) unless the team decides otherwise | Simple deploys; forces good secret hygiene |
+| Repo | Standalone, **public** GitHub repo (confirmed 2026-09-30) deployed on Vercel Hobby | Simple deploys; forces good secret hygiene |
+| Deepgram plan | **Free $200 credit** (pay-as-you-go tier, no card). Nova-3 English streaming + diarization ≈ $0.41–0.58 per live hour | Whole festival + testing ≈ $15–20 of credit |
 | Live STT | Browser → Deepgram WebSocket, using a short-lived token from `/api/deepgram-token` | Vercel functions can't hold long audio sockets; lowest latency; key stays server-side |
 | Caption fan-out | Supabase Realtime **broadcast** channel (`captions:{sessionId}`) for interim + final text; only **final** segments saved to `transcript_segments` | Interim words change many times per second — too chatty for DB writes |
 | Garden/feed/state sync | Supabase Realtime **Postgres changes** on `garden_nodes`, `garden_vines`, `audience_submissions`, `app_state` | TVs update automatically when rows change; on reconnect, re-fetch |
@@ -107,18 +108,20 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — Transcripts kept **privately** after the festival; **no audio stored**.
 - 2026-09-30 — Streaming STT = **Deepgram**; Whisper is not used live.
 - 2026-09-30 — **Both days share one garden.** Garden tables have no session filter; nodes/vines store `origin_session_id` for provenance only.
-- 2026-09-30 — **Captions = speech bubbles, one sentence each, colour-coded per speaker** via Deepgram diarization. Labels "Voice 1…6" (anonymous); colours may reshuffle after a reconnect (new connection restarts speaker numbering). Admin toggle falls back to single-colour bubbles.
+- 2026-09-30 — **Captions = speech bubbles, one sentence each, colour-coded per speaker** via Deepgram diarization. Colours may reshuffle after a reconnect (new connection restarts speaker numbering). Admin toggle falls back to single-colour bubbles.
+- 2026-09-30 — **Voices are never named.** Each voice gets a garden-animal emoji (🐸 🐦 🐞 🦋 🐝 🐛, then 🦔 🐌 🦉 🐇 🐢 🐿️), rendered from self-hosted Noto Emoji SVGs so every TV looks the same.
+- 2026-09-30 — **Deepgram:** Nova-3 Monolingual English, free $200 credit, `diarize=true`, `smart_format=true`, `interim_results=true`, **`mip_opt_out=true`** (no audio kept for training). Browser uses a 30-second temporary token from `/api/deepgram-token` (`POST /v1/auth/grant`); the API key must have **Member** permission.
+- 2026-09-30 — **GitHub repo is public.**
 - 2026-09-30 — **No fixed build calendar**; build in phase order as time allows.
 - 2026-09-30 — **No manual recording chunks.** One continuous stream per day (Start / Pause for breaks / Stop); Deepgram's final segments are saved as individual rows; reconnects just continue the transcript.
 
 ### Blocked / open
 - Daily topic schedule (live questions + times, lunch break?).
 - Venue access on Fri Oct 16 for setup + rehearsal; venue time zone.
-- Should voices ever show names/roles on TV, or always "Voice 1, Voice 2…"?
 - TV count, resolution, and what device runs the browser on each TV.
 - Mic hardware and whether we can take a feed from the venue PA/mixer.
 - Who operates `/admin` during sessions (host vs dedicated operator).
-- Accounts needed: Supabase project, Vercel project, Deepgram account + API key, OpenAI API key, GitHub repo (public or private?).
+- Accounts needed: Supabase project, Vercel project, Deepgram account (free credit) + Member API key, OpenAI API key, public GitHub repo.
 - Official poster art / fonts license for the garden frame.
 
 ---
@@ -132,7 +135,8 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [ ] Read `node_modules/next/dist/docs/` for any version-specific changes before writing code.
 - [ ] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4.
 - [ ] `.env.example` with placeholder names only (see §6).
-- [ ] Create GitHub repo, push `main`, connect Vercel, add env vars in Vercel.
+- [ ] Create **public** GitHub repo, push `main`, connect Vercel, add env vars in Vercel.
+- [ ] Sign up for Deepgram (free $200 credit, no card). Console → API Keys → Create Key → Advanced → **Member** permission. Store it only in `.env.local` / Vercel as `DEEPGRAM_API_KEY`.
 - **Test:** home page renders in cream/ink with Cormorant title; Vercel preview deploys from `main`.
 
 ### Phase 1 — Data + realtime spine
@@ -146,17 +150,18 @@ No fixed calendar — we build in this order as time allows and see how far we g
 ### Phase 2 — Live captions — **MUST**
 
 **Module 2A — Plain live captions (get words flowing first)**
-- [ ] `/api/deepgram-token` (host-only) returns a short-lived token.
-- [ ] Admin mic capture (mic picker, level meter) → Deepgram WebSocket with interim results, punctuation, smart formatting, and **diarization on** (so speaker numbers are already arriving for 2B).
+- [ ] `/api/deepgram-token` (host-only) calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token.
+- [ ] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize=true`** (speaker numbers ready for 2B), **`mip_opt_out=true`**. Check current Deepgram docs for exact parameter names before coding.
 - [ ] Broadcast interim/final text to `captions:{sessionId}`; `/captions` shows it as simple lines.
 - [ ] Pause/Resume/Stop; keep-alive during silence; auto-reconnect with backoff; wake lock; "tab hidden" warning; single-controller lock.
 - **Test:** speak into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.
 
 **Module 2B — Speech bubbles + speaker colours**
 - [ ] Pure helper `src/lib/captions/build-bubbles.ts`: takes Deepgram word results (`punctuated_word`, `speaker`, `start`, `end`, final/interim) and returns bubbles `{ id, connectionId, speaker, text, isFinal, startMs, endMs }`. New bubble when the speaker changes **or** a sentence ends (`.` `?` `!`). Unit-test it with made-up word arrays (speaker switch mid-sentence, two sentences from one speaker, interim → final replacement, reconnect with a new `connectionId`).
-- [ ] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → voice slot 1–6 (wraps after 6) → design tokens.
+- [ ] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → `{ animal, emojiSrc, colourSlot }` — animal from the 12-animal list (wraps after 12), colour slot 1–6 (wraps after 6). Unit-test the wrapping.
+- [ ] Add 12 Noto Emoji animal SVGs to `public/voices/` + the Noto licence file.
 - [ ] Broadcast bubbles (not raw words) to the TVs; save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker`.
-- [ ] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + "Voice N" label, alternate indent, newest at bottom, fade-rise entry, smooth scroll.
+- [ ] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + animal emoji (no names), alternate indent, newest at bottom, fade-rise entry, smooth scroll.
 - [ ] Admin "Speaker colours" toggle (`app_state.speaker_colours_on`) → single-colour bubbles when off.
 - **Test:** two or three people take turns reading a made-up script → each sentence is its own bubble; speaker changes switch colour most of the time; a speaker who says two sentences gets two same-coloured bubbles; toggle colours off → all bubbles cream, still one sentence each; reload `/captions` mid-talk → recent bubbles reappear.
 
@@ -193,7 +198,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** full 30-minute dress rehearsal with a real mic and all four screens.
 
 ### Phase 8 — Nice to have (only if ahead)
-- [ ] Auto mode polish · host renames voices ("Voice 2" → "Facilitator") · day tint/filter on the garden · growth timelapse (both days) for the Sunday close.
+- [ ] Auto mode polish · day tint/filter on the garden · growth timelapse (both days) for the Sunday close.
 
 ### 5.9 Cut lines if behind
 1. Drop Phase 8 entirely.
@@ -210,7 +215,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=        # Supabase *publishable* key
 SUPABASE_SECRET_KEY=                  # server only — audience inserts, admin tasks
 NEXT_PUBLIC_APP_URL=
-DEEPGRAM_API_KEY=                     # server only — used to mint short-lived tokens
+DEEPGRAM_API_KEY=                     # server only — Member-permission key, used to mint 30s tokens
 OPENAI_API_KEY=                       # server only
 OPENAI_SYNTHESIS_MODEL=               # small/fast chat model name
 HOST_EMAILS=                          # comma-separated allowlist for /admin

@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.2  
+**Version:** 0.2.3  
 **Last updated:** 2026-09-30  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.3 (2026-09-30):** Voices are **never named** — each is labelled with a **garden-animal emoji** (🐸 🐦 🐞 🦋 🐝 🐛 …). Deepgram **Nova-3 (English)** on the **free $200 credit**, with `mip_opt_out=true` so Deepgram doesn't keep audio for model training. Cost section updated with published rates. GitHub repo is **public**.
 - **v0.2.2 (2026-09-30):** Deepgram confirmed for captions. Captions now **separate speakers** (Deepgram diarization) and show as a **sequence of speech bubbles** — one sentence per bubble, colour-coded per voice with a text label. Admin toggle to fall back to single-colour bubbles. No fixed build calendar (build order only).
 - **v0.2.1 (2026-09-30):** Dates confirmed (festival Oct 16–18; garden live Oct 17 & 18, 11:00–17:00). **One shared garden across both days** — Day 2 grows from Day 1's garden, never resets. Sessions = days (`day_1`, `day_2`) for transcript/export partitioning only. Recording is one continuous stream per day; transcript saves automatically in short segments, so no manual chunking. Cost estimate updated to ~12 live hours.
 - **v0.2 (2026-09-30):** Split design guide into `DESIGN_GUIDE.md`. Confirmed room layout (upstairs = live discussion + mic; downstairs = overflow captions + garden). STT committed to streaming Deepgram (Whisper is not live). Hybrid is the expected festival mode; Manual stays the fail-safe default on boot. Audience submissions stay **separate** from the garden. English only. Transcripts kept privately (no audio stored). Added data model, privacy/moderation, failure handling, success criteria, and scope cut lines for a < 2 week build. Standalone repo that **copies** map modules from Camp-CLAI.
@@ -83,7 +84,7 @@ Both days grow **the same garden**. Sunday opens with Saturday's garden already 
 | :--- | :--- | :--- |
 | **Frontend** | Next.js (App Router) + Tailwind CSS v4, hosted on Vercel | Same stack as Camp-CLAI, so map code copies over cleanly. |
 | **Database & realtime** | Supabase (Postgres + Realtime) | Persists sessions, schedule, garden, submissions. Realtime **broadcast** carries live caption text; **row changes** carry garden/feed updates. |
-| **Speech-to-text** | **Deepgram streaming** (latest Nova model; confirm at build time) with **diarization**, punctuation, and smart formatting on | True word-by-word streaming with interim results, plus a speaker number on every word so captions can separate voices. The browser gets a **short-lived token** from our server; the real API key never leaves the server. |
+| **Speech-to-text** | **Deepgram streaming, Nova-3 Monolingual (English)** with **diarization**, smart formatting, and `mip_opt_out=true`; on Deepgram's **free $200 credit** | True word-by-word streaming with interim results, plus a speaker number on every word so captions can separate voices. Nova-3 is Deepgram's recommended model for crosstalk and far-field (room mic) audio. The browser gets a **30-second temporary token** from our server (only needed to open the connection); the real API key never leaves the server. |
 | **Post-event transcript (optional)** | OpenAI Whisper (batch) | Only if we later want a cleaner archival pass. Not live. |
 | **Synthesis LLM** | OpenAI (small, fast model; name set via env var) | Every ~35s, reads the new transcript window **plus the current garden** and returns JSON proposals. |
 | **Garden visualizer** | `d3-force` + SVG, adapted from Camp-CLAI `KnowledgeMap` | Tier gravity (seeds low, themes high) inside a force layout; plant sprites; curved vines. |
@@ -112,26 +113,36 @@ Requires host login (1–3 host accounts).
 ### View 2: Downstairs Captions & Garden (`/captions`) — overflow TV
 Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Header:** "Discussion Garden" + the active **Live Question**.
-* **Live captions as speech bubbles:** each sentence appears as its own bubble, colour-coded by speaker with a small "Voice 1 / Voice 2…" label; newest at the bottom, older bubbles scroll up. Words still being recognized appear lighter inside the newest bubble. See §4.1.
+* **Live captions as speech bubbles:** each sentence appears as its own bubble, colour-coded by speaker and marked with that voice's animal emoji (🐸, 🐦, 🐞…); newest at the bottom, older bubbles scroll up. Words still being recognized appear lighter inside the newest bubble. See §4.1.
 * **Garden canvas:** published seeds, sprouts, themes, and vines, with gentle growth animation.
 * **Schedule sidebar:** today's items with times; current item highlighted.
 * **QR code:** persistent corner code linking to `/audience`.
 * **Status:** subtle `[PAUSED]` / "Reconnecting…" indicator; never a blank screen.
 
 ### 4.1 Caption bubbles & speaker separation
-**What the audience sees:** a chat-like column of bubbles. A new bubble starts when **the sentence ends** or **the speaker changes**. Each voice gets its own bubble colour plus a text label, so the colour isn't the only cue.
+**What the audience sees:** a chat-like column of bubbles. A new bubble starts when **the sentence ends** or **the speaker changes**. Each voice gets its own bubble colour **and** its own garden-animal emoji, so colour isn't the only cue.
+
+**Voices are never named.** No real names, roles, or initials appear on any screen — only the animal.
+
+| Voice | Emoji | Colour |
+| :--- | :--- | :--- |
+| 1 | 🐸 Frog | Forest |
+| 2 | 🐦 Bird | Denim |
+| 3 | 🐞 Ladybug | Terracotta |
+| 4 | 🦋 Butterfly | Lavender |
+| 5 | 🐝 Bee | Marigold |
+| 6 | 🐛 Caterpillar | Pistachio |
+| 7–12 | 🦔 Hedgehog · 🐌 Snail · 🦉 Owl · 🐇 Rabbit · 🐢 Turtle · 🐿️ Squirrel | Colours 1–6 repeat |
 
 **How it works:** Deepgram tags every word with a speaker number (0, 1, 2…). A small pure helper (`buildCaptionBubbles`) turns the word stream into bubbles: same speaker + unfinished sentence → keep adding to the bubble; sentence punctuation (`.` `?` `!`) or a different speaker → start a new bubble. The host laptop does this and broadcasts finished and in-progress bubbles to the TVs.
 
 **Known limits (set expectations):**
-- **Speakers are anonymous** — Deepgram knows "voice 1 vs voice 2", not who they are. Labels are "Voice 1", "Voice 2"… by default.
-- **Numbering can reshuffle after a reconnect.** Each new Deepgram connection starts counting speakers from scratch, so after a Wi-Fi drop the same person may get a different colour. Minimizing reconnects (wired/hotspot internet) keeps colours stable.
+- **Speakers are anonymous by design** — Deepgram knows "voice 1 vs voice 2", not who they are, and we keep it that way.
+- **Animals can reshuffle after a reconnect.** Each new Deepgram connection starts counting speakers from scratch, so after a Wi-Fi drop the same person may come back as a different animal. Minimizing reconnects (wired/hotspot internet) keeps colours stable.
 - **Accuracy depends on audio.** Clear mic pickup of each speaker matters most; very short interjections ("yeah", "mm") and overlapping talk may be attributed to the wrong voice.
-- **More than 6 voices** reuse colours; labels stay distinct.
+- **More than 6 voices** reuse colours but still get a unique animal (up to 12, then animals repeat too).
 
-**Host controls:** "Speaker colours" on/off (off = single-colour bubbles, still one sentence per bubble) in case diarization misbehaves in the room.
-
-**Nice to have:** host renames a voice (e.g. "Voice 2" → "Facilitator") for the current connection. Real names on a public TV only with that person's consent.
+**Host controls:** "Speaker colours" on/off (off = single-colour bubbles with no animals, still one sentence per bubble) in case diarization misbehaves in the room.
 
 ### View 3: Participant Mobile Entry (`/audience`)
 * **Zero login.** Text field (question, story, or reaction) + optional name/tag.
@@ -195,6 +206,8 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 ### Privacy & consent
 - **Signage** in both rooms: "This discussion is live-captioned and summarized. Audio is not recorded."
 - **No audio stored** anywhere. Transcript text is kept privately for organizers after the festival.
+- **Deepgram opt-out:** every connection sends `mip_opt_out=true`, so Deepgram keeps audio only as long as needed to transcribe it and never uses it for model training. Without this flag, Deepgram may store samples — which would contradict the signage.
+- **Voices are anonymous** on every screen (animal emoji only).
 - Audience name/tag is optional; no emails or phone numbers collected.
 - Nothing from the audience reaches a TV without host approval.
 
@@ -238,14 +251,18 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 6. Garden export (JSON + PNG) and transcript export.
 
 **Nice to have (cut first if behind)**
-7. Auto mode · host renames voices ("Facilitator").
+7. Auto mode.
 8. Day tint/filter on the garden ("show what grew on Sunday").
 9. Garden growth timelapse for the Sunday close (replays both days).
 
 ---
 
 ## 10. Cost Estimate (rough — verify current pricing)
-- **STT:** 2 days × 6 live hours = **~720 minutes** max of streaming (less with pauses) + ~1–2 hours of testing/rehearsal. Check Deepgram's current per-minute rate, including whether diarization is billed as an add-on; likely tens of dollars at most.
+- **STT (Deepgram, published rates 2026-09-30):** Nova-3 English streaming **$0.0048/min** (limited-time promo; regular $0.0077) + speaker diarization add-on **$0.0020/min** ≈ **$0.41–$0.58 per live hour**.
+  - Festival: 2 days × 6 h = 720 min max → **~$5–7**.
+  - Building + testing + rehearsal (allow ~20 h) → **~$8–12**.
+  - **Free $200 credit** (one-time, no expiry, no credit card) covers roughly **340–490 hours** of streaming — far more than we need. Streaming concurrency on the free/pay-as-you-go tier is up to 150 connections; we use 1.
+  - Pause stops sending audio, which saves credit. Watch usage in the Deepgram console after the first test.
 - **LLM:** 12 hours ÷ ~35s windows ≈ **~1,250 calls** with small prompts on a small model; likely a few dollars.
 - **Supabase / Vercel:** free/hobby tiers should suffice; confirm Realtime connection limits vs number of TVs + phones.
 
@@ -260,4 +277,3 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 6. Final brand assets: official fonts licensing, poster art for the garden background, logo files.
 7. Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?
 8. Venue internet: is a wired connection or dedicated hotspot available upstairs? (Fewer reconnects = more stable speaker colours.)
-9. Should voices ever show real names/roles on the TV, or always stay "Voice 1, Voice 2…"?
