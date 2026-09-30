@@ -1,7 +1,7 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-09-30 (caption pipeline + route shells built on a same-browser transport; awaiting mic test)  
+**Last updated:** 2026-09-30 (Phase 1 data + realtime spine on local Supabase; captions now travel via Supabase Realtime)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
@@ -15,7 +15,7 @@
 ### Colleague / new-agent checklist
 1. Pull latest `main`. Never commit `.env.local` or real keys (see `.cursorrules` → Secrets).
 2. Copy `.env.example` → `.env.local`; fill values from the team's password manager / Vercel.
-3. `npm install` && `npm run dev` → open http://localhost:3000.
+3. `npm install` → start Docker Desktop → `npm run db:start` (local Supabase; put its URL + publishable + secret keys in `.env.local`) → `npm run host:add -- email "password"` → `npm run dev` → open http://localhost:3000.
 4. Read **§4 Progress & Decisions** before writing code.
 5. Build **one module at a time** from §5; verify with its test checklist; update §4; commit to `main`.
 
@@ -81,9 +81,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ## 4. Progress & Decisions (living log)
 
 ### Current phase
-**Phase 0 — nearly done** (only Vercel left). **Phase 2 (2A + 2B) — built, awaiting manual mic test.** Captions currently travel between tabs of the **same browser** (BroadcastChannel); swap to Supabase Realtime in Phase 1 without touching the UI (`CaptionChannel` interface).
+**Phase 0 — nearly done** (only Vercel left). **Phase 1 — built on local Supabase, awaiting host browser test.** **Phase 2 — speaker separation verified by user; captions now travel over Supabase Realtime** (any device / browser, not just same-browser tabs).
 
-**Next session:** (1) finish the Phase 2 test checklist, (2) start Phase 1 (Supabase) or Phase 3 (schedule) depending on accounts.
+**Next session:** (1) user tests Phase 1 in two different browsers (see §5 Phase 1 test), (2) Phase 3 — schedule editor + Now/Next strip + QR, (3) create the **hosted** Supabase project + Vercel when ready to put screens on real TVs (see "Going to hosted Supabase" in §7).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -111,9 +111,18 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - Fix: mic now opens with **browser voice cleanup off** (`echoCancellation` / `noiseSuppression` / `autoGainControl` = false via `micConstraints()`), since that processing makes voices sound alike. Admin toggle "Browser voice cleanup" to turn it back on for a very noisy room.
   - Added **"Voices heard"** row on `/admin` (`voicesHeard(feed)`) — shows one animal per detected speaker on the current connection; use it for the venue mic check.
   - Switched `diarize=true` → `diarize_model=latest` (deprecated param; same v1 streaming diarizer today).
+- 2026-09-30 — **Speaker separation re-test passed** (user: "It works!") with voice cleanup off.
+- 2026-09-30 — **Phase 1 — data + realtime spine (local Supabase via Docker):**
+  - `supabase/migrations/20260930000001_core.sql` — all PRD §6 tables + `hosts` allowlist + `is_host()` + RLS; `app_state` single row (boots `manual`); `transcript_segments.bubble_id` unique (safe retries); realtime publication for app_state/sessions/schedule/garden/submissions; **private broadcast policies** on `realtime.messages` (`captions`: everyone listens, hosts send; `captions-hello`: anyone).
+  - `supabase/seed.sql` — `day_1` / `day_2` + 6 made-up schedule items; active day = `day_1`.
+  - Auth: `/login` (sign-in only; sign-ups disabled), `src/proxy.ts` (session refresh on host routes only), `requireHost()` on `/admin`, `/api/deepgram-token` now **host-only** (401/403) instead of blocked in production. `npm run host:add -- email "password"` creates/updates a host.
+  - Realtime: `createSupabaseCaptionChannel` (one per tab, `getCaptionChannel()`), `useFestivalState` (app_state + days + schedule; **re-fetches on every change and every reconnect** via `watchTables` + `createRefetcher`), TVs show "Reconnecting" when their own connection drops.
+  - Host: status (Live/Paused…) + speaker colours persisted to `app_state`; finished bubbles saved to `transcript_segments` via `TranscriptQueue` (batched every 3s, retries, capped); admin notices for save backlog / missing day. New **Festival day** + **Live question** pickers on `/admin`.
+  - `/captions` + `/room-feed` show the live question.
+  - Verified by agent: `npm run db:check` → **19/19 access checks pass** (visitor can't read transcripts or write anything; non-host can't either; non-host broadcast doesn't reach TVs; public-channel spoof doesn't reach the private channel); `/admin` → 307 to `/login` when signed out; token route 401 signed out; browser login → `/admin` works; live question change in DB → `/captions` updated without reload. 73 unit tests pass.
 
 ### In progress
-- Re-test speaker separation with 2–3 real people (voice cleanup off). If still one animal: try a better/closer mic, then consider whether the festival mic setup (single room mic vs. mixer feed) can support it; the colours toggle is the fallback.
+- User browser test of Phase 1 (two browsers, captions + live question).
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
 ### Decisions (must remember)
@@ -132,7 +141,10 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **GitHub repo is public.**
 - 2026-09-30 — **No fixed build calendar**; build in phase order as time allows.
 - 2026-09-30 — **No manual recording chunks.** One continuous stream per day (Start / Pause for breaks / Stop); Deepgram's final segments are saved as individual rows; reconnects just continue the transcript.
-- 2026-09-30 — **Caption transport is swappable.** UI talks to a `CaptionChannel` (`send` / `subscribe` / `close`). Today: BroadcastChannel (same browser only, for dev). Phase 1: Supabase Realtime broadcast. Display screens say `hello` on load; the host tab replies with a `snapshot` so a reloaded TV shows recent bubbles.
+- 2026-09-30 — **Caption transport = Supabase Realtime private broadcast** behind the `CaptionChannel` interface (`send` / `subscribe` / `onConnection`). Topic `captions` (hosts send, everyone listens) + `captions-hello` (display asks for a snapshot after every (re)connect; only the tab holding the mic replies, max once/second). One channel per tab — supabase-js reuses channels by topic name, so components add/remove listeners instead of opening channels.
+- 2026-09-30 — **Status source of truth = `app_state`** (audio status + speaker colours), also broadcast for speed. TVs read it on load and on reconnect.
+- 2026-09-30 — **Hosts live in `public.hosts`** (not an env var) so RLS can check them via `is_host()`. Public sign-up is **disabled**; host accounts are created with `npm run host:add`. Host emails are never committed (seed has none).
+- 2026-09-30 — **Local development uses the Supabase CLI + Docker** (`npm run db:start`). Hosted project only needed for real TVs / deploy.
 - 2026-09-30 — **Pause = close the Deepgram connection** (`CloseStream`), so paused time costs nothing; Resume opens a fresh connection. While Live, MediaRecorder keeps sending (silent) audio, so no separate KeepAlive message is needed.
 - 2026-09-30 — **Only one tab can control the mic** (Web Locks). A second `/admin` tab shows a warning instead of starting a second paid stream.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
@@ -143,7 +155,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - TV count, resolution, and what device runs the browser on each TV.
 - Mic hardware and whether we can take a feed from the venue PA/mixer.
 - Who operates `/admin` during sessions (host vs dedicated operator).
-- Accounts needed: Supabase project, Vercel project, Deepgram account (free credit) + Member API key, OpenAI API key, public GitHub repo.
+- Accounts still needed: **hosted** Supabase project, Vercel project, OpenAI API key. (Deepgram Member key + public GitHub repo done.)
+- Stale "Live" on TVs if the host tab crashes/closes while live (app_state keeps `live`). Consider a host heartbeat in Phase 7.
+- Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
 
 ---
@@ -163,19 +177,20 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** home page renders in cream/ink with Cormorant title; Vercel preview deploys from `main`.
 
 ### Phase 1 — Data + realtime spine
-- [ ] Migration `0001_core.sql`: tables from PRD §6 + RLS (public read of published/approved; host write; transcripts host-only). Garden tables have **no** session filter.
-- [ ] Seed script: sessions `day_1` (Oct 17, 11:00–17:00) and `day_2` (Oct 18, 11:00–17:00) + placeholder schedule items (made-up text only).
-- [ ] Host login (`/login`) + allowlist check protecting `/admin`.
+- [x] Migration (`supabase/migrations/20260930000001_core.sql`): tables from PRD §6 + RLS (public read of published/approved; host write; transcripts host-only). Garden tables have **no** session filter.
+- [x] Seed (`supabase/seed.sql`): sessions `day_1` (Oct 17, 11:00–17:00) and `day_2` (Oct 18, 11:00–17:00) + placeholder schedule items (made-up text only).
+- [x] Host login (`/login`) + allowlist (`public.hosts`) protecting `/admin` and `/api/deepgram-token`.
 - [x] Route shells: `/admin`, `/captions`, `/audience`, `/room-feed` (built early, 2026-09-30).
-- [ ] `src/lib/realtime/` helpers: subscribe to `app_state` + broadcast channel; re-fetch on reconnect.
-- **Test:** change `app_state.active_schedule_item_id` in Supabase → both TV routes update within ~1s without reload. Logged-out user cannot open `/admin`.
+- [x] `src/lib/realtime/` helpers: subscribe to `app_state` + broadcast channel; re-fetch on reconnect.
+- [x] `npm run db:check` access-rule checks (19 checks).
+- **Test:** change `app_state.active_schedule_item_id` in Supabase → both TV routes update within ~1s without reload. Logged-out user cannot open `/admin`. *(Agent-verified 2026-09-30; user to confirm in two browsers.)*
 
 ### Phase 2 — Live captions — **MUST**
 
 **Module 2A — Plain live captions (get words flowing first)**
-- [x] `/api/deepgram-token` calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token. *(Blocked in production until host login; make it host-only in Phase 1.)*
+- [x] `/api/deepgram-token` calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token. **Host-only** (Phase 1).
 - [x] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize_model=latest`**, **`mip_opt_out=true`**.
-- [x] Broadcast to the display screens — **local transport only** (BroadcastChannel). [ ] Supabase Realtime `captions:{sessionId}` (Phase 1).
+- [x] Broadcast to the display screens via Supabase Realtime private channel `captions` (one live stream, so no per-session topic).
 - [x] Pause/Resume/Stop; auto-reconnect with backoff; wake lock; single-controller lock. [ ] "Tab hidden" warning on `/admin`.
 - **Test:** speak into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.
 
@@ -183,9 +198,9 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] Pure helper (built as `group-words.ts` + `bubble-accumulator.ts`): takes Deepgram word results (`punctuated_word`, `speaker`, `start`, `end`, final/interim) and returns bubbles `{ id, connectionId, speaker, text, isFinal, startMs, endMs }`. New bubble when the speaker changes **or** a sentence ends (`.` `?` `!`). Unit-test it with made-up word arrays (speaker switch mid-sentence, two sentences from one speaker, interim → final replacement, reconnect with a new `connectionId`).
 - [x] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → `{ animal, emojiSrc, colourSlot }` — animal from the 12-animal list (wraps after 12), colour slot 1–6 (wraps after 6). Unit-test the wrapping.
 - [x] Add 12 Noto Emoji animal SVGs to `public/voices/` + the Noto licence file.
-- [x] Broadcast bubbles (not raw words) to the TVs. [ ] Save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker` (needs Supabase, Phase 1).
+- [x] Broadcast bubbles (not raw words) to the TVs. [x] Save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker` (`TranscriptQueue`, idempotent on `bubble_id`).
 - [x] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + animal emoji (no names), alternate indent, newest at bottom, fade-rise entry.
-- [x] Admin "Speaker colours" toggle → single-colour bubbles when off. *(Local state for now; move to `app_state.speaker_colours_on` in Phase 1.)*
+- [x] Admin "Speaker colours" toggle → single-colour bubbles when off; saved in `app_state.speaker_colours_on`.
 - **Test:** two or three people take turns reading a made-up script → each sentence is its own bubble; speaker changes switch colour most of the time; a speaker who says two sentences gets two same-coloured bubbles; toggle colours off → all bubbles cream, still one sentence each; reload `/captions` mid-talk → recent bubbles reappear.
 
 ### Phase 3 — Schedule + live question + QR — **MUST**
@@ -236,17 +251,26 @@ No fixed calendar — we build in this order as time allows and see how far we g
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=        # Supabase *publishable* key
-SUPABASE_SECRET_KEY=                  # server only — audience inserts, admin tasks
+SUPABASE_SECRET_KEY=                  # server only — host:add / db:check scripts, audience inserts (Phase 4)
 NEXT_PUBLIC_APP_URL=
 DEEPGRAM_API_KEY=                     # server only — Member-permission key, used to mint 30s tokens
 OPENAI_API_KEY=                       # server only
 OPENAI_SYNTHESIS_MODEL=               # small/fast chat model name
-HOST_EMAILS=                          # comma-separated allowlist for /admin
 ```
+Hosts are **not** an env var — they live in `public.hosts` (`npm run host:add`).
 
 ---
 
 ## 7. Festival runbook (fill in during Phase 7)
+
+### Going to hosted Supabase (before real TVs / Vercel)
+- [ ] Create a Supabase project (free tier) — region near the venue.
+- [ ] Link and push the schema: `npx supabase link --project-ref <ref>` then `npx supabase db push` (agent can run these once the user has logged in with `npx supabase login`). Seed the two days (run `supabase/seed.sql` in the SQL editor, then replace the made-up schedule).
+- [ ] **Realtime → Settings → turn OFF "Allow public access"** so only private channels (with our RLS) work.
+- [ ] **Auth → Sign In / Providers → disable "Allow new users to sign up"** (hosts are created by script).
+- [ ] Put the hosted URL + publishable + secret keys in Vercel env vars (and `.env.local` if testing against hosted).
+- [ ] `npm run host:add -- <real host email> "<password>"` for each host (1–3).
+- [ ] `npm run db:check` against the hosted project → all checks pass.
 
 ### Fri Oct 16 (setup + rehearsal)
 - [ ] Test every TV browser loads its URL full-screen (F11 / kiosk) and survives a Wi-Fi toggle.

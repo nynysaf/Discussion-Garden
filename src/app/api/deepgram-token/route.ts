@@ -1,15 +1,16 @@
+import { checkHost } from "@/lib/auth/host";
 import {
   DeepgramConfigError,
   grantDeepgramToken,
 } from "@/lib/deepgram/grant-token";
 
 export async function POST() {
-  // Blocked in production until host login protects this route; otherwise
-  // anyone on the public site could spend the Deepgram credit.
-  if (process.env.NODE_ENV === "production") {
+  // Hosts only — otherwise anyone on the public site could spend the credit.
+  const host = await checkHost();
+  if (host.status !== "host") {
     return Response.json(
-      { error: "Captions are disabled until host login is set up." },
-      { status: 403 },
+      { error: "Sign in as a host to start captions." },
+      { status: host.status === "signed-out" ? 401 : 403 },
     );
   }
 

@@ -1,7 +1,10 @@
 "use client";
 
+import { LiveQuestion } from "@/components/realtime/LiveQuestion";
+import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles } from "@/lib/captions/caption-feed";
+import { activeScheduleItem } from "@/lib/realtime/festival-state";
 import { CaptionColumn } from "./CaptionColumn";
 import { useCaptionFeed } from "./useCaptionFeed";
 
@@ -10,10 +13,13 @@ const EMPTY_MESSAGE: Record<string, string> = {
   paused: "Captions are paused.",
 };
 
-/** Downstairs TV — layout per DESIGN_GUIDE.md §5.1. */
+/** Downstairs TV — layout per DESIGN_GUIDE.md §5.1. Read-only. */
 export function CaptionsScreen() {
-  const feed = useCaptionFeed();
+  const festival = useFestivalState();
+  const { feed, connection } = useCaptionFeed(festival.state.appState, festival.loaded);
   const { audioStatus, speakerColoursOn } = feed.status;
+  const offline = connection === "reconnecting" || festival.connection === "reconnecting";
+  const pill = offline ? "reconnecting" : audioStatus;
 
   return (
     <main className="grid h-dvh grid-cols-[58fr_42fr] grid-rows-[auto_minmax(0,1fr)_auto] gap-[2vh] overflow-hidden p-[3vh_3vw]">
@@ -21,12 +27,13 @@ export function CaptionsScreen() {
         <h1 className="font-display text-[clamp(2rem,3.4vw,4.5rem)] font-bold uppercase leading-none tracking-[0.05em]">
           Discussion Garden
         </h1>
-        <div className="flex items-center gap-4">
-          <p className="rounded-full bg-festival-marigold px-[1.2em] py-[0.4em] font-display text-[clamp(1.1rem,1.8vw,2.4rem)] font-semibold italic text-festival-ink">
-            Live question coming soon
-          </p>
-          {audioStatus !== "live" && audioStatus !== "idle" && (
-            <StatusPill status={audioStatus} className="text-[clamp(0.9rem,1vw,1.3rem)]" />
+        <div className="flex min-w-0 items-center gap-4">
+          <LiveQuestion
+            item={activeScheduleItem(festival.state)}
+            className="text-[clamp(1.1rem,1.8vw,2.4rem)]"
+          />
+          {pill !== "live" && pill !== "idle" && (
+            <StatusPill status={pill} className="shrink-0 text-[clamp(0.9rem,1vw,1.3rem)]" />
           )}
         </div>
       </header>

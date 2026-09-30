@@ -6,15 +6,18 @@ import { CaptionColumn } from "@/components/captions/CaptionColumn";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles, voicesHeard } from "@/lib/captions/caption-feed";
 import { voiceFor } from "@/lib/captions/voice-slot";
+import type { AppState } from "@/lib/realtime/app-state";
 import { useHostCaptions } from "./useHostCaptions";
+
+type Props = { appState: AppState; stateLoaded: boolean };
 
 const primaryButton =
   "rounded-full bg-festival-forest px-5 py-2 font-semibold text-festival-cream transition hover:brightness-110 disabled:opacity-40";
 const secondaryButton =
   "rounded-full border border-festival-forest px-5 py-2 font-semibold text-festival-forest transition hover:bg-festival-forest/10 disabled:opacity-40";
 
-export function AudioPanel() {
-  const host = useHostCaptions();
+export function AudioPanel({ appState, stateLoaded }: Props) {
+  const host = useHostCaptions(appState, stateLoaded);
   const { audioStatus, speakerColoursOn } = host.feed.status;
 
   const isActive =
@@ -44,6 +47,24 @@ export function AudioPanel() {
         <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="alert">
           Captions are already running in another tab of this browser. Use that
           tab, or close it first.
+        </p>
+      )}
+      {host.transcriptBacklog > 0 && (
+        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+          {host.transcriptBacklog} transcript line
+          {host.transcriptBacklog === 1 ? "" : "s"} waiting to save — retrying.
+          Captions are unaffected.
+        </p>
+      )}
+      {host.stateSaveError && (
+        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+          Couldn&apos;t update the TVs&apos; status (Live / Paused). Captions still
+          flow; check the connection.
+        </p>
+      )}
+      {stateLoaded && !appState.activeSessionId && (
+        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+          No festival day selected — the transcript will be saved without a day.
         </p>
       )}
 
@@ -170,7 +191,7 @@ export function AudioPanel() {
             <Link href="/captions" target="_blank" className="underline">
               /captions
             </Link>{" "}
-            in another tab of this browser to see the TV view.
+            on any device to see the TV view.
           </p>
         </div>
 

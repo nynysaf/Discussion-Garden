@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.3  
+**Version:** 0.2.4  
 **Last updated:** 2026-09-30  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.4 (2026-09-30):** Host allowlist is a `hosts` table (checked by RLS), not an env var; public sign-up disabled. `transcript_segments` gains `bubble_id` (unique) so saves can be retried safely. Caption broadcast uses a **private** realtime channel — only hosts can send to the TVs.
 - **v0.2.3 (2026-09-30):** Voices are **never named** — each is labelled with a **garden-animal emoji** (🐸 🐦 🐞 🦋 🐝 🐛 …). Deepgram **Nova-3 (English)** on the **free $200 credit**, with `mip_opt_out=true` so Deepgram doesn't keep audio for model training. Cost section updated with published rates. GitHub repo is **public**.
 - **v0.2.2 (2026-09-30):** Deepgram confirmed for captions. Captions now **separate speakers** (Deepgram diarization) and show as a **sequence of speech bubbles** — one sentence per bubble, colour-coded per voice with a text label. Admin toggle to fall back to single-colour bubbles. No fixed build calendar (build order only).
 - **v0.2.1 (2026-09-30):** Dates confirmed (festival Oct 16–18; garden live Oct 17 & 18, 11:00–17:00). **One shared garden across both days** — Day 2 grows from Day 1's garden, never resets. Sessions = days (`day_1`, `day_2`) for transcript/export partitioning only. Recording is one continuous stream per day; transcript saves automatically in short segments, so no manual chunking. Cost estimate updated to ~12 live hours.
@@ -190,7 +191,8 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
 | `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` | Public read, host write |
-| `transcript_segments` | `id`, `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
+| `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
+| `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
 | `garden_vines` | `id`, `source_node_id`, `target_node_id`, `kind` (grows_into/relates_to), `status`, `origin`, `origin_session_id` | Public read of `published` only |
 | `synthesis_runs` | `id`, `session_id`, `window_start`, `window_end`, `mode`, `raw_output`, `error`, `created_at` | Host only (debug/audit) |

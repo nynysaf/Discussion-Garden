@@ -15,13 +15,21 @@ This repository is **public**. Treat every push as world-readable.
 If a secret is ever committed: rotate it immediately in the provider's dashboard.
 
 ## Local setup
+Needs Node 22+ and Docker Desktop (running) for the local Supabase.
 ```bash
 npm install
 copy .env.example .env.local
-# fill .env.local with your own keys — never commit it
+npm run db:start        # local Supabase; copy its API URL, Publishable key, Secret key into .env.local
+npm run host:add -- host@example.com "a long password"   # local host login for /admin
 npm run dev
 ```
-Open http://localhost:3000.
+Open http://localhost:3000 — `/admin` asks you to sign in.
+
+Useful scripts:
+- `npm test` — unit tests (pure helpers in `src/lib/`)
+- `npm run db:check` — verifies database + realtime access rules (visitors vs non-hosts vs hosts)
+- `npm run db:reset` — rebuild the local database from `supabase/migrations` + `supabase/seed.sql`
+- Local Supabase Studio (database browser): http://127.0.0.1:54323
 
 ## Stack
 Next.js (App Router) · Tailwind CSS v4 · Supabase · Vercel · Deepgram · OpenAI

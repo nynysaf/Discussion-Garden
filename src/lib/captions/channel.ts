@@ -18,13 +18,12 @@ export type CaptionMessage =
       status: CaptionStatus;
     };
 
-/**
- * Transport between the host laptop and display screens. The local
- * implementation only reaches tabs in the same browser; a Supabase Realtime
- * implementation replaces it for real TVs without changing callers.
- */
+export type Connection = "connecting" | "live" | "reconnecting";
+
+/** Transport between the host laptop and display screens. */
 export interface CaptionChannel {
   send(message: CaptionMessage): void;
   subscribe(handler: (message: CaptionMessage) => void): () => void;
-  close(): void;
+  /** Called immediately with the current state, then on every change. */
+  onConnection(handler: (connection: Connection) => void): () => void;
 }

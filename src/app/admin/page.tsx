@@ -1,32 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AudioPanel } from "@/components/admin/AudioPanel";
-import { ComingSoon } from "@/components/ComingSoon";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { SignOutButton } from "@/components/auth/SignOutButton";
+import { requireHost } from "@/lib/auth/host";
 
 export const metadata: Metadata = { title: "Host controls" };
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const email = await requireHost("/admin");
+
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="font-display text-5xl font-bold uppercase tracking-[0.05em]">
           Host controls
         </h1>
-        <Link href="/" className="text-festival-forest underline">
-          All screens
-        </Link>
+        <nav className="flex items-baseline gap-4 text-sm">
+          <span className="opacity-70">{email}</span>
+          <SignOutButton />
+          <Link href="/" className="text-festival-forest underline">
+            All screens
+          </Link>
+        </nav>
       </header>
-
-      <div className="mt-8 flex flex-col gap-6">
-        <AudioPanel />
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <ComingSoon title="Schedule & live question" phase="Phase 3" />
-          <ComingSoon title="Audience moderation" phase="Phase 4" />
-          <ComingSoon title="Garden editor" phase="Phase 5" />
-          <ComingSoon title="AI drafts" phase="Phase 6" />
-        </div>
-      </div>
+      <AdminDashboard />
     </main>
   );
 }
