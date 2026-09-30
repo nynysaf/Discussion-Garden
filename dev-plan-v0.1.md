@@ -1,7 +1,7 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-09-30 (speaker-coloured caption bubbles; no build calendar; no code yet)  
+**Last updated:** 2026-09-30 (caption pipeline + route shells built on a same-browser transport; awaiting mic test)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
@@ -81,7 +81,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ## 4. Progress & Decisions (living log)
 
 ### Current phase
-**Phase 0 — in progress.** Next.js scaffolded and pushed 2026-09-30. Remaining: design tokens + fonts, Vercel connection.
+**Phase 0 — nearly done** (only Vercel left). **Phase 2 (2A + 2B) — built, awaiting manual mic test.** Captions currently travel between tabs of the **same browser** (BroadcastChannel); swap to Supabase Realtime in Phase 1 without touching the UI (`CaptionChannel` interface).
+
+**Next session:** (1) get a Deepgram key with **Member** permission working (current key returns 403 from `/v1/auth/grant`), (2) run the Phase 2 test checklist, (3) start Phase 1 (Supabase) or Phase 3 (schedule) depending on accounts.
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -94,10 +96,17 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 ### Shipped
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
-- 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + Member key created (key lives only in `.env.local`).
+- 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + key created (key lives only in `.env.local`).
+- 2026-09-30 — **Caption pipeline (Phase 2A + 2B code):**
+  - `src/lib/deepgram/` — `buildListenUrl` (nova-3, diarize, `mip_opt_out=true`), `parseDeepgramMessage`, server-only `grantDeepgramToken`, client `fetchDeepgramToken`.
+  - `src/lib/captions/` — `groupWords` (new bubble on speaker change or sentence end), `BubbleAccumulator` (keeps only the unfinished tail → no memory growth), `voiceFor` (12 animals / 6 colours), `feedReducer` (last 40 bubbles), `CaptionChannel` interface + `createLocalCaptionChannel` (BroadcastChannel), `LiveCaptioner` (mic → MediaRecorder 250ms webm/opus → Deepgram WebSocket; reconnect with 1s→10s backoff and a new `connectionId`).
+  - `src/lib/audio/` — level meter, backoff, recorder MIME pick, wake lock (from Camp-CLAI), single-controller Web Lock.
+  - `/api/deepgram-token` — **returns 403 in production** until host login exists (protects free credit on the public URL).
+  - UI: `/admin` (AudioPanel: mic picker, level meter, Start/Pause/Resume/Stop, speaker-colours toggle, live preview), `/captions` (DESIGN_GUIDE §5.1 layout with garden/QR/schedule placeholders), `/audience` + `/room-feed` placeholders, home hub.
+  - 12 Noto Emoji SVGs in `public/voices/` + licence. Vitest set up: `npm test` → 53 tests passing.
 
 ### In progress
-- *(none)*
+- Phase 2 manual mic test (needs Member-permission Deepgram key).
 
 ### Decisions (must remember)
 - 2026-09-30 — Standalone repo; **copy** map modules from Camp-CLAI.
@@ -115,8 +124,13 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **GitHub repo is public.**
 - 2026-09-30 — **No fixed build calendar**; build in phase order as time allows.
 - 2026-09-30 — **No manual recording chunks.** One continuous stream per day (Start / Pause for breaks / Stop); Deepgram's final segments are saved as individual rows; reconnects just continue the transcript.
+- 2026-09-30 — **Caption transport is swappable.** UI talks to a `CaptionChannel` (`send` / `subscribe` / `close`). Today: BroadcastChannel (same browser only, for dev). Phase 1: Supabase Realtime broadcast. Display screens say `hello` on load; the host tab replies with a `snapshot` so a reloaded TV shows recent bubbles.
+- 2026-09-30 — **Pause = close the Deepgram connection** (`CloseStream`), so paused time costs nothing; Resume opens a fresh connection. While Live, MediaRecorder keeps sending (silent) audio, so no separate KeepAlive message is needed.
+- 2026-09-30 — **Only one tab can control the mic** (Web Locks). A second `/admin` tab shows a warning instead of starting a second paid stream.
+- 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open
+- **Deepgram key permission:** `/v1/auth/grant` returns **403** with the current key → create a new key with **Member** role (Console → API Keys → Create Key → Advanced/permissions → Member) and replace it in `.env.local`.
 - Daily topic schedule (live questions + times, lunch break?).
 - Venue access on Fri Oct 16 for setup + rehearsal; venue time zone.
 - TV count, resolution, and what device runs the browser on each TV.
@@ -133,8 +147,8 @@ No fixed calendar — we build in this order as time allows and see how far we g
 
 ### Phase 0 — Project setup
 - [x] Create Next.js app. `create-next-app` refuses non-empty folders and names with spaces, so scaffold into a temp folder (e.g. `npx create-next-app@latest dg-scaffold --ts --tailwind --app --src-dir --eslint`) and move its contents up into this folder.
-- [ ] Read `node_modules/next/dist/docs/` for any version-specific changes before writing code.
-- [ ] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4.
+- [x] Read `node_modules/next/dist/docs/` for any version-specific changes before writing code.
+- [x] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4 (`src/app/globals.css`, `layout.tsx`).
 - [x] `.env.example` with placeholder names only (see §6).
 - [x] Create **public** GitHub repo, push `main`.
 - [ ] Connect Vercel, add env vars in Vercel.
@@ -145,26 +159,26 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [ ] Migration `0001_core.sql`: tables from PRD §6 + RLS (public read of published/approved; host write; transcripts host-only). Garden tables have **no** session filter.
 - [ ] Seed script: sessions `day_1` (Oct 17, 11:00–17:00) and `day_2` (Oct 18, 11:00–17:00) + placeholder schedule items (made-up text only).
 - [ ] Host login (`/login`) + allowlist check protecting `/admin`.
-- [ ] Route shells: `/admin`, `/captions`, `/audience`, `/room-feed`.
+- [x] Route shells: `/admin`, `/captions`, `/audience`, `/room-feed` (built early, 2026-09-30).
 - [ ] `src/lib/realtime/` helpers: subscribe to `app_state` + broadcast channel; re-fetch on reconnect.
 - **Test:** change `app_state.active_schedule_item_id` in Supabase → both TV routes update within ~1s without reload. Logged-out user cannot open `/admin`.
 
 ### Phase 2 — Live captions — **MUST**
 
 **Module 2A — Plain live captions (get words flowing first)**
-- [ ] `/api/deepgram-token` (host-only) calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token.
-- [ ] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize=true`** (speaker numbers ready for 2B), **`mip_opt_out=true`**. Check current Deepgram docs for exact parameter names before coding.
-- [ ] Broadcast interim/final text to `captions:{sessionId}`; `/captions` shows it as simple lines.
-- [ ] Pause/Resume/Stop; keep-alive during silence; auto-reconnect with backoff; wake lock; "tab hidden" warning; single-controller lock.
+- [x] `/api/deepgram-token` calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token. *(Blocked in production until host login; make it host-only in Phase 1.)*
+- [x] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize=true`**, **`mip_opt_out=true`**.
+- [x] Broadcast to the display screens — **local transport only** (BroadcastChannel). [ ] Supabase Realtime `captions:{sessionId}` (Phase 1).
+- [x] Pause/Resume/Stop; auto-reconnect with backoff; wake lock; single-controller lock. [ ] "Tab hidden" warning on `/admin`.
 - **Test:** speak into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.
 
 **Module 2B — Speech bubbles + speaker colours**
-- [ ] Pure helper `src/lib/captions/build-bubbles.ts`: takes Deepgram word results (`punctuated_word`, `speaker`, `start`, `end`, final/interim) and returns bubbles `{ id, connectionId, speaker, text, isFinal, startMs, endMs }`. New bubble when the speaker changes **or** a sentence ends (`.` `?` `!`). Unit-test it with made-up word arrays (speaker switch mid-sentence, two sentences from one speaker, interim → final replacement, reconnect with a new `connectionId`).
-- [ ] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → `{ animal, emojiSrc, colourSlot }` — animal from the 12-animal list (wraps after 12), colour slot 1–6 (wraps after 6). Unit-test the wrapping.
-- [ ] Add 12 Noto Emoji animal SVGs to `public/voices/` + the Noto licence file.
-- [ ] Broadcast bubbles (not raw words) to the TVs; save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker`.
-- [ ] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + animal emoji (no names), alternate indent, newest at bottom, fade-rise entry, smooth scroll.
-- [ ] Admin "Speaker colours" toggle (`app_state.speaker_colours_on`) → single-colour bubbles when off.
+- [x] Pure helper (built as `group-words.ts` + `bubble-accumulator.ts`): takes Deepgram word results (`punctuated_word`, `speaker`, `start`, `end`, final/interim) and returns bubbles `{ id, connectionId, speaker, text, isFinal, startMs, endMs }`. New bubble when the speaker changes **or** a sentence ends (`.` `?` `!`). Unit-test it with made-up word arrays (speaker switch mid-sentence, two sentences from one speaker, interim → final replacement, reconnect with a new `connectionId`).
+- [x] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → `{ animal, emojiSrc, colourSlot }` — animal from the 12-animal list (wraps after 12), colour slot 1–6 (wraps after 6). Unit-test the wrapping.
+- [x] Add 12 Noto Emoji animal SVGs to `public/voices/` + the Noto licence file.
+- [x] Broadcast bubbles (not raw words) to the TVs. [ ] Save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker` (needs Supabase, Phase 1).
+- [x] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + animal emoji (no names), alternate indent, newest at bottom, fade-rise entry.
+- [x] Admin "Speaker colours" toggle → single-colour bubbles when off. *(Local state for now; move to `app_state.speaker_colours_on` in Phase 1.)*
 - **Test:** two or three people take turns reading a made-up script → each sentence is its own bubble; speaker changes switch colour most of the time; a speaker who says two sentences gets two same-coloured bubbles; toggle colours off → all bubbles cream, still one sentence each; reload `/captions` mid-talk → recent bubbles reappear.
 
 ### Phase 3 — Schedule + live question + QR — **MUST**

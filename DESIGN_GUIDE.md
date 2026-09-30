@@ -156,7 +156,7 @@ Captions get a tall right column because bubbles need vertical room. The schedul
 - Voices 7–12 reuse colours 1–6 but keep a unique animal. After 12, both repeat.
 - **Speaker colours off** (admin toggle): all bubbles use `festival-cream` with a `festival-green` border and no emoji — still one sentence per bubble.
 
-**Emoji rendering:** TV browsers (smart TVs, streaming sticks, Windows vs Android) draw emoji very differently, and some lack colour emoji entirely. Ship the 12 animals as **self-hosted SVG files** in `public/voices/` (from the open-source **Noto Emoji** set, Apache 2.0 licence — keep its licence file alongside) and render them as `<img>` so every screen looks identical. Don't depend on the system emoji font.
+**Emoji rendering:** TV browsers (smart TVs, streaming sticks, Windows vs Android) draw emoji very differently, and some lack colour emoji entirely. Ship the 12 animals as **self-hosted SVG files** in `public/voices/` (from the open-source **Noto Emoji** set — images Apache 2.0 per its README, repo licence file OFL 1.1; the licence file is kept as `public/voices/LICENSE-noto-emoji.txt`) and render them as `<img>` so every screen looks identical. Don't depend on the system emoji font.
 - Add these as tokens: `--color-voice-1` … `--color-voice-6` and `--color-voice-1-tint` … `--color-voice-6-tint`.
 
 **Motion:** a new bubble fades + rises ~10px over 250ms; the column scrolls smoothly. Reduced motion: bubbles simply appear.
