@@ -1,0 +1,58 @@
+# Project Context
+- Product: **Discussion Garden** — live captions, schedule prompts, moderated audience feed, and a growing "garden" knowledge graph for the *We Create Our Futures* festival.
+- Source of truth: `prd-v0.2.md` (product), `dev-plan-v0.1.md` (roadmap + progress log), `DESIGN_GUIDE.md` (UI). Read §4 of the Dev Plan before coding.
+- Four views: `/admin` (host, upstairs), `/captions` (downstairs overflow TV), `/audience` (phones, zero login), `/room-feed` (upstairs TV).
+- Deadline is **< 2 weeks**. Follow the Must → Should → Nice order and cut lines in the Dev Plan. Don't add scope that isn't in the PRD without asking.
+
+# Next.js version
+- This project uses a recent Next.js with breaking changes vs. older training data. Before writing Next.js code, check `node_modules/next/dist/docs/` for the relevant guide and heed deprecation notices.
+- Tailwind is **v4**: theme tokens live in `@theme` in `globals.css`, not `tailwind.config.js`.
+
+# Festival guardrails (never break)
+- **Captions never depend on AI.** Synthesis failures must not stop, delay, or crash captions.
+- **Displays are read-only.** `/captions` and `/room-feed` never write to the database.
+- **Nothing unmoderated on a public TV.** Audience submissions need host approval; AI garden nodes need approval in Hybrid mode.
+- **Keys stay server-side.** Deepgram and OpenAI keys only in server code; the browser gets a short-lived Deepgram token.
+- **Transcripts are private** (host-only RLS). **Never store audio.**
+- Audience submissions do **not** become garden nodes (decided 2026-09-30).
+- App boots in **Manual** mode; Hybrid is the expected festival mode.
+- TVs must never look frozen or blank: show Paused / Reconnecting states and re-fetch state after reconnect.
+- Verify third-party APIs (Deepgram, OpenAI, Supabase Realtime) against current docs instead of memory.
+
+# Reuse from Camp-CLAI
+- Reference repo: `C:\Users\narya\OneDrive\Documents\GitHub\Camp-CLAI`. **Copy and adapt** files listed in Dev Plan §3; never import from or modify Camp-CLAI.
+- Camp-CLAI's map is a dark canvas; Discussion Garden uses the **light cream poster** canvas from `DESIGN_GUIDE.md`.
+
+# Git — always land on `main`
+- Durable work must end on `main`. The next session starts from `main`; work left on a side branch is effectively lost.
+- Commit → push to `main` (or merge the PR into `main`) before ending a task. A Vercel preview deploy is not the same as landing on `main`.
+- Never force-push `main`. Never commit secrets.
+
+# Developer Profile & Mentorship
+- USER PROFILE: Beginner developers.
+- TEACHING STYLE: Mentor/teacher, not just a code generator.
+- EXPLAIN THE 'WHY': For every change or command, explain why in plain English.
+- STEP-BY-STEP: Small incremental steps. Never dump a massive block of commands without explaining each.
+- PAUSE FOR CONFIRMATION: Ask the user to run/test one step before the next.
+
+# Living Documents (PRD & Dev Plan)
+- Treat `prd-v0.2.md` and `dev-plan-v0.1.md` as living documents.
+- After meaningful work, update Dev Plan §4 **Progress & Decisions**: shipped, in progress, blocked, and decisions that must survive the next session. Tick phase checkboxes in §5.
+- Update the PRD when scope, terminology, or success criteria change, with a changelog line.
+- Edit current versioned files in place; bump to a new version only for substantial shifts.
+- Write durable facts (festival dates, session slugs, host emails policy, TV setup) into the docs, not just chat.
+
+# Modular Build & Testability
+- Build one module at a time from Dev Plan §5: implement → verify with its test checklist → update §4 → commit.
+- Put logic in pure helpers under `src/lib/` (garden layout, tier mapping, AI proposal validation, rate limiting, realtime helpers). Keep UI components thin.
+- Every module gets a manual test checklist; add automated tests when a test runner exists.
+- Wrap all AI and network calls in try/catch with a visible, non-blocking error state.
+- Follow `DESIGN_GUIDE.md`: use tokens, never hard-coded colors; respect contrast rules and `prefers-reduced-motion`.
+
+# Secrets & Public Repo
+- Assume the repo may be **public**; every commit is world-readable.
+- **Never commit:** `.env.local`, API keys (Deepgram, OpenAI), Supabase secret/service keys, DB passwords, tokens, real festival transcripts or audience submissions.
+- Only commit `.env.example` with empty placeholder values.
+- Before staging, scan for `sk-`, `dg_`/Deepgram keys, `service_role`, `sb_secret_`, connection strings with passwords, and pasted `.env` contents.
+- **Flag risky territory** before proceeding: real transcripts, audience submissions, PII, audio files, or credentials in fixtures. Use made-up sample text for tests and seeds.
+- If a secret may have been committed: stop, tell the user, and advise rotating the key immediately.

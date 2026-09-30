@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# Next.js / build output
+.next/
+out/
+build/
+
+# env files — only .env.example is committed
+.env*
+!.env.example
+
+# Vercel
+.vercel/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+*.tsbuildinfo
+next-env.d.ts
+
+# never commit audio or real festival exports
+*.wav
+*.mp3
+*.webm
+*.m4a
+exports/
