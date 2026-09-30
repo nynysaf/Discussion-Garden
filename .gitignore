@@ -1,5 +1,13 @@
 # dependencies
 node_modules/
+/.pnp
+.pnp.*
+
+# testing
+/coverage
+
+# certificates
+*.pem
 
 # Next.js / build output
 .next/
