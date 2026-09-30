@@ -147,6 +147,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - Each node keeps the **same sprite** every render (stable hash of its id — copy `stableIndex` from Camp-CLAI).
 - If a sprite is missing or doesn't suit the poster style, fall back to a **colored circle** in the tier color with a thin ink outline.
 - **Labels:** `font-caption`, semibold, ink text with a cream halo (`paint-order: stroke; stroke: #FAF8F5; stroke-width: 4px`) so they read over vines. Labels ≤ 6 words; truncate with ellipsis.
+- **Density over two days:** the garden keeps growing through Sunday (plan for ~150 nodes). When crowded, always label themes and sprouts; show seed labels only for new/recently reinforced seeds so the TV stays readable.
 - **Verify in Phase 5:** do the Camp-CLAI Plant sprites look right on cream next to the poster art? If not, swap the pack — the code doesn't change.
 
 ### 6.3 Vines

@@ -1,12 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2  
+**Version:** 0.2.1  
 **Last updated:** 2026-09-30  
+**Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.1 (2026-09-30):** Dates confirmed (festival Oct 16–18; garden live Oct 17 & 18, 11:00–17:00). **One shared garden across both days** — Day 2 grows from Day 1's garden, never resets. Sessions = days (`day_1`, `day_2`) for transcript/export partitioning only. Recording is one continuous stream per day; transcript saves automatically in short segments, so no manual chunking. Cost estimate updated to ~12 live hours.
 - **v0.2 (2026-09-30):** Split design guide into `DESIGN_GUIDE.md`. Confirmed room layout (upstairs = live discussion + mic; downstairs = overflow captions + garden). STT committed to streaming Deepgram (Whisper is not live). Hybrid is the expected festival mode; Manual stays the fail-safe default on boot. Audience submissions stay **separate** from the garden. English only. Transcripts kept privately (no audio stored). Added data model, privacy/moderation, failure handling, success criteria, and scope cut lines for a < 2 week build. Standalone repo that **copies** map modules from Camp-CLAI.
 - **v0.1:** Original PRD + design guide.
 
@@ -43,6 +45,18 @@
 
 > Open: how many TVs downstairs, their resolution (1080p vs 4K), and whether any TV upstairs should *also* show the garden (see §11).
 
+### 2.1 Schedule
+| Date | What | Sessions |
+| :--- | :--- | :--- |
+| Fri Oct 16 | Festival day 1 — Discussion Garden **not** live | Venue setup + full rehearsal (target) |
+| Sat Oct 17 | Discussion Garden live 11:00–17:00 | `day_1` |
+| Sun Oct 18 | Discussion Garden live 11:00–17:00 | `day_2` |
+
+Times are venue-local (assumed Eastern, UTC-4 — confirm). Schedule items (topics / live questions) sit inside each day.
+
+### 2.2 One garden, two days
+Both days grow **the same garden**. Sunday opens with Saturday's garden already on screen and keeps growing it. Sessions (`day_1`, `day_2`) only split the private transcript and exports; they never filter or reset the garden. Each node remembers which day it first appeared (`origin_session_id`), so a later "which day did this come from" tint or filter is possible without changing the data.
+
 ---
 
 ## 3. System Architecture & Tech Stack
@@ -76,6 +90,7 @@
 ### 3.1 Why these choices
 - **Captions go browser → Deepgram directly** (not through our server): Vercel serverless functions can't hold long-lived audio WebSockets, and a direct connection keeps latency lowest.
 - **Live caption words are broadcast, not written row-by-row:** interim words change many times per second. Only **final** segments are saved to the database.
+- **No manual recording chunks:** each day runs as one continuous live stream (Start at 11:00, Pause for breaks, Stop at 17:00). Deepgram returns text in short "final" segments (a sentence or so each), and each is saved as its own row. If the connection drops, the app reconnects and carries on — the transcript simply continues. No audio file exists, so there's nothing to split.
 - **The admin browser drives the AI timer:** simplest reliable scheduler for a 2-day event — no background job service needed. Only one admin tab may run the timer (see §7).
 
 ---
@@ -85,7 +100,7 @@
 ### View 1: Host Admin Control Panel (`/admin`) — upstairs laptop
 Requires host login (1–3 host accounts).
 * **Live audio control:** Start / Pause / Resume / Stop; mic picker; input level meter; connection status (Live / Reconnecting / Paused / Offline).
-* **Session picker:** choose the active session (e.g. `day_1_morning`).
+* **Day picker:** choose the active session (`day_1` or `day_2`). Switching day changes where transcript segments are filed — the garden stays the same.
 * **Schedule & live question manager:** add/reorder schedule items; one click sets the **active live question** on all screens.
 * **Synthesis mode toggle:** Manual · Hybrid · Auto (see §5). Boots in **Manual**.
 * **Garden editor:** plant seeds, create sprouts, bloom themes, draw vines, edit/rename/delete, merge duplicates.
@@ -134,7 +149,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Auto:** AI proposals publish directly. Host can still edit/delete. Use only if Hybrid proves too busy.
 
 ### 5.3 AI synthesis contract
-- **Input:** transcript text since the last run (with timestamps), the active live question, and a compact list of **existing published nodes** (id, tier, label).
+- **Input:** transcript text since the last run (with timestamps), the active live question, and a compact list of **existing published nodes** (id, tier, label) from the whole two-day garden. If the garden grows past ~150 nodes, send all themes + sprouts and only the most recent/heaviest seeds to keep the prompt small.
 - **Output (JSON):** `new_nodes[]`, `reinforce[]` (existing node ids to bump weight), `new_vines[]` (by id or label), each with a short rationale and the transcript segment ids it came from.
 - **Rules:** prefer reinforcing an existing node over creating a near-duplicate; seeds must be grounded in something actually said; labels ≤ 6 words; skip windows with little substance.
 - **Failure:** any AI error is logged and shown as a small admin notice; captions and the manual editor keep working.
@@ -145,16 +160,16 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 
 | Table | Key columns | Visibility |
 | :--- | :--- | :--- |
-| `sessions` | `id`, `slug` (`day_1_morning`), `title`, `day`, `starts_at`, `ends_at` | Public read |
+| `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
 | `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `highlighted_submission_id` | Public read, host write |
 | `transcript_segments` | `id`, `session_id`, `text`, `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
-| `garden_nodes` | `id`, `session_id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `source_segment_ids[]` | Public read of `published` only |
-| `garden_vines` | `id`, `session_id`, `source_node_id`, `target_node_id`, `kind` (grows_into/relates_to), `status`, `origin` | Public read of `published` only |
+| `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
+| `garden_vines` | `id`, `source_node_id`, `target_node_id`, `kind` (grows_into/relates_to), `status`, `origin`, `origin_session_id` | Public read of `published` only |
 | `synthesis_runs` | `id`, `session_id`, `window_start`, `window_end`, `mode`, `raw_output`, `error`, `created_at` | Host only (debug/audit) |
 | `audience_submissions` | `id`, `session_id`, `body`, `name_tag`, `status` (pending/approved/highlighted/dismissed), `device_hash`, `created_at` | Public read of approved/highlighted only; inserts via server route |
 
-- Garden is scoped per **session**; a festival-wide view (all sessions) is a stretch goal.
+- There is **one garden for the whole festival**. Garden tables have no session filter; `origin_session_id` records provenance only.
 - Displays read with the public (anon) key and see only what RLS allows. Writes from the host go through authenticated requests; audience inserts go through a server route that rate-limits.
 
 ---
@@ -176,9 +191,11 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | AI error or slow response | Skip that window, log it, keep going. Mode can drop to Manual in one click. |
 | Two admin tabs open | Only the tab that pressed **Start** runs the mic and AI timer; others are view-only for those controls. |
 | Pause | Stops sending audio to Deepgram (saves quota); garden stays on screen with `[PAUSED]`. |
+| Long silence while Live | App sends keep-alive messages so Deepgram doesn't close an idle connection; if it closes anyway, reconnect as above. |
+| Overnight between days | Nothing runs. Sunday: pick `day_2`, press Start — the garden is already there. |
 
 ### Session partitioning
-Data is tagged by session (`day_1_morning`, `day_2_afternoon`, …) so history splits cleanly while still allowing a whole-festival export.
+Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so organizers can export each day's transcript separately. The garden is shared and exported as one festival garden (with each node's origin day).
 
 ---
 
@@ -186,8 +203,8 @@ Data is tagged by session (`day_1_morning`, `day_2_afternoon`, …) so history s
 - Captions appear on the downstairs TV within **~1.5 s** of speech during rehearsal and the festival.
 - Zero caption outages longer than **30 s** that aren't caused by venue internet.
 - In Hybrid, host can clear the draft queue in under **1 minute** per window on average.
-- Every session ends with a garden of at least one theme and its supporting sprouts/seeds.
-- Organizers can export each session's garden (JSON + PNG) and transcript after the festival.
+- Sunday 11:00 opens with Saturday's garden intact, and by 17:00 Sunday the garden holds themes supported by seeds from **both** days.
+- Organizers can export the festival garden (JSON + PNG) and each day's transcript after the festival.
 
 ---
 
@@ -197,7 +214,7 @@ Data is tagged by session (`day_1_morning`, `day_2_afternoon`, …) so history s
 1. Live captions upstairs mic → downstairs TV, with pause/resume and reconnect.
 2. Schedule + live question on all screens.
 3. Audience submission → moderation → upstairs room feed.
-4. Garden canvas on `/captions` with **Manual** editing.
+4. Garden canvas on `/captions` with **Manual** editing, persisting across both days.
 
 **Should have**
 5. Hybrid AI drafts + approval queue.
@@ -205,23 +222,24 @@ Data is tagged by session (`day_1_morning`, `day_2_afternoon`, …) so history s
 
 **Nice to have (cut first if behind)**
 7. Auto mode.
-8. Festival-wide garden view.
-9. Garden growth timelapse for the closing session.
+8. Day tint/filter on the garden ("show what grew on Sunday").
+9. Garden growth timelapse for the Sunday close (replays both days).
 
 ---
 
 ## 10. Cost Estimate (rough — verify current pricing)
-- **STT:** ~2 days × ~8 live hours ≈ 960 minutes of streaming. Check Deepgram's current per-minute rate; likely tens of dollars.
-- **LLM:** ~35s windows ≈ 1,650 calls with small prompts on a small model; likely a few dollars.
+- **STT:** 2 days × 6 live hours = **~720 minutes** max of streaming (less with pauses) + ~1–2 hours of testing/rehearsal. Check Deepgram's current per-minute rate; likely tens of dollars at most.
+- **LLM:** 12 hours ÷ ~35s windows ≈ **~1,250 calls** with small prompts on a small model; likely a few dollars.
 - **Supabase / Vercel:** free/hobby tiers should suffice; confirm Realtime connection limits vs number of TVs + phones.
 
 ---
 
 ## 11. Open Questions
-1. **Exact festival dates** and daily schedule (needed for session slugs and the build deadline).
-2. Number and resolution of TVs; are they smart TVs, laptops, or streaming sticks running a browser?
-3. Mic hardware: one room mic, a mixer feed from existing PA, or lapel mics? (The biggest driver of caption quality.)
-4. Who operates `/admin` during sessions — the host themself or a dedicated operator? (Hybrid works best with a dedicated operator.)
-5. Final brand assets: official fonts licensing, poster art for the garden background, logo files.
-6. Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?
-7. Venue internet: is a wired connection or dedicated hotspot available upstairs?
+1. **Daily topic schedule** within 11:00–17:00 (live questions + times), and whether there's a lunch break to Pause through.
+2. Can we get into the venue on **Fri Oct 16** for setup and a rehearsal with the real mic and TVs? Confirm venue time zone.
+3. Number and resolution of TVs; are they smart TVs, laptops, or streaming sticks running a browser?
+4. Mic hardware: one room mic, a mixer feed from existing PA, or lapel mics? (The biggest driver of caption quality.)
+5. Who operates `/admin` during sessions — the host themself or a dedicated operator? (Hybrid works best with a dedicated operator; 6-hour days are long for one person.)
+6. Final brand assets: official fonts licensing, poster art for the garden background, logo files.
+7. Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?
+8. Venue internet: is a wired connection or dedicated hotspot available upstairs?

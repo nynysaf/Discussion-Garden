@@ -2,7 +2,8 @@
 - Product: **Discussion Garden** — live captions, schedule prompts, moderated audience feed, and a growing "garden" knowledge graph for the *We Create Our Futures* festival.
 - Source of truth: `prd-v0.2.md` (product), `dev-plan-v0.1.md` (roadmap + progress log), `DESIGN_GUIDE.md` (UI). Read §4 of the Dev Plan before coding.
 - Four views: `/admin` (host, upstairs), `/captions` (downstairs overflow TV), `/audience` (phones, zero login), `/room-feed` (upstairs TV).
-- Deadline is **< 2 weeks**. Follow the Must → Should → Nice order and cut lines in the Dev Plan. Don't add scope that isn't in the PRD without asking.
+- Dates: festival Oct 16–18, 2026. **Garden live Sat Oct 17 & Sun Oct 18, 11:00–17:00.** Code freeze Thu Oct 15; venue rehearsal Fri Oct 16.
+- Follow the Must → Should → Nice order and cut lines in the Dev Plan. Don't add scope that isn't in the PRD without asking.
 
 # Next.js version
 - This project uses a recent Next.js with breaking changes vs. older training data. Before writing Next.js code, check `node_modules/next/dist/docs/` for the relevant guide and heed deprecation notices.
@@ -15,6 +16,8 @@
 - **Keys stay server-side.** Deepgram and OpenAI keys only in server code; the browser gets a short-lived Deepgram token.
 - **Transcripts are private** (host-only RLS). **Never store audio.**
 - Audience submissions do **not** become garden nodes (decided 2026-09-30).
+- **One shared garden across both days.** Never scope, filter, or reset the garden by session/day. Sessions (`day_1`, `day_2`) only partition transcripts and exports; nodes store `origin_session_id` for provenance.
+- Recording is one continuous stream per day; save Deepgram final segments as rows. Don't build manual audio chunking.
 - App boots in **Manual** mode; Hybrid is the expected festival mode.
 - TVs must never look frozen or blank: show Paused / Reconnecting states and re-fetch state after reconnect.
 - Verify third-party APIs (Deepgram, OpenAI, Supabase Realtime) against current docs instead of memory.
