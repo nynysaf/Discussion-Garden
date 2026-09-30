@@ -39,6 +39,7 @@
 - EXPLAIN THE 'WHY': For every change or command, explain why in plain English.
 - STEP-BY-STEP: Small incremental steps. Never dump a massive block of commands without explaining each.
 - PAUSE FOR CONFIRMATION: Ask the user to run/test one step before the next.
+- RUN TERMINAL ACTIONS YOURSELF: If a step is a terminal action you can run (installs, restarting the dev server, git, scripts, checks), run it — don't ask the user to. Still explain what it does and why. Only hand the user things you can't do: browser/mic testing, logging into dashboards, creating accounts or API keys, pasting secrets into `.env.local`.
 
 # Living Documents (PRD & Dev Plan)
 - Treat `prd-v0.2.md` and `dev-plan-v0.1.md` as living documents.
