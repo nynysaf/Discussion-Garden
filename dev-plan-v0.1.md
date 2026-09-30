@@ -83,7 +83,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ### Current phase
 **Phase 0 — nearly done** (only Vercel left). **Phase 2 (2A + 2B) — built, awaiting manual mic test.** Captions currently travel between tabs of the **same browser** (BroadcastChannel); swap to Supabase Realtime in Phase 1 without touching the UI (`CaptionChannel` interface).
 
-**Next session:** (1) get a Deepgram key with **Member** permission working (current key returns 403 from `/v1/auth/grant`), (2) run the Phase 2 test checklist, (3) start Phase 1 (Supabase) or Phase 3 (schedule) depending on accounts.
+**Next session:** (1) finish the Phase 2 test checklist, (2) start Phase 1 (Supabase) or Phase 3 (schedule) depending on accounts.
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -105,8 +105,10 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - UI: `/admin` (AudioPanel: mic picker, level meter, Start/Pause/Resume/Stop, speaker-colours toggle, live preview), `/captions` (DESIGN_GUIDE §5.1 layout with garden/QR/schedule placeholders), `/audience` + `/room-feed` placeholders, home hub.
   - 12 Noto Emoji SVGs in `public/voices/` + licence. Vitest set up: `npm test` → 53 tests passing.
 
+- 2026-09-30 — **First live captions working locally** (mic → Deepgram → bubbles on `/admin`). Gotcha: a Deepgram key made with default settings returns `403 Insufficient permissions` from `/v1/auth/grant`; the key must be created with **Advanced → Member** (permission can't be changed afterwards).
+
 ### In progress
-- Phase 2 manual mic test (needs Member-permission Deepgram key).
+- Phase 2 manual test checklist (multi-speaker colours, Pause/Resume, colours toggle, `/captions` reload, Wi-Fi drop, 60-minute run).
 
 ### Decisions (must remember)
 - 2026-09-30 — Standalone repo; **copy** map modules from Camp-CLAI.
@@ -130,7 +132,6 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open
-- **Deepgram key permission:** `/v1/auth/grant` returns **403** with the current key → create a new key with **Member** role (Console → API Keys → Create Key → Advanced/permissions → Member) and replace it in `.env.local`.
 - Daily topic schedule (live questions + times, lunch break?).
 - Venue access on Fri Oct 16 for setup + rehearsal; venue time zone.
 - TV count, resolution, and what device runs the browser on each TV.
