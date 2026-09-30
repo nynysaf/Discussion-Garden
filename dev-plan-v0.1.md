@@ -81,7 +81,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ## 4. Progress & Decisions (living log)
 
 ### Current phase
-**Phase 0 — not started.** Docs created 2026-09-30.
+**Phase 0 — in progress.** Next.js scaffolded and pushed 2026-09-30. Remaining: design tokens + fonts, Vercel connection.
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -94,6 +94,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 ### Shipped
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
+- 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + Member key created (key lives only in `.env.local`).
 
 ### In progress
 - *(none)*
@@ -131,12 +132,13 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 No fixed calendar — we build in this order as time allows and see how far we get before Sat Oct 17. Build order follows the PRD's **Must → Should → Nice** list, so whatever exists on the day is the most important part. If time runs short, cut from the bottom (§5.9), never from captions.
 
 ### Phase 0 — Project setup
-- [ ] Create Next.js app. `create-next-app` refuses non-empty folders and names with spaces, so scaffold into a temp folder (e.g. `npx create-next-app@latest dg-scaffold --ts --tailwind --app --src-dir --eslint`) and move its contents up into this folder.
+- [x] Create Next.js app. `create-next-app` refuses non-empty folders and names with spaces, so scaffold into a temp folder (e.g. `npx create-next-app@latest dg-scaffold --ts --tailwind --app --src-dir --eslint`) and move its contents up into this folder.
 - [ ] Read `node_modules/next/dist/docs/` for any version-specific changes before writing code.
 - [ ] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4.
-- [ ] `.env.example` with placeholder names only (see §6).
-- [ ] Create **public** GitHub repo, push `main`, connect Vercel, add env vars in Vercel.
-- [ ] Sign up for Deepgram (free $200 credit, no card). Console → API Keys → Create Key → Advanced → **Member** permission. Store it only in `.env.local` / Vercel as `DEEPGRAM_API_KEY`.
+- [x] `.env.example` with placeholder names only (see §6).
+- [x] Create **public** GitHub repo, push `main`.
+- [ ] Connect Vercel, add env vars in Vercel.
+- [x] Sign up for Deepgram (free $200 credit, no card). Console → API Keys → Create Key → Advanced → **Member** permission. Store it only in `.env.local` / Vercel as `DEEPGRAM_API_KEY`.
 - **Test:** home page renders in cream/ink with Cormorant title; Vercel preview deploys from `main`.
 
 ### Phase 1 — Data + realtime spine
