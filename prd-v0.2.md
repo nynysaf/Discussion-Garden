@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.1  
+**Version:** 0.2.2  
 **Last updated:** 2026-09-30  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.2 (2026-09-30):** Deepgram confirmed for captions. Captions now **separate speakers** (Deepgram diarization) and show as a **sequence of speech bubbles** — one sentence per bubble, colour-coded per voice with a text label. Admin toggle to fall back to single-colour bubbles. No fixed build calendar (build order only).
 - **v0.2.1 (2026-09-30):** Dates confirmed (festival Oct 16–18; garden live Oct 17 & 18, 11:00–17:00). **One shared garden across both days** — Day 2 grows from Day 1's garden, never resets. Sessions = days (`day_1`, `day_2`) for transcript/export partitioning only. Recording is one continuous stream per day; transcript saves automatically in short segments, so no manual chunking. Cost estimate updated to ~12 live hours.
 - **v0.2 (2026-09-30):** Split design guide into `DESIGN_GUIDE.md`. Confirmed room layout (upstairs = live discussion + mic; downstairs = overflow captions + garden). STT committed to streaming Deepgram (Whisper is not live). Hybrid is the expected festival mode; Manual stays the fail-safe default on boot. Audience submissions stay **separate** from the garden. English only. Transcripts kept privately (no audio stored). Added data model, privacy/moderation, failure handling, success criteria, and scope cut lines for a < 2 week build. Standalone repo that **copies** map modules from Camp-CLAI.
 - **v0.1:** Original PRD + design guide.
@@ -82,7 +83,7 @@ Both days grow **the same garden**. Sunday opens with Saturday's garden already 
 | :--- | :--- | :--- |
 | **Frontend** | Next.js (App Router) + Tailwind CSS v4, hosted on Vercel | Same stack as Camp-CLAI, so map code copies over cleanly. |
 | **Database & realtime** | Supabase (Postgres + Realtime) | Persists sessions, schedule, garden, submissions. Realtime **broadcast** carries live caption text; **row changes** carry garden/feed updates. |
-| **Speech-to-text** | **Deepgram streaming** (latest Nova model; confirm at build time) | True word-by-word streaming with interim results. The browser gets a **short-lived token** from our server; the real API key never leaves the server. |
+| **Speech-to-text** | **Deepgram streaming** (latest Nova model; confirm at build time) with **diarization**, punctuation, and smart formatting on | True word-by-word streaming with interim results, plus a speaker number on every word so captions can separate voices. The browser gets a **short-lived token** from our server; the real API key never leaves the server. |
 | **Post-event transcript (optional)** | OpenAI Whisper (batch) | Only if we later want a cleaner archival pass. Not live. |
 | **Synthesis LLM** | OpenAI (small, fast model; name set via env var) | Every ~35s, reads the new transcript window **plus the current garden** and returns JSON proposals. |
 | **Garden visualizer** | `d3-force` + SVG, adapted from Camp-CLAI `KnowledgeMap` | Tier gravity (seeds low, themes high) inside a force layout; plant sprites; curved vines. |
@@ -106,16 +107,31 @@ Requires host login (1–3 host accounts).
 * **Garden editor:** plant seeds, create sprouts, bloom themes, draw vines, edit/rename/delete, merge duplicates.
 * **Draft queue (Hybrid):** AI proposals listed with Approve / Edit / Reject; "Approve all" for speed.
 * **Moderation queue:** incoming audience submissions with Approve / Highlight / Dismiss.
-* **Kill switches:** "Hide garden on TVs" and "Freeze captions" for emergencies.
+* **Kill switches:** "Hide garden on TVs", "Freeze captions", and "Speaker colours" on/off.
 
 ### View 2: Downstairs Captions & Garden (`/captions`) — overflow TV
 Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Header:** "Discussion Garden" + the active **Live Question**.
-* **Live captions:** large high-contrast text, 2–3 visible lines, interim words styled lighter than final words.
+* **Live captions as speech bubbles:** each sentence appears as its own bubble, colour-coded by speaker with a small "Voice 1 / Voice 2…" label; newest at the bottom, older bubbles scroll up. Words still being recognized appear lighter inside the newest bubble. See §4.1.
 * **Garden canvas:** published seeds, sprouts, themes, and vines, with gentle growth animation.
 * **Schedule sidebar:** today's items with times; current item highlighted.
 * **QR code:** persistent corner code linking to `/audience`.
 * **Status:** subtle `[PAUSED]` / "Reconnecting…" indicator; never a blank screen.
+
+### 4.1 Caption bubbles & speaker separation
+**What the audience sees:** a chat-like column of bubbles. A new bubble starts when **the sentence ends** or **the speaker changes**. Each voice gets its own bubble colour plus a text label, so the colour isn't the only cue.
+
+**How it works:** Deepgram tags every word with a speaker number (0, 1, 2…). A small pure helper (`buildCaptionBubbles`) turns the word stream into bubbles: same speaker + unfinished sentence → keep adding to the bubble; sentence punctuation (`.` `?` `!`) or a different speaker → start a new bubble. The host laptop does this and broadcasts finished and in-progress bubbles to the TVs.
+
+**Known limits (set expectations):**
+- **Speakers are anonymous** — Deepgram knows "voice 1 vs voice 2", not who they are. Labels are "Voice 1", "Voice 2"… by default.
+- **Numbering can reshuffle after a reconnect.** Each new Deepgram connection starts counting speakers from scratch, so after a Wi-Fi drop the same person may get a different colour. Minimizing reconnects (wired/hotspot internet) keeps colours stable.
+- **Accuracy depends on audio.** Clear mic pickup of each speaker matters most; very short interjections ("yeah", "mm") and overlapping talk may be attributed to the wrong voice.
+- **More than 6 voices** reuse colours; labels stay distinct.
+
+**Host controls:** "Speaker colours" on/off (off = single-colour bubbles, still one sentence per bubble) in case diarization misbehaves in the room.
+
+**Nice to have:** host renames a voice (e.g. "Voice 2" → "Facilitator") for the current connection. Real names on a public TV only with that person's consent.
 
 ### View 3: Participant Mobile Entry (`/audience`)
 * **Zero login.** Text field (question, story, or reaction) + optional name/tag.
@@ -162,8 +178,8 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `highlighted_submission_id` | Public read, host write |
-| `transcript_segments` | `id`, `session_id`, `text`, `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` | Public read, host write |
+| `transcript_segments` | `id`, `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
 | `garden_vines` | `id`, `source_node_id`, `target_node_id`, `kind` (grows_into/relates_to), `status`, `origin`, `origin_session_id` | Public read of `published` only |
 | `synthesis_runs` | `id`, `session_id`, `window_start`, `window_end`, `mode`, `raw_output`, `error`, `created_at` | Host only (debug/audit) |
@@ -202,6 +218,7 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 ## 8. Success Criteria
 - Captions appear on the downstairs TV within **~1.5 s** of speech during rehearsal and the festival.
 - Zero caption outages longer than **30 s** that aren't caused by venue internet.
+- In rehearsal with 3+ people talking, a change of speaker starts a new, differently coloured bubble in the large majority of turns; each bubble holds one sentence.
 - In Hybrid, host can clear the draft queue in under **1 minute** per window on average.
 - Sunday 11:00 opens with Saturday's garden intact, and by 17:00 Sunday the garden holds themes supported by seeds from **both** days.
 - Organizers can export the festival garden (JSON + PNG) and each day's transcript after the festival.
@@ -211,7 +228,7 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 ## 9. Scope for a < 2 Week Build
 
 **Must have (festival fails without these)**
-1. Live captions upstairs mic → downstairs TV, with pause/resume and reconnect.
+1. Live captions upstairs mic → downstairs TV as one-sentence speech bubbles, colour-coded by speaker (with single-colour fallback), with pause/resume and reconnect.
 2. Schedule + live question on all screens.
 3. Audience submission → moderation → upstairs room feed.
 4. Garden canvas on `/captions` with **Manual** editing, persisting across both days.
@@ -221,14 +238,14 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 6. Garden export (JSON + PNG) and transcript export.
 
 **Nice to have (cut first if behind)**
-7. Auto mode.
+7. Auto mode · host renames voices ("Facilitator").
 8. Day tint/filter on the garden ("show what grew on Sunday").
 9. Garden growth timelapse for the Sunday close (replays both days).
 
 ---
 
 ## 10. Cost Estimate (rough — verify current pricing)
-- **STT:** 2 days × 6 live hours = **~720 minutes** max of streaming (less with pauses) + ~1–2 hours of testing/rehearsal. Check Deepgram's current per-minute rate; likely tens of dollars at most.
+- **STT:** 2 days × 6 live hours = **~720 minutes** max of streaming (less with pauses) + ~1–2 hours of testing/rehearsal. Check Deepgram's current per-minute rate, including whether diarization is billed as an add-on; likely tens of dollars at most.
 - **LLM:** 12 hours ÷ ~35s windows ≈ **~1,250 calls** with small prompts on a small model; likely a few dollars.
 - **Supabase / Vercel:** free/hobby tiers should suffice; confirm Realtime connection limits vs number of TVs + phones.
 
@@ -238,8 +255,9 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 1. **Daily topic schedule** within 11:00–17:00 (live questions + times), and whether there's a lunch break to Pause through.
 2. Can we get into the venue on **Fri Oct 16** for setup and a rehearsal with the real mic and TVs? Confirm venue time zone.
 3. Number and resolution of TVs; are they smart TVs, laptops, or streaming sticks running a browser?
-4. Mic hardware: one room mic, a mixer feed from existing PA, or lapel mics? (The biggest driver of caption quality.)
+4. Mic hardware: one room mic, a mixer feed from existing PA, or lapel mics? (The biggest driver of caption quality **and** of how well voices are told apart.)
 5. Who operates `/admin` during sessions — the host themself or a dedicated operator? (Hybrid works best with a dedicated operator; 6-hour days are long for one person.)
 6. Final brand assets: official fonts licensing, poster art for the garden background, logo files.
 7. Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?
-8. Venue internet: is a wired connection or dedicated hotspot available upstairs?
+8. Venue internet: is a wired connection or dedicated hotspot available upstairs? (Fewer reconnects = more stable speaker colours.)
+9. Should voices ever show real names/roles on the TV, or always stay "Voice 1, Voice 2…"?

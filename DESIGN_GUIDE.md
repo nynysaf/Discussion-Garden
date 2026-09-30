@@ -1,9 +1,9 @@
 # Discussion Garden — Visual Design Guide
 
-**Version:** 0.2 · 2026-09-30  
+**Version:** 0.2.1 · 2026-09-30  
 **Applies to:** all four views (`/admin`, `/captions`, `/audience`, `/room-feed`).  
 **Companion:** `prd-v0.2.md` · `dev-plan-v0.1.md`  
-**Changelog:** v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
+**Changelog:** v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
 
 > Tell your AI coding agent: **"Use these tokens as the single source of truth. Never hard-code colors or fonts; always reference the token."**
 
@@ -85,6 +85,14 @@ Tailwind v4 defines theme values in CSS, not `tailwind.config.js`. Put this in `
   --font-display: var(--font-cormorant), "Cinzel", serif;
   --font-caption: var(--font-jakarta), "Inter", system-ui, sans-serif;
 
+  /* caption speaker slots — strip / bubble tint (see §5.2) */
+  --color-voice-1: #3B5B28; --color-voice-1-tint: #D0D5C8;
+  --color-voice-2: #4C6D8C; --color-voice-2-tint: #D4D9DE;
+  --color-voice-3: #C86A58; --color-voice-3-tint: #EFD9D2;
+  --color-voice-4: #9682AF; --color-voice-4-tint: #E4DEE6;
+  --color-voice-5: #1A1C1A; --color-voice-5-tint: #F7E3C7;
+  --color-voice-6: #1A1C1A; --color-voice-6-tint: #E8F0DB;
+
   --shadow-poster: 0 4px 20px -2px rgba(26, 28, 26, 0.08);
 
   --ease-garden: cubic-bezier(.22, .61, .36, 1);
@@ -100,8 +108,8 @@ This generates classes like `bg-festival-cream`, `text-festival-ink`, `font-disp
 TVs are read from 3–6 m (10–20 ft) by people who can't interact with them.
 
 - **No hover or click required** to understand anything. No tooltips on TV views.
-- **Caption size:** start at **52px** on a 1080p screen (scale with `vh`/`clamp()`), tune in rehearsal from the back row.
-- **Caption layout:** 2–3 visible lines, ≤ ~55 characters per line, newest line at the bottom. Final words in `festival-ink`; interim (still-changing) words at ~60% opacity.
+- **Caption size:** start at **44–48px** on a 1080p screen (scale with `vh`/`clamp()`), tune in rehearsal from the back row.
+- **Caption bubbles:** one sentence per bubble, newest at the bottom; older bubbles scroll up and fade out near the top. Aim for 4–6 visible bubbles. Final words in `festival-ink`; still-changing words at ~60% opacity inside the newest bubble. See §5.2.
 - **Safe area:** keep content ≥ 3% from every edge (some TVs overscan/crop).
 - **Status is subtle but present:** `[PAUSED]`, "Reconnecting…" in a small pill — never a blank or frozen-looking screen.
 - **Motion on TV:** calm. The garden settles and **stops moving**; only new/changed nodes animate.
@@ -109,22 +117,48 @@ TVs are read from 3–6 m (10–20 ft) by people who can't interact with them.
 ### 5.1 `/captions` layout (16:9, draft)
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│ DISCUSSION GARDEN        [ LIVE QUESTION: "How might we…" ]  │  ~14%
-├───────────────────────────────────────────────┬──────────────┤
-│                                               │  SCHEDULE    │
-│              GARDEN CANVAS                    │  10:00 ...   │
-│   (themes top · sprouts middle · seeds soil)  │ ▶11:00 ...   │  ~56%
-│                                               │  13:00 ...   │
-├───────────────────────────────────────────────┤              │
-│  live captions line 1                         │   ┌──────┐   │
-│  live captions line 2 (newest)                │   │  QR  │   │  ~30%
-│                                               │   └──────┘   │
-└───────────────────────────────────────────────┴──────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│ DISCUSSION GARDEN          [ LIVE QUESTION: "How might we…" ]    │  ~14%
+├─────────────────────────────────────┬────────────────────────────┤
+│                                     │ ┃Voice 1                   │
+│                                     │ ┃ That's what I noticed.   │
+│          GARDEN CANVAS              │     ┃Voice 2               │
+│  (themes top · sprouts middle ·     │     ┃ Can you say more?    │
+│   seeds in the soil)                │ ┃Voice 1                   │  ~72%
+│                                     │ ┃ Sure — last spring we…   │
+│                                     │                            │
+├─────────────────────────────────────┴──────────────┬─────────────┤
+│ NOW 11:00 Topic A  ·  NEXT 12:30 Topic B  ·  …      │  QR  Join → │  ~14%
+└─────────────────────────────────────────────────────┴─────────────┘
+   garden ~58% width                    caption column ~42% width
 ```
-Open question: side-by-side (above) vs alternating full-screen garden. Decide after the first TV test.
+Captions get a tall right column because bubbles need vertical room. The schedule becomes a compact "Now · Next" strip along the bottom with the QR code. Open question: this side-by-side layout vs alternating full-screen garden — decide after the first TV test.
 
-### 5.2 `/room-feed` layout
+### 5.2 Caption bubbles & speaker colours
+
+**Bubble anatomy:** rounded card (`16px` radius, slightly organic corner on the speaker side), light tinted background, a **6px coloured strip** on the left edge, a small label above the text ("Voice 1" in `font-caption`, ~0.45× caption size, semibold, ink at 70%), and the sentence in ink.
+
+**Alignment:** alternate speakers get a slight indent (e.g. odd voices flush left, even voices indented ~8%) so turn-taking reads at a glance, like a conversation — without a two-sided phone-chat layout that wastes width.
+
+**Speaker palette** (tints = 22% colour on cream; ink text on every tint measures ≥ 11 : 1):
+
+| Voice slot | Strip colour | Bubble tint | Strip vs cream |
+| :--- | :--- | :--- | :--- |
+| 1 | `festival-forest` `#3B5B28` | `#D0D5C8` | 7.3 : 1 ✅ |
+| 2 | `festival-denim` `#4C6D8C` | `#D4D9DE` | 5.1 : 1 ✅ |
+| 3 | `festival-terracotta` `#C86A58` | `#EFD9D2` | 3.5 : 1 ✅ |
+| 4 | `festival-lavender` `#9682AF` | `#E4DEE6` | 3.2 : 1 ✅ |
+| 5 | `festival-ink` strip | `#F7E3C7` (marigold tint) | 16 : 1 ✅ |
+| 6 | `festival-ink` strip, dashed | `#E8F0DB` (pistachio tint) | 16 : 1 ✅ |
+
+- Marigold and pistachio are too pale for strips on cream, so slots 5–6 use an ink strip (dashed for slot 6) with their tint as the bubble background.
+- Voice 7+ reuses slots from 1; the label keeps them distinct.
+- **Speaker colours off** (admin toggle): all bubbles use `festival-cream` with a `festival-green` border and no voice label — still one sentence per bubble.
+- Add these as tokens: `--color-voice-1` … `--color-voice-6` and `--color-voice-1-tint` … `--color-voice-6-tint`.
+
+**Motion:** a new bubble fades + rises ~10px over 250ms; the column scrolls smoothly. Reduced motion: bubbles simply appear.
+
+### 5.3 `/room-feed` layout
 Live question banner on top; highlighted submission pinned large with a marigold "Being discussed" badge (ink text); approved submissions scroll slowly beneath as cream cards with `shadow-poster`.
 
 ---
@@ -177,7 +211,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - Icons: thin rounded line icons (Lucide), 1.5px stroke.
 
 ## 9. Accessibility checklist
-- Captions: ink on cream, large, stable line positions (no jumping).
+- Captions: ink text on light tints, large, smooth scrolling (no jumping); every speaker bubble has a text label so voice isn't shown by colour alone.
 - Full keyboard use on `/admin` and `/audience`; visible focus rings (`festival-forest`, 2px offset).
 - `prefers-reduced-motion` respected everywhere.
 - Status never color-only.

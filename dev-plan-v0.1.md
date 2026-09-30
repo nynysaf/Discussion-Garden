@@ -1,12 +1,12 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-09-30 (dates confirmed; shared two-day garden; no code yet)  
+**Last updated:** 2026-09-30 (speaker-coloured caption bubbles; no build calendar; no code yet)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
 **Reference project:** Camp-CLAI (`C:\Users\narya\OneDrive\Documents\GitHub\Camp-CLAI`) — copy code, don't import it.  
-**Deadline:** **code freeze Thu Oct 15** (evening) · venue setup + rehearsal **Fri Oct 16** · **live Sat Oct 17 & Sun Oct 18, 11:00–17:00**.
+**Festival:** Oct 16–18, 2026 · **live Sat Oct 17 & Sun Oct 18, 11:00–17:00** · rehearsal at venue Fri Oct 16 if possible. No fixed build calendar — work in phase order as time allows.
 
 ---
 
@@ -49,6 +49,7 @@
 | Audience writes | `/api/submissions` server route: length check, profanity check, per-device rate limit, then insert with the secret key | Anonymous inserts shouldn't hit the DB directly |
 | Garden layout | `d3-force` + `forceY` per tier (seeds low, themes high) + collide; freeze after settle | Garden-bed shape, calm on TVs |
 | Garden scope | One festival-wide garden; `sessions` = days (`day_1`, `day_2`) for transcripts/exports only | Sunday keeps growing Saturday's garden |
+| Speaker bubbles | Deepgram `diarize` on; host laptop groups words into bubbles (new bubble on speaker change or sentence end) with a pure helper, then broadcasts bubbles | One place does the grouping, so every TV shows identical bubbles; helper is unit-testable |
 | Recording | One continuous Deepgram stream per day; save each final segment as a row; keep-alive during silence; auto-reconnect | No audio files, so nothing to chunk; reconnects are seamless |
 
 ---
@@ -106,12 +107,14 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — Transcripts kept **privately** after the festival; **no audio stored**.
 - 2026-09-30 — Streaming STT = **Deepgram**; Whisper is not used live.
 - 2026-09-30 — **Both days share one garden.** Garden tables have no session filter; nodes/vines store `origin_session_id` for provenance only.
+- 2026-09-30 — **Captions = speech bubbles, one sentence each, colour-coded per speaker** via Deepgram diarization. Labels "Voice 1…6" (anonymous); colours may reshuffle after a reconnect (new connection restarts speaker numbering). Admin toggle falls back to single-colour bubbles.
+- 2026-09-30 — **No fixed build calendar**; build in phase order as time allows.
 - 2026-09-30 — **No manual recording chunks.** One continuous stream per day (Start / Pause for breaks / Stop); Deepgram's final segments are saved as individual rows; reconnects just continue the transcript.
 
 ### Blocked / open
 - Daily topic schedule (live questions + times, lunch break?).
 - Venue access on Fri Oct 16 for setup + rehearsal; venue time zone.
-- If the team is in Canada, Mon Oct 12 is Thanksgiving — the calendar in §5 may need to shift that day's work to the weekend.
+- Should voices ever show names/roles on TV, or always "Voice 1, Voice 2…"?
 - TV count, resolution, and what device runs the browser on each TV.
 - Mic hardware and whether we can take a feed from the venue PA/mixer.
 - Who operates `/admin` during sessions (host vs dedicated operator).
@@ -120,26 +123,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 ---
 
-## 5. Phase plan (< 2 weeks)
+## 5. Phase plan
 
-Build order follows the PRD's **Must → Should → Nice** list. If a day slips, cut from the bottom (§5.9), never from captions.
+No fixed calendar — we build in this order as time allows and see how far we get before Sat Oct 17. Build order follows the PRD's **Must → Should → Nice** list, so whatever exists on the day is the most important part. If time runs short, cut from the bottom (§5.9), never from captions.
 
-**Calendar (weekdays; weekends Oct 3–4 and 10–11 are buffer):**
-
-| Date | Phase |
-| :--- | :--- |
-| Thu Oct 1 | Phase 0 — setup |
-| Fri Oct 2 | Phase 1 — data + realtime spine |
-| Mon Oct 5 – Tue Oct 6 | Phase 2 — live captions |
-| Wed Oct 7 | Phase 3 — schedule, live question, QR |
-| Thu Oct 8 | Phase 4 — audience → moderation → room feed |
-| Fri Oct 9 + Mon Oct 12 | Phase 5 — garden canvas + manual editor |
-| Tue Oct 13 | Phase 6 — Hybrid AI synthesis |
-| Wed Oct 14 – Thu Oct 15 | Phase 7 — hardening, export, dress rehearsal · **code freeze Thu evening** |
-| Fri Oct 16 | Venue setup + rehearsal — blocker fixes only |
-| Sat Oct 17 – Sun Oct 18 | **Live 11:00–17:00** |
-
-### Phase 0 — Project setup *(Thu Oct 1)*
+### Phase 0 — Project setup
 - [ ] Create Next.js app. `create-next-app` refuses non-empty folders and names with spaces, so scaffold into a temp folder (e.g. `npx create-next-app@latest dg-scaffold --ts --tailwind --app --src-dir --eslint`) and move its contents up into this folder.
 - [ ] Read `node_modules/next/dist/docs/` for any version-specific changes before writing code.
 - [ ] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4.
@@ -147,7 +135,7 @@ Build order follows the PRD's **Must → Should → Nice** list. If a day slips,
 - [ ] Create GitHub repo, push `main`, connect Vercel, add env vars in Vercel.
 - **Test:** home page renders in cream/ink with Cormorant title; Vercel preview deploys from `main`.
 
-### Phase 1 — Data + realtime spine *(Fri Oct 2)*
+### Phase 1 — Data + realtime spine
 - [ ] Migration `0001_core.sql`: tables from PRD §6 + RLS (public read of published/approved; host write; transcripts host-only). Garden tables have **no** session filter.
 - [ ] Seed script: sessions `day_1` (Oct 17, 11:00–17:00) and `day_2` (Oct 18, 11:00–17:00) + placeholder schedule items (made-up text only).
 - [ ] Host login (`/login`) + allowlist check protecting `/admin`.
@@ -155,40 +143,49 @@ Build order follows the PRD's **Must → Should → Nice** list. If a day slips,
 - [ ] `src/lib/realtime/` helpers: subscribe to `app_state` + broadcast channel; re-fetch on reconnect.
 - **Test:** change `app_state.active_schedule_item_id` in Supabase → both TV routes update within ~1s without reload. Logged-out user cannot open `/admin`.
 
-### Phase 2 — Live captions *(Mon Oct 5 – Tue Oct 6)* — **MUST**
-- [ ] `/api/deepgram-token` (host-only) returns a short-lived token.
-- [ ] Admin mic capture (mic picker, level meter) → Deepgram WebSocket with interim results.
-- [ ] Broadcast interim/final to `captions:{sessionId}`; insert final segments into `transcript_segments`.
-- [ ] `/captions` caption band per `DESIGN_GUIDE.md` §5.
-- [ ] Pause/Resume/Stop; keep-alive during silence; auto-reconnect with backoff; wake lock; "tab hidden" warning; single-controller lock.
-- **Test:** speak upstairs-style into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.
+### Phase 2 — Live captions — **MUST**
 
-### Phase 3 — Schedule + live question + QR *(Wed Oct 7)* — **MUST**
+**Module 2A — Plain live captions (get words flowing first)**
+- [ ] `/api/deepgram-token` (host-only) returns a short-lived token.
+- [ ] Admin mic capture (mic picker, level meter) → Deepgram WebSocket with interim results, punctuation, smart formatting, and **diarization on** (so speaker numbers are already arriving for 2B).
+- [ ] Broadcast interim/final text to `captions:{sessionId}`; `/captions` shows it as simple lines.
+- [ ] Pause/Resume/Stop; keep-alive during silence; auto-reconnect with backoff; wake lock; "tab hidden" warning; single-controller lock.
+- **Test:** speak into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.
+
+**Module 2B — Speech bubbles + speaker colours**
+- [ ] Pure helper `src/lib/captions/build-bubbles.ts`: takes Deepgram word results (`punctuated_word`, `speaker`, `start`, `end`, final/interim) and returns bubbles `{ id, connectionId, speaker, text, isFinal, startMs, endMs }`. New bubble when the speaker changes **or** a sentence ends (`.` `?` `!`). Unit-test it with made-up word arrays (speaker switch mid-sentence, two sentences from one speaker, interim → final replacement, reconnect with a new `connectionId`).
+- [ ] Pure helper `src/lib/captions/voice-slot.ts`: speaker number → voice slot 1–6 (wraps after 6) → design tokens.
+- [ ] Broadcast bubbles (not raw words) to the TVs; save each **finished** bubble as one `transcript_segments` row with `connection_id` + `speaker`.
+- [ ] `/captions` bubble column per `DESIGN_GUIDE.md` §5.2: tint + strip + "Voice N" label, alternate indent, newest at bottom, fade-rise entry, smooth scroll.
+- [ ] Admin "Speaker colours" toggle (`app_state.speaker_colours_on`) → single-colour bubbles when off.
+- **Test:** two or three people take turns reading a made-up script → each sentence is its own bubble; speaker changes switch colour most of the time; a speaker who says two sentences gets two same-coloured bubbles; toggle colours off → all bubbles cream, still one sentence each; reload `/captions` mid-talk → recent bubbles reappear.
+
+### Phase 3 — Schedule + live question + QR — **MUST**
 - [ ] Admin schedule manager (add/edit/reorder, set active).
-- [ ] Live Question header on `/captions` and `/room-feed`; schedule sidebar; QR to `/audience` (`qrcode` package, as in Camp-CLAI).
+- [ ] Live Question header on `/captions` and `/room-feed`; "Now · Next" schedule strip; QR to `/audience` (`qrcode` package, as in Camp-CLAI).
 - **Test:** set active item on admin → both TVs update; QR scanned from a phone opens `/audience`.
 
-### Phase 4 — Audience → moderation → room feed *(Thu Oct 8)* — **MUST**
+### Phase 4 — Audience → moderation → room feed — **MUST**
 - [ ] `/audience` form + confirmation + consent line.
 - [ ] `/api/submissions`: length limit, profanity check, per-device rate limit, insert.
 - [ ] Admin moderation queue: Approve / Highlight / Dismiss (realtime).
 - [ ] `/room-feed` board + highlighted pin.
 - **Test:** submit from 2 phones → appear in admin within ~1s; approve → room feed shows it; highlight → pinned; spam 10 rapid submissions → rate-limited with friendly message.
 
-### Phase 5 — Garden canvas + Manual editor *(Fri Oct 9 + Mon Oct 12)* — **MUST**
+### Phase 5 — Garden canvas + Manual editor — **MUST**
 - [ ] Copy + adapt layout/curves/sprites (§3); pure helpers in `src/lib/garden/` with unit tests if a runner exists.
 - [ ] `GardenCanvas` renders published nodes/vines with tier bands, sprites, labels, growth animation; freezes after settle.
 - [ ] Admin editor: plant seed, create sprout, bloom theme, draw vine, rename, delete, merge; "Hide garden on TVs".
 - [ ] Verify Camp-CLAI Plant sprites on cream; swap or fall back to circles if they clash.
 - **Test:** plant 15 nodes across tiers → TV shows seeds low, themes high, no overlaps, no continuous jitter; reduced-motion shows no pulses. Switch active day `day_1` → `day_2` → garden is unchanged and new nodes record `origin_session_id = day_2`. Load ~150 fake nodes (a full two-day garden) → still readable on a 1080p TV, no slowdown.
 
-### Phase 6 — Hybrid AI synthesis *(Tue Oct 13)* — SHOULD
+### Phase 6 — Hybrid AI synthesis — SHOULD
 - [ ] `/api/synthesis` (host-only): builds window + current garden → OpenAI JSON → validates → inserts **draft** nodes/vines (Hybrid) or **published** (Auto); logs to `synthesis_runs`.
 - [ ] Admin timer (~35s) only while Live and mode ≠ Manual; skip if previous call still running.
 - [ ] Draft queue UI: Approve / Edit / Reject / Approve all; `reinforce` bumps weight on approve.
 - **Test:** 5 minutes of sample talk → drafts arrive, no near-duplicates of existing nodes; force an API error → admin notice, captions unaffected; switch to Manual → timer stops.
 
-### Phase 7 — Hardening + export + rehearsal *(Wed Oct 14 – Thu Oct 15; code freeze Thu evening)* — SHOULD
+### Phase 7 — Hardening + export + rehearsal — SHOULD (rehearsal itself is a must before Sat Oct 17)
 - [ ] Export: festival garden JSON + PNG (with each node's origin day); transcript text per day (host-only).
 - [ ] "Reset test data" admin action for **before** Saturday only (clears rehearsal nodes/submissions/transcripts) — guarded by a typed confirmation, and disabled once `day_1` has started.
 - [ ] Real TV test at venue (or same model TV): caption size, safe area, contrast from back row.
@@ -196,7 +193,7 @@ Build order follows the PRD's **Must → Should → Nice** list. If a day slips,
 - **Test:** full 30-minute dress rehearsal with a real mic and all four screens.
 
 ### Phase 8 — Nice to have (only if ahead)
-- [ ] Auto mode polish · day tint/filter on the garden · growth timelapse (both days) for the Sunday close.
+- [ ] Auto mode polish · host renames voices ("Voice 2" → "Facilitator") · day tint/filter on the garden · growth timelapse (both days) for the Sunday close.
 
 ### 5.9 Cut lines if behind
 1. Drop Phase 8 entirely.
