@@ -12,7 +12,8 @@ describe("buildListenUrl", () => {
   it("requests Nova-3 English with speakers, formatting, and interim words", () => {
     expect(params.get("model")).toBe("nova-3");
     expect(params.get("language")).toBe("en");
-    expect(params.get("diarize")).toBe("true");
+    expect(params.get("diarize_model")).toBe("latest");
+    expect(params.has("diarize")).toBe(false);
     expect(params.get("smart_format")).toBe("true");
     expect(params.get("interim_results")).toBe("true");
     expect(params.get("utterance_end_ms")).toBe("1500");

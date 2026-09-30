@@ -1,5 +1,6 @@
 import { backoffDelayMs } from "@/lib/audio/backoff";
 import { rmsLevel } from "@/lib/audio/level";
+import { micConstraints } from "@/lib/audio/mic-constraints";
 import { pickRecorderMimeType } from "@/lib/audio/recorder-mime";
 import { buildListenUrl } from "@/lib/deepgram/listen-url";
 import { parseDeepgramMessage } from "@/lib/deepgram/parse-message";
@@ -51,13 +52,13 @@ export class LiveCaptioner {
     return this.stream !== null;
   }
 
-  async start(deviceId?: string): Promise<void> {
+  async start(deviceId?: string, voiceCleanup = false): Promise<void> {
     if (this.wantLive) return;
     this.wantLive = true;
     this.options.onStatus("connecting");
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
-        audio: deviceId ? { deviceId: { exact: deviceId } } : true,
+        audio: micConstraints(deviceId, voiceCleanup),
       });
       this.startLevelMeter(this.stream);
       await this.connect();

@@ -51,6 +51,21 @@ export function feedReducer(
   }
 }
 
+/**
+ * Speaker numbers heard on the newest connection, in order of first
+ * appearance. Earlier connections are ignored because numbering restarts.
+ */
+export function voicesHeard(feed: CaptionFeed): number[] {
+  const all = [...feed.recent, ...feed.live];
+  const connectionId = all.at(-1)?.connectionId;
+  const speakers: number[] = [];
+  for (const bubble of all) {
+    if (bubble.connectionId !== connectionId) continue;
+    if (!speakers.includes(bubble.speaker)) speakers.push(bubble.speaker);
+  }
+  return speakers;
+}
+
 /** Bubbles to draw, oldest first, newest (in-progress) last. */
 export function visibleBubbles(
   feed: CaptionFeed,

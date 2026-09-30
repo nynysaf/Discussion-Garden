@@ -26,6 +26,7 @@ export function useHostCaptions() {
   const [level, setLevel] = useState(0);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [deviceId, setDeviceId] = useState("");
+  const [voiceCleanup, setVoiceCleanup] = useState(false);
   const [blockedByOtherTab, setBlockedByOtherTab] = useState(false);
 
   const feedRef = useRef(feed);
@@ -125,10 +126,10 @@ export function useHostCaptions() {
       releaseLockRef.current = release;
       setBlockedByOtherTab(false);
     }
-    await captionerRef.current?.start(deviceId || undefined);
+    await captionerRef.current?.start(deviceId || undefined, voiceCleanup);
     await refreshDevices();
     await keepAwake();
-  }, [deviceId, keepAwake, refreshDevices]);
+  }, [deviceId, voiceCleanup, keepAwake, refreshDevices]);
 
   const pause = useCallback(() => captionerRef.current?.pause(), []);
 
@@ -157,6 +158,8 @@ export function useHostCaptions() {
     devices,
     deviceId,
     setDeviceId,
+    voiceCleanup,
+    setVoiceCleanup,
     blockedByOtherTab,
     start,
     pause,

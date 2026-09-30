@@ -50,7 +50,7 @@
 | Audience writes | `/api/submissions` server route: length check, profanity check, per-device rate limit, then insert with the secret key | Anonymous inserts shouldn't hit the DB directly |
 | Garden layout | `d3-force` + `forceY` per tier (seeds low, themes high) + collide; freeze after settle | Garden-bed shape, calm on TVs |
 | Garden scope | One festival-wide garden; `sessions` = days (`day_1`, `day_2`) for transcripts/exports only | Sunday keeps growing Saturday's garden |
-| Speaker bubbles | Deepgram `diarize` on; host laptop groups words into bubbles (new bubble on speaker change or sentence end) with a pure helper, then broadcasts bubbles | One place does the grouping, so every TV shows identical bubbles; helper is unit-testable |
+| Speaker bubbles | Deepgram diarization on (`diarize_model=latest`); host laptop groups words into bubbles (new bubble on speaker change or sentence end) with a pure helper, then broadcasts bubbles | One place does the grouping, so every TV shows identical bubbles; helper is unit-testable |
 | Recording | One continuous Deepgram stream per day; save each final segment as a row; keep-alive during silence; auto-reconnect | No audio files, so nothing to chunk; reconnects are seamless |
 
 ---
@@ -103,12 +103,18 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - `src/lib/audio/` — level meter, backoff, recorder MIME pick, wake lock (from Camp-CLAI), single-controller Web Lock.
   - `/api/deepgram-token` — **returns 403 in production** until host login exists (protects free credit on the public URL).
   - UI: `/admin` (AudioPanel: mic picker, level meter, Start/Pause/Resume/Stop, speaker-colours toggle, live preview), `/captions` (DESIGN_GUIDE §5.1 layout with garden/QR/schedule placeholders), `/audience` + `/room-feed` placeholders, home hub.
-  - 12 Noto Emoji SVGs in `public/voices/` + licence. Vitest set up: `npm test` → 53 tests passing.
+  - 12 Noto Emoji SVGs in `public/voices/` + licence. Vitest set up: `npm test` → 58 tests passing.
 
 - 2026-09-30 — **First live captions working locally** (mic → Deepgram → bubbles on `/admin`). Gotcha: a Deepgram key made with default settings returns `403 Insufficient permissions` from `/v1/auth/grant`; the key must be created with **Advanced → Member** (permission can't be changed afterwards).
+- 2026-09-30 — Manual test: second tab, Pause/Resume, colours toggle, `/captions` reload **pass**. **Issue:** in the first real test every voice got the same colour/animal.
+  - Diagnosis: streamed a synthetic two-voice clip (Windows TTS, made-up text, deleted afterwards) straight to Deepgram with our exact settings → speakers **were** separated (0/1), with the usual one-sentence lag at each change. So Deepgram + our parsing work; the browser mic path is the suspect.
+  - Fix: mic now opens with **browser voice cleanup off** (`echoCancellation` / `noiseSuppression` / `autoGainControl` = false via `micConstraints()`), since that processing makes voices sound alike. Admin toggle "Browser voice cleanup" to turn it back on for a very noisy room.
+  - Added **"Voices heard"** row on `/admin` (`voicesHeard(feed)`) — shows one animal per detected speaker on the current connection; use it for the venue mic check.
+  - Switched `diarize=true` → `diarize_model=latest` (deprecated param; same v1 streaming diarizer today).
 
 ### In progress
-- Phase 2 manual test checklist (multi-speaker colours, Pause/Resume, colours toggle, `/captions` reload, Wi-Fi drop, 60-minute run).
+- Re-test speaker separation with 2–3 real people (voice cleanup off). If still one animal: try a better/closer mic, then consider whether the festival mic setup (single room mic vs. mixer feed) can support it; the colours toggle is the fallback.
+- Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
 ### Decisions (must remember)
 - 2026-09-30 — Standalone repo; **copy** map modules from Camp-CLAI.
@@ -122,7 +128,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **Both days share one garden.** Garden tables have no session filter; nodes/vines store `origin_session_id` for provenance only.
 - 2026-09-30 — **Captions = speech bubbles, one sentence each, colour-coded per speaker** via Deepgram diarization. Colours may reshuffle after a reconnect (new connection restarts speaker numbering). Admin toggle falls back to single-colour bubbles.
 - 2026-09-30 — **Voices are never named.** Each voice gets a garden-animal emoji (🐸 🐦 🐞 🦋 🐝 🐛, then 🦔 🐌 🦉 🐇 🐢 🐿️), rendered from self-hosted Noto Emoji SVGs so every TV looks the same.
-- 2026-09-30 — **Deepgram:** Nova-3 Monolingual English, free $200 credit, `diarize=true`, `smart_format=true`, `interim_results=true`, **`mip_opt_out=true`** (no audio kept for training). Browser uses a 30-second temporary token from `/api/deepgram-token` (`POST /v1/auth/grant`); the API key must have **Member** permission.
+- 2026-09-30 — **Deepgram:** Nova-3 Monolingual English, free $200 credit, `diarize_model=latest` (replaces deprecated `diarize=true`; never send both), `smart_format=true`, `interim_results=true`, **`mip_opt_out=true`** (no audio kept for training). Browser uses a 30-second temporary token from `/api/deepgram-token` (`POST /v1/auth/grant`); the API key must have **Member** permission.
 - 2026-09-30 — **GitHub repo is public.**
 - 2026-09-30 — **No fixed build calendar**; build in phase order as time allows.
 - 2026-09-30 — **No manual recording chunks.** One continuous stream per day (Start / Pause for breaks / Stop); Deepgram's final segments are saved as individual rows; reconnects just continue the transcript.
@@ -168,7 +174,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 
 **Module 2A — Plain live captions (get words flowing first)**
 - [x] `/api/deepgram-token` calls Deepgram `POST /v1/auth/grant` and returns the 30-second token. Fetch a fresh one for every (re)connect — the open WebSocket outlives the token. *(Blocked in production until host login; make it host-only in Phase 1.)*
-- [x] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize=true`**, **`mip_opt_out=true`**.
+- [x] Admin mic capture (mic picker, level meter) → Deepgram WebSocket: `model=nova-3`, `language=en`, `interim_results=true`, `smart_format=true`, **`diarize_model=latest`**, **`mip_opt_out=true`**.
 - [x] Broadcast to the display screens — **local transport only** (BroadcastChannel). [ ] Supabase Realtime `captions:{sessionId}` (Phase 1).
 - [x] Pause/Resume/Stop; auto-reconnect with backoff; wake lock; single-controller lock. [ ] "Tab hidden" warning on `/admin`.
 - **Test:** speak into laptop → second browser shows captions in ≤ ~1.5s; pull Wi-Fi 10s → reconnects and resumes; Pause shows `[PAUSED]` and stops Deepgram usage; stay silent 2 minutes while Live → connection stays open (or reconnects cleanly); **run 60+ minutes continuously** → no memory growth or slowdown in the admin tab.

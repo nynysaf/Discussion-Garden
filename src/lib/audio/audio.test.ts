@@ -1,7 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { backoffDelayMs } from "./backoff";
 import { rmsLevel } from "./level";
+import { micConstraints } from "./mic-constraints";
 import { pickRecorderMimeType } from "./recorder-mime";
+
+describe("micConstraints", () => {
+  it("sends raw audio by default", () => {
+    expect(micConstraints()).toEqual({
+      channelCount: 1,
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false,
+    });
+  });
+
+  it("pins the chosen device and can turn cleanup on", () => {
+    expect(micConstraints("mic-2", true)).toMatchObject({
+      deviceId: { exact: "mic-2" },
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+    });
+  });
+});
 
 describe("rmsLevel", () => {
   it("is 0 for silence or no samples", () => {

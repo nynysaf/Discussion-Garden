@@ -23,7 +23,8 @@ export function buildListenUrl(
     interim_results: "true",
     smart_format: "true",
     punctuate: "true",
-    diarize: "true",
+    // `diarize=true` is deprecated; never send both (Deepgram rejects that).
+    diarize_model: "latest",
     utterance_end_ms: String(o.utteranceEndMs),
     // Keeps Deepgram from retaining festival audio for model training.
     mip_opt_out: "true",

@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { CaptionColumn } from "@/components/captions/CaptionColumn";
 import { StatusPill } from "@/components/StatusPill";
-import { visibleBubbles } from "@/lib/captions/caption-feed";
+import { visibleBubbles, voicesHeard } from "@/lib/captions/caption-feed";
+import { voiceFor } from "@/lib/captions/voice-slot";
 import { useHostCaptions } from "./useHostCaptions";
 
 const primaryButton =
@@ -20,6 +22,7 @@ export function AudioPanel() {
     audioStatus === "connecting" ||
     audioStatus === "reconnecting";
   const canStart = audioStatus === "idle" || audioStatus === "error";
+  const voices = voicesHeard(host.feed).map(voiceFor);
 
   const confirmStop = () => {
     if (window.confirm("Stop captions and release the microphone?")) host.stop();
@@ -80,6 +83,31 @@ export function AudioPanel() {
             </div>
           </div>
 
+          <div>
+            <span className="text-sm font-semibold">Voices heard</span>
+            <div className="mt-1 flex min-h-8 flex-wrap items-center gap-2">
+              {voices.length === 0 ? (
+                <span className="text-sm opacity-70">None yet</span>
+              ) : (
+                voices.map((voice) => (
+                  <Image
+                    key={voice.animal}
+                    src={voice.emojiSrc}
+                    alt={voice.animal}
+                    title={voice.animal}
+                    width={28}
+                    height={28}
+                    unoptimized
+                  />
+                ))
+              )}
+            </div>
+            <p className="text-sm opacity-70">
+              Mic check: have each person speak a sentence or two — you should
+              see one animal per person.
+            </p>
+          </div>
+
           <div className="flex flex-wrap gap-3">
             {canStart && (
               <button type="button" className={primaryButton} onClick={() => void host.start()}>
@@ -114,6 +142,23 @@ export function AudioPanel() {
               <span className="font-semibold">Speaker colours &amp; animals</span>
               <span className="block text-sm opacity-70">
                 Turn off if voices are being mixed up — bubbles stay one sentence each.
+              </span>
+            </span>
+          </label>
+
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              className="h-5 w-5 accent-festival-forest"
+              checked={host.voiceCleanup}
+              onChange={(e) => host.setVoiceCleanup(e.target.checked)}
+              disabled={!canStart}
+            />
+            <span>
+              <span className="font-semibold">Browser voice cleanup</span>
+              <span className="block text-sm opacity-70">
+                Noise suppression and auto volume. Leave off for better speaker
+                separation; try on only in a very noisy room. Applies on Start.
               </span>
             </span>
           </label>

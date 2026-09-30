@@ -5,6 +5,7 @@ import {
   appendRecent,
   feedReducer,
   visibleBubbles,
+  voicesHeard,
 } from "./caption-feed";
 import { words } from "./test-helpers";
 
@@ -66,6 +67,36 @@ describe("feedReducer", () => {
 
   it("ignores hello messages", () => {
     expect(feedReducer(INITIAL_FEED, { type: "hello" })).toBe(INITIAL_FEED);
+  });
+});
+
+describe("voicesHeard", () => {
+  it("is empty before anyone speaks", () => {
+    expect(voicesHeard(INITIAL_FEED)).toEqual([]);
+  });
+
+  it("lists each speaker once, in order of first appearance", () => {
+    const feed = {
+      ...INITIAL_FEED,
+      recent: [
+        toBubble("c1", words("Hi.", 2, 0), true),
+        toBubble("c1", words("Hello.", 0, 1000), true),
+        toBubble("c1", words("Again.", 2, 2000), true),
+      ],
+      live: [toBubble("c1", words("And me", 1, 3000), false)],
+    };
+    expect(voicesHeard(feed)).toEqual([2, 0, 1]);
+  });
+
+  it("only counts the newest connection", () => {
+    const feed = {
+      ...INITIAL_FEED,
+      recent: [
+        toBubble("old", words("Before.", 3, 0), true),
+        toBubble("new", words("After.", 0, 0), true),
+      ],
+    };
+    expect(voicesHeard(feed)).toEqual([0]);
   });
 });
 
