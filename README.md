@@ -29,6 +29,7 @@ Useful scripts:
 - `npm test` — unit tests (pure helpers in `src/lib/`)
 - `npm run db:check` — verifies database + realtime access rules (visitors vs non-hosts vs hosts)
 - `npm run db:reset` — rebuild the local database from `supabase/migrations` + `supabase/seed.sql`
+- `npm run db:push:hosted` — apply new migrations to the hosted project over HTTPS (needs `SUPABASE_ACCESS_TOKEN` and `npx supabase link`)
 - Local Supabase Studio (database browser): http://127.0.0.1:54323
 
 ## Stack

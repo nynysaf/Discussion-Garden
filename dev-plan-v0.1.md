@@ -83,7 +83,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ### Current phase
 **Phase 0 — nearly done** (only Vercel left). **Phase 1 — built on local Supabase, awaiting host browser test.** **Phase 2 — speaker separation verified by user; captions now travel over Supabase Realtime** (any device / browser, not just same-browser tabs).
 
-**Next session:** (1) user tests Phase 1 in two different browsers (see §5 Phase 1 test), (2) Phase 3 — schedule editor + Now/Next strip + QR, (3) create the **hosted** Supabase project + Vercel when ready to put screens on real TVs (see "Going to hosted Supabase" in §7).
+**Next session:** (1) user tests Phase 1 in two different browsers (see §5 Phase 1 test), (2) Phase 3 — schedule editor + Now/Next strip + QR, (3) hosted Supabase is set up — remaining: Vercel + real hosts + private `watchTables` channel (see "Going to hosted Supabase" in §7).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -122,11 +122,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - Verified by agent: `npm run db:check` → **19/19 access checks pass** (visitor can't read transcripts or write anything; non-host can't either; non-host broadcast doesn't reach TVs; public-channel spoof doesn't reach the private channel); `/admin` → 307 to `/login` when signed out; token route 401 signed out; browser login → `/admin` works; live question change in DB → `/captions` updated without reload. 73 unit tests pass.
 
 - 2026-09-30 — **Dev server froze** (every page hung, then 404s after restart). Cause: corrupted `.next` cache — likely OneDrive syncing the folder while Next.js writes to it. Fix: stop the server, delete `.next`, `npm run dev`. If it recurs, move the repo out of OneDrive (e.g. `C:\dev\Discussion-Garden`). Also: caption sends before the channel is joined now use `httpSend()` explicitly (Supabase deprecates the silent REST fallback).
-- 2026-09-30 — User created a **hosted Supabase project** (not yet linked; `.env.local` still points at local Supabase).
+- 2026-09-30 — **Hosted Supabase ready** (`mjjzfqyrskvhngwstjoz`): linked, schema + seed pushed via new `npm run db:push:hosted` (Management API over HTTPS — direct Postgres connection is blocked on the user's network), sign-ups disabled, `db:check` 19/19 against hosted. `.env.local` still points the app at **local** Supabase. Found while testing: hosted Realtime confirms postgres_changes a moment *after* `SUBSCRIBED`, so `watchTables` now also refetches on that `system` "ok" message, and `db:check` waits for it.
 
 ### In progress
 - User browser test of Phase 1 (two browsers, captions + live question).
-- Link the hosted Supabase project and push the schema (see §7 "Going to hosted Supabase").
+- Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
 ### Decisions (must remember)
@@ -159,7 +159,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - TV count, resolution, and what device runs the browser on each TV.
 - Mic hardware and whether we can take a feed from the venue PA/mixer.
 - Who operates `/admin` during sessions (host vs dedicated operator).
-- Accounts still needed: **hosted** Supabase project, Vercel project, OpenAI API key. (Deepgram Member key + public GitHub repo done.)
+- Accounts still needed: Vercel project, OpenAI API key. (Hosted Supabase done.) (Deepgram Member key + public GitHub repo done.)
 - Stale "Live" on TVs if the host tab crashes/closes while live (app_state keeps `live`). Consider a host heartbeat in Phase 7.
 - Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
@@ -268,13 +268,18 @@ Hosts are **not** an env var — they live in `public.hosts` (`npm run host:add`
 ## 7. Festival runbook (fill in during Phase 7)
 
 ### Going to hosted Supabase (before real TVs / Vercel)
-- [ ] Create a Supabase project (free tier) — region near the venue.
-- [ ] Link and push the schema: `npx supabase link --project-ref <ref>` then `npx supabase db push` (agent can run these once the user has logged in with `npx supabase login`). Seed the two days (run `supabase/seed.sql` in the SQL editor, then replace the made-up schedule).
-- [ ] **Realtime → Settings → turn OFF "Allow public access"** so only private channels (with our RLS) work.
-- [ ] **Auth → Sign In / Providers → disable "Allow new users to sign up"** (hosts are created by script).
-- [ ] Put the hosted URL + publishable + secret keys in Vercel env vars (and `.env.local` if testing against hosted).
-- [ ] `npm run host:add -- <real host email> "<password>"` for each host (1–3).
-- [ ] `npm run db:check` against the hosted project → all checks pass.
+Hosted project: **`mjjzfqyrskvhngwstjoz`** ("Discussion Garden", `us-east-1`), URL `https://mjjzfqyrskvhngwstjoz.supabase.co`. `.env.local` holds `SUPABASE_ACCESS_TOKEN` (CLI / Management API) + `SUPABASE_DB_PASSWORD`; its `NEXT_PUBLIC_SUPABASE_*` / `SUPABASE_SECRET_KEY` stay on **local**.
+
+- [x] Create a Supabase project (free tier) — `us-east-1`.
+- [x] Link: `npx supabase link --project-ref mjjzfqyrskvhngwstjoz` (with `SUPABASE_ACCESS_TOKEN` + `SUPABASE_DB_PASSWORD` loaded from `.env.local` into the shell).
+- [x] Push schema + seed. `npx supabase db push` **times out on the user's home network** (Postgres pooler connection gets cut), so use **`npm run db:push:hosted`** — applies missing `supabase/migrations/*.sql` over HTTPS via the Management API and records them in `supabase_migrations.schema_migrations` (compatible with `db push`). Seed: `node --env-file=.env.local scripts/push-hosted.mjs --seed` (only seeds if no sessions exist). PowerShell strips `--` from `npm run x -- --flag`, so call node directly for flags.
+- [ ] Replace the made-up schedule with the real one (once known).
+- [ ] **Realtime "Allow public access" OFF** (`private_only`). **Not yet — would break TVs:** `watchTables` (postgres_changes) uses public channels. First move it to a private channel + add a `realtime.messages` select policy for its topic, verify against current Supabase docs, then flip.
+- [x] **Sign-ups disabled** (`disable_signup = true`, set via Management API).
+- [ ] Put the hosted URL + publishable + secret keys in Vercel env vars. Keys can be read with the access token (`GET /v1/projects/<ref>/api-keys?reveal=true`) — never print them.
+- [ ] `host:add` each real host (1–3) against hosted: set `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SECRET_KEY` in the shell first (shell vars win over `--env-file`). Password typed by the user, not in chat.
+- [x] `db:check` against hosted (same shell-var trick) → **19/19 pass** (2026-09-30).
+- [ ] Hosted `site_url` is still `http://localhost:3000` — set to the Vercel URL at deploy.
 
 ### Fri Oct 16 (setup + rehearsal)
 - [ ] Test every TV browser loads its URL full-screen (F11 / kiosk) and survives a Wi-Fi toggle.

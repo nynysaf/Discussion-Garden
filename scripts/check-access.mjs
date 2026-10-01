@@ -104,13 +104,23 @@ try {
 
   // ── Realtime: app_state row changes reach visitors ──
   const seen = [];
+  let pgSystem = null;
   const watch = anon
     .channel(`check-watch-${suffix}`)
-    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "app_state" }, (p) => seen.push(p.new));
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "app_state" }, (p) => seen.push(p.new))
+    .on("system", {}, (p) => {
+      if (p.extension === "postgres_changes") pgSystem = p;
+    });
   check("visitor subscribes to app_state changes", await subscribe(watch));
+  // Hosted projects confirm the database side a moment after SUBSCRIBED.
+  await waitFor(() => pgSystem !== null, 10000);
   const hostUpdate = await host.from("app_state").update({ garden_hidden: !original.garden_hidden }).eq("id", true).select();
   check("host can change app_state", !hostUpdate.error && hostUpdate.data.length === 1, hostUpdate.error?.message);
-  check("visitor receives the app_state change", await waitFor(() => seen.length > 0));
+  check(
+    "visitor receives the app_state change",
+    await waitFor(() => seen.length > 0, 10000),
+    pgSystem ? `${pgSystem.status}: ${pgSystem.message}` : "no postgres_changes system message",
+  );
 
   // ── Realtime: private caption broadcast ──
   const received = [];
