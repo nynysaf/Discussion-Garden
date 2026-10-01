@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.4  
-**Last updated:** 2026-09-30  
+**Version:** 0.2.6  
+**Last updated:** 2026-10-01  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
 - **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. "Now" = the item the host put live, not the clock (sessions run late).
 - **v0.2.4 (2026-09-30):** Host allowlist is a `hosts` table (checked by RLS), not an env var; public sign-up disabled. `transcript_segments` gains `bubble_id` (unique) so saves can be retried safely. Caption broadcast uses a **private** realtime channel — only hosts can send to the TVs.
 - **v0.2.3 (2026-09-30):** Voices are **never named** — each is labelled with a **garden-animal emoji** (🐸 🐦 🐞 🦋 🐝 🐛 …). Deepgram **Nova-3 (English)** on the **free $200 credit**, with `mip_opt_out=true` so Deepgram doesn't keep audio for model training. Cost section updated with published rates. GitHub repo is **public**.
@@ -111,6 +112,7 @@ Requires host login (1–3 host accounts).
 * **Draft queue (Hybrid):** AI proposals listed with Approve / Edit / Reject; "Approve all" for speed.
 * **Moderation queue:** incoming audience submissions with Approve / Highlight / Dismiss.
 * **Kill switches:** "Hide garden on TVs", "Freeze captions", and "Speaker colours" on/off.
+* **Downstairs TV layout** *(Should)*: Garden · Both · Captions buttons, plus an optional auto-rotate (on/off + seconds per view). See View 2.
 
 ### View 2: Downstairs Captions & Garden (`/captions`) — overflow TV
 Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
@@ -120,6 +122,14 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Now · Next strip:** the live item and the one after it, with venue times; "now" highlighted.
 * **QR code:** persistent corner code linking to `/audience`.
 * **Status:** subtle `[PAUSED]` / "Reconnecting…" indicator; never a blank screen.
+* **Three layouts** *(Should — built after Hybrid AI; until then the screen is always "Both")*:
+  * **Both** — garden left, captions right (the layout above).
+  * **Garden** — the garden slides out to the right and fills the whole middle band, covering the captions.
+  * **Captions** — the captions slide out to the left and fill the whole middle band, covering the garden.
+  * The header, live question, Now · Next strip, and QR code stay put in every layout; only the middle band changes.
+  * The host picks the layout on `/admin`; an optional auto-rotate cycles the layouts on a timer. The TV reads the choice from `app_state` and does the rotating itself, so it stays read-only.
+  * "Hide garden on TVs" always wins: the TV shows Captions.
+  * `prefers-reduced-motion`: switch with a short fade instead of a slide.
 
 ### 4.1 Caption bubbles & speaker separation
 **What the audience sees:** a chat-like column of bubbles. A new bubble starts when **the sentence ends** or **the speaker changes**. Each voice gets its own bubble colour **and** its own garden-animal emoji, so colour isn't the only cue.
@@ -191,7 +201,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` | Public read, host write |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id`, `captions_layout` (`garden`/`both`/`captions`), `captions_rotate_seconds` (null = off) | Public read, host write |
 | `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
 | `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
@@ -252,11 +262,12 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 **Should have**
 5. Hybrid AI drafts + approval queue.
 6. Garden export (JSON + PNG) and transcript export.
+7. `/captions` layout switcher: Garden · Both · Captions with slide animation, host buttons + optional auto-rotate (after Hybrid AI).
 
 **Nice to have (cut first if behind)**
-7. Auto mode.
-8. Day tint/filter on the garden ("show what grew on Sunday").
-9. Garden growth timelapse for the Sunday close (replays both days).
+8. Auto mode.
+9. Day tint/filter on the garden ("show what grew on Sunday").
+10. Garden growth timelapse for the Sunday close (replays both days).
 
 ---
 
@@ -278,5 +289,5 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 4. Mic hardware: one room mic, a mixer feed from existing PA, or lapel mics? (The biggest driver of caption quality **and** of how well voices are told apart.)
 5. Who operates `/admin` during sessions — the host themself or a dedicated operator? (Hybrid works best with a dedicated operator; 6-hour days are long for one person.)
 6. Final brand assets: official fonts licensing, poster art for the garden background, logo files.
-7. Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?
+7. ~~Should the downstairs TV show the garden and captions side-by-side, or alternate full-screen?~~ **Resolved 2026-10-01:** both — three layouts the host switches between, with optional auto-rotate (View 2).
 8. Venue internet: is a wired connection or dedicated hotspot available upstairs? (Fewer reconnects = more stable speaker colours.)

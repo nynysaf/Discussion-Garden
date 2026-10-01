@@ -3,7 +3,7 @@
 **Version:** 0.2.2 · 2026-09-30  
 **Applies to:** all four views (`/admin`, `/captions`, `/audience`, `/room-feed`).  
 **Companion:** `prd-v0.2.md` · `dev-plan-v0.1.md`  
-**Changelog:** v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
+**Changelog:** v0.2.3 `/captions` has three layouts — Garden / Both / Captions — with a slide transition (§5.1a). v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
 
 > Tell your AI coding agent: **"Use these tokens as the single source of truth. Never hard-code colors or fonts; always reference the token."**
 
@@ -132,7 +132,32 @@ TVs are read from 3–6 m (10–20 ft) by people who can't interact with them.
 └─────────────────────────────────────────────────────┴─────────────┘
    garden ~58% width                    caption column ~42% width
 ```
-Captions get a tall right column because bubbles need vertical room. The schedule becomes a compact "Now · Next" strip along the bottom with the QR code. Open question: this side-by-side layout vs alternating full-screen garden — decide after the first TV test.
+Captions get a tall right column because bubbles need vertical room. The schedule becomes a compact "Now · Next" strip along the bottom with the QR code. This is the **Both** layout; see §5.1a for the two full-screen layouts.
+
+### 5.1a `/captions` layouts: Garden · Both · Captions *(Should; decided 2026-10-01)*
+
+Only the **middle band** changes. The header (title + live question) and the bottom strip (Now · Next + QR) never move.
+
+```
+ GARDEN                          BOTH                            CAPTIONS
+┌───────────────────────┐      ┌───────────────────────┐      ┌───────────────────────┐
+│ TITLE · QUESTION      │      │ TITLE · QUESTION      │      │ TITLE · QUESTION      │
+├───────────────────────┤      ├─────────────┬─────────┤      ├───────────────────────┤
+│                       │ ◄──  │             │         │  ──► │                       │
+│     GARDEN (100%)     │      │ GARDEN ~58% │ CAP ~42%│      │    CAPTIONS (100%)    │
+│                       │      │             │         │      │                       │
+├───────────────────────┤      ├─────────────┴─────────┤      ├───────────────────────┤
+│ NOW · NEXT        QR  │      │ NOW · NEXT        QR  │      │ NOW · NEXT        QR  │
+└───────────────────────┘      └───────────────────────┘      └───────────────────────┘
+```
+
+- **Both → Garden:** the garden panel grows to the right over the caption column. **Both → Captions:** the caption column grows to the left over the garden. Going back reverses the motion.
+- **Motion:** one slow, calm slide (~800–1000 ms, ease-in-out). Animate `transform`/`clip-path`, not `width`, so the garden canvas and bubbles don't re-layout every frame. After the slide, the garden re-fits to its new size once and settles (no jitter).
+- **Full-screen captions:** don't stretch bubbles across 16:9. Keep a readable centred column (~60–70ch max) and allow the caption size to go up one step. Bubbles keep their alternating indent, colours, and animal emoji.
+- **Full-screen garden:** the same garden, fit to the wider area. No captions overlay.
+- **Reduced motion:** a ~200 ms cross-fade instead of the slide.
+- **Garden hidden** (admin kill switch) → always Captions, whatever layout is selected.
+- **Auto-rotate:** each layout holds for the host's chosen time (e.g. 60 s). The rotation never interrupts a slide that's already running.
 
 ### 5.2 Caption bubbles & speaker colours
 

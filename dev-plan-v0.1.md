@@ -84,23 +84,22 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | Phase | Status |
 | :--- | :--- |
 | 0 — Setup | Done except **Vercel** |
-| 1 — Data + realtime spine | Built + agent-verified (local). **User browser test pending** |
+| 1 — Data + realtime spine | Done — user-verified 2026-10-01 (two browsers) |
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
-| 3 — Schedule + live question + QR | Built + agent-verified. **User test pending** (phone QR scan) |
+| 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
-| 4 → 8 | Not started |
+| 4 — Audience → moderation → room feed | **Next** |
+| 5 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
 **1. Start the machine back up** (agent runs these, from **`C:\dev\Discussion-Garden`** — the old OneDrive copy is retired):
 - Check free space on C: first (`Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"`). Under ~5 GB free → Docker breaks; tell the user before doing anything else.
 - Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
 - `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again.
-- Sanity: `npm test` (94 pass) and `npm run db:check` (19/19).
+- Sanity: `npm test` (95 pass) and `npm run db:check` (19/19).
 
-**2. User tests** (agent can't do these):
-- **Phase 3 phone test:** on the laptop open `http://10.0.0.141:3000/captions` (LAN IP — re-check with `Get-NetIPAddress` if Wi-Fi changed) → scan the QR with a phone on the same Wi-Fi → `/audience` placeholder opens. If it can't connect: turn off the VPN (ProTUN) and allow Node through Windows Firewall.
-- **Phase 3 admin test:** `/admin` → add an item, Next question →, watch `/captions` update.
-- **Phase 1 test:** captions + live question in two different browsers (sign in to `/admin` in one, `/captions` in the other).
+**2. Testing notes:**
+- Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
 - Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
 
 **3. Then build:** **Phase 4** — `/audience` form + consent line → `/api/submissions` (length, profanity, per-device rate limit) → admin moderation queue → `/room-feed` board with highlighted pin.
@@ -156,7 +155,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-01 — **C: drive was 100% full (0 GB of 935 GB)** — this broke Docker (storage went read-only) and probably caused the "OneDrive" dev-server freezes too. Freed 8 GB (npm cache + old `node_modules`). Docker Desktop hung on restart → force-quit + `wsl --terminate docker-desktop`. The Supabase `storage-api` image was damaged by the full disk (crash loop, exit 139) → deleted the image so `db:start` re-pulled it. After that: `db:start` clean, `db:check` 19/19, 94 tests pass. Supabase's `vector` log collector restart-loops on this machine; harmless (we don't use it).
 
 ### In progress
-- User browser test of Phase 1 (two browsers, captions + live question) and Phase 3 phone QR scan.
+- Phase 4 build (starting 2026-10-01).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -185,6 +184,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **"Now" on the TVs = the item the host put live**, not the clock (sessions run late). With nothing live, the strip shows the day's first item as "UP NEXT". Times are entered and shown in **venue time** (`src/lib/schedule/time.ts`) regardless of the device's clock.
 - 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://10.0.0.141:3000`). `next.config.ts` `allowedDevOrigins` allows private LAN IPs in dev (otherwise Next blocks the page's scripts). Other devices can't load *data* locally — `.env.local` points at `127.0.0.1` Supabase — so multi-device tests need hosted Supabase/Vercel.
 - 2026-09-30 — **Never call `crypto.randomUUID()` directly** in browser code — it's missing on plain-http pages (LAN IP) and crashed `/captions`. Use `uniqueId()` from `src/lib/unique-id.ts`.
+- 2026-10-01 — **`/captions` gets three layouts: Garden · Both · Captions** (PRD v0.2.6, DESIGN_GUIDE §5.1a). Smooth slide (garden grows right / captions grow left); header, live question, Now · Next, QR fixed in all three. Host buttons on `/admin` + optional auto-rotate; TV rotates locally from `app_state` (`captions_layout`, `captions_rotate_seconds`) so it stays read-only. "Hide garden" forces Captions. **Should-have, built as Phase 6B after Hybrid AI**; until then `/captions` is always Both. Cut before Hybrid if behind.
 - 2026-10-01 — **`/admin` (the mic) only works on a secure page:** `http://localhost:3000` locally, `https://` on Vercel. On a plain-http LAN address (`http://10.0.0.x`) browsers hide the mic API; `LiveCaptioner` now shows a plain-English message instead of crashing. LAN addresses are only for phones/TVs.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
@@ -269,6 +269,13 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [ ] Draft queue UI: Approve / Edit / Reject / Approve all; `reinforce` bumps weight on approve.
 - **Test:** 5 minutes of sample talk → drafts arrive, no near-duplicates of existing nodes; force an API error → admin notice, captions unaffected; switch to Manual → timer stops.
 
+### Phase 6B — `/captions` layouts: Garden · Both · Captions — SHOULD (after Phase 6)
+- [ ] Migration: `app_state.captions_layout` (`garden`/`both`/`captions`, default `both`) + `captions_rotate_seconds` (null = off).
+- [ ] Pure helper `src/lib/captions/layout.ts`: `effectiveLayout(selected, gardenHidden)` and `nextRotation(current, elapsed, seconds)`, with unit tests.
+- [ ] `/captions`: middle band animates between layouts per DESIGN_GUIDE §5.1a (transform/clip-path slide; cross-fade under reduced motion); garden re-fits once after the slide.
+- [ ] `/admin`: Garden · Both · Captions buttons + auto-rotate on/off + seconds.
+- **Test:** each button → TV slides within ~1s, header/strip/QR never move; auto-rotate at 20s cycles all three and survives a TV reload; "Hide garden" → Captions; reduced-motion → fade only; full-screen captions stay readable from the back row.
+
 ### Phase 7 — Hardening + export + rehearsal — SHOULD (rehearsal itself is a must before Sat Oct 17)
 - [ ] Export: festival garden JSON + PNG (with each node's origin day); transcript text per day (host-only).
 - [ ] "Reset test data" admin action for **before** Saturday only (clears rehearsal nodes/submissions/transcripts) — guarded by a typed confirmation, and disabled once `day_1` has started.
@@ -282,8 +289,9 @@ No fixed calendar — we build in this order as time allows and see how far we g
 ### 5.9 Cut lines if behind
 1. Drop Phase 8 entirely.
 2. Drop Auto mode (keep Manual + Hybrid).
-3. Drop Hybrid (Manual only) — garden still works.
-4. Drop garden PNG export (keep JSON + transcript).
+3. Drop the `/captions` layout switcher (Phase 6B) — the TV stays on Both.
+4. Drop Hybrid (Manual only) — garden still works.
+5. Drop garden PNG export (keep JSON + transcript).
 **Never cut:** captions, live question, moderation.
 
 ---
