@@ -11,8 +11,7 @@ const select =
 export function FestivalPanel({ state, loaded }: { state: FestivalState; loaded: boolean }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { appState, sessions, schedule } = state;
-  const todaysItems = schedule.filter((item) => item.sessionId === appState.activeSessionId);
+  const { appState, sessions } = state;
 
   async function save(patch: Partial<AppState>) {
     setSaving(true);
@@ -32,8 +31,8 @@ export function FestivalPanel({ state, loaded }: { state: FestivalState; loaded:
 
   return (
     <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <h2 className="font-display text-3xl font-semibold">Festival day &amp; live question</h2>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <h2 className="font-display text-3xl font-semibold">Festival day</h2>
+      <div className="mt-4 max-w-md">
         <label className="flex flex-col gap-1">
           <span className="text-sm font-semibold">Festival day</span>
           <select
@@ -52,28 +51,8 @@ export function FestivalPanel({ state, loaded }: { state: FestivalState; loaded:
             ))}
           </select>
           <span className="text-sm opacity-70">
-            Files the transcript under this day. The garden is shared across both days.
-          </span>
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold">Live question on the TVs</span>
-          <select
-            className={select}
-            disabled={!loaded || saving || !appState.activeSessionId}
-            value={appState.activeScheduleItemId ?? ""}
-            onChange={(e) => void save({ activeScheduleItemId: e.target.value || null })}
-          >
-            <option value="">— none —</option>
-            {todaysItems.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
-                {item.question ? ` — ${item.question}` : ""}
-              </option>
-            ))}
-          </select>
-          <span className="text-sm opacity-70">
-            Editing the schedule itself comes in Phase 3.
+            Files the transcript under this day and picks which schedule the TVs show. The garden is
+            shared across both days.
           </span>
         </label>
       </div>

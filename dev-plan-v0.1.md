@@ -83,7 +83,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ### Current phase
 **Phase 0 — nearly done** (only Vercel left). **Phase 1 — built on local Supabase, awaiting host browser test.** **Phase 2 — speaker separation verified by user; captions now travel over Supabase Realtime** (any device / browser, not just same-browser tabs).
 
-**Next session:** (1) user tests Phase 1 in two different browsers (see §5 Phase 1 test), (2) Phase 3 — schedule editor + Now/Next strip + QR, (3) hosted Supabase is set up — remaining: Vercel + real hosts + private `watchTables` channel (see "Going to hosted Supabase" in §7).
+**Phase 3 — built and agent-verified** (phone QR scan pending).
+
+**Next session:** (1) user tests Phase 1 in two browsers + scans the QR with a phone, (2) Phase 4 — audience form → moderation → room feed, (3) hosted Supabase is set up — remaining: Vercel + real hosts + private `watchTables` channel (see "Going to hosted Supabase" in §7).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -124,8 +126,15 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **Dev server froze** (every page hung, then 404s after restart). Cause: corrupted `.next` cache — likely OneDrive syncing the folder while Next.js writes to it. Fix: stop the server, delete `.next`, `npm run dev`. If it recurs, move the repo out of OneDrive (e.g. `C:\dev\Discussion-Garden`). Also: caption sends before the channel is joined now use `httpSend()` explicitly (Supabase deprecates the silent REST fallback).
 - 2026-09-30 — **Hosted Supabase ready** (`mjjzfqyrskvhngwstjoz`): linked, schema + seed pushed via new `npm run db:push:hosted` (Management API over HTTPS — direct Postgres connection is blocked on the user's network), sign-ups disabled, `db:check` 19/19 against hosted. `.env.local` still points the app at **local** Supabase. Found while testing: hosted Realtime confirms postgres_changes a moment *after* `SUBSCRIBED`, so `watchTables` now also refetches on that `system` "ok" message, and `db:check` waits for it.
 
+- 2026-09-30 — **Phase 3 — schedule + live question + QR:**
+  - `src/lib/schedule/` — `time.ts` (`venueTime`, `toVenueIso`; venue zone `America/Toronto`, offset `-04:00`), `schedule.ts` (`dayItems`, `nowAndNext`, `moveItem`, `nextSortOrder`, `validateDraft`: title ≤ 80, question ≤ 200), `schedule-db.ts` (host-only writes; throw on error). `src/lib/qr/qr.ts` — `qrShape` (QR as one SVG path, coloured with tokens), `audienceUrl`, `displayUrl`.
+  - `/admin` → **Schedule & live question** panel (`ScheduleManager`); Festival day panel now only picks the day.
+  - `/captions` footer → `NowNextStrip` + `AudienceQr` (13vh, links to `<this screen's origin>/audience`).
+  - Verified by agent in the browser: add (14:05 round-trips), move, edit, Show on TVs, Next question, delete-while-live (TV drops the question, strip shows "UP NEXT"); TV updates without reload. 92 unit tests pass.
+- 2026-09-30 — Dev server froze **again** (2nd time today, same `.next` fix). Strong sign OneDrive syncing is the cause — see Blocked / open.
+
 ### In progress
-- User browser test of Phase 1 (two browsers, captions + live question).
+- User browser test of Phase 1 (two browsers, captions + live question) and Phase 3 phone QR scan.
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -151,6 +160,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **Local development uses the Supabase CLI + Docker** (`npm run db:start`). Hosted project only needed for real TVs / deploy.
 - 2026-09-30 — **Pause = close the Deepgram connection** (`CloseStream`), so paused time costs nothing; Resume opens a fresh connection. While Live, MediaRecorder keeps sending (silent) audio, so no separate KeepAlive message is needed.
 - 2026-09-30 — **Only one tab can control the mic** (Web Locks). A second `/admin` tab shows a warning instead of starting a second paid stream.
+- 2026-09-30 — **"Now" on the TVs = the item the host put live**, not the clock (sessions run late). With nothing live, the strip shows the day's first item as "UP NEXT". Times are entered and shown in **venue time** (`src/lib/schedule/time.ts`) regardless of the device's clock.
+- 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://192.168.x.x:3000`).
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open
@@ -163,6 +174,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Stale "Live" on TVs if the host tab crashes/closes while live (app_state keeps `live`). Consider a host heartbeat in Phase 7.
 - Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
+- **Repo lives in OneDrive** → `.next` cache corruption froze the dev server twice on 2026-09-30. Fix each time: stop server, delete `.next`, `npm run dev`. Lasting fix: move the repo to e.g. `C:\dev\Discussion-Garden` (needs the user's OK — Cursor workspace paths change).
 
 ---
 
@@ -208,9 +220,9 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** two or three people take turns reading a made-up script → each sentence is its own bubble; speaker changes switch colour most of the time; a speaker who says two sentences gets two same-coloured bubbles; toggle colours off → all bubbles cream, still one sentence each; reload `/captions` mid-talk → recent bubbles reappear.
 
 ### Phase 3 — Schedule + live question + QR — **MUST**
-- [ ] Admin schedule manager (add/edit/reorder, set active).
-- [ ] Live Question header on `/captions` and `/room-feed`; "Now · Next" schedule strip; QR to `/audience` (`qrcode` package, as in Camp-CLAI).
-- **Test:** set active item on admin → both TVs update; QR scanned from a phone opens `/audience`.
+- [x] Admin schedule manager (add/edit/delete/reorder, "Show on TVs", "Next question →", Clear; day tabs to prep the other day).
+- [x] Live Question header on `/captions` and `/room-feed`; "Now · Next" schedule strip; QR to `/audience` (`qrcode` package, as in Camp-CLAI).
+- **Test:** set active item on admin → both TVs update; QR scanned from a phone opens `/audience`. *(Agent-verified 2026-09-30 except the phone scan — user to confirm.)*
 
 ### Phase 4 — Audience → moderation → room feed — **MUST**
 - [ ] `/audience` form + confirmation + consent line.

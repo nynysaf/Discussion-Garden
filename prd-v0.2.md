@@ -8,6 +8,7 @@
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. "Now" = the item the host put live, not the clock (sessions run late).
 - **v0.2.4 (2026-09-30):** Host allowlist is a `hosts` table (checked by RLS), not an env var; public sign-up disabled. `transcript_segments` gains `bubble_id` (unique) so saves can be retried safely. Caption broadcast uses a **private** realtime channel — only hosts can send to the TVs.
 - **v0.2.3 (2026-09-30):** Voices are **never named** — each is labelled with a **garden-animal emoji** (🐸 🐦 🐞 🦋 🐝 🐛 …). Deepgram **Nova-3 (English)** on the **free $200 credit**, with `mip_opt_out=true` so Deepgram doesn't keep audio for model training. Cost section updated with published rates. GitHub repo is **public**.
 - **v0.2.2 (2026-09-30):** Deepgram confirmed for captions. Captions now **separate speakers** (Deepgram diarization) and show as a **sequence of speech bubbles** — one sentence per bubble, colour-coded per voice with a text label. Admin toggle to fall back to single-colour bubbles. No fixed build calendar (build order only).
@@ -116,7 +117,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Header:** "Discussion Garden" + the active **Live Question**.
 * **Live captions as speech bubbles:** each sentence appears as its own bubble, colour-coded by speaker and marked with that voice's animal emoji (🐸, 🐦, 🐞…); newest at the bottom, older bubbles scroll up. Words still being recognized appear lighter inside the newest bubble. See §4.1.
 * **Garden canvas:** published seeds, sprouts, themes, and vines, with gentle growth animation.
-* **Schedule sidebar:** today's items with times; current item highlighted.
+* **Now · Next strip:** the live item and the one after it, with venue times; "now" highlighted.
 * **QR code:** persistent corner code linking to `/audience`.
 * **Status:** subtle `[PAUSED]` / "Reconnecting…" indicator; never a blank screen.
 

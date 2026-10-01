@@ -4,6 +4,7 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { AudioPanel } from "./AudioPanel";
 import { FestivalPanel } from "./FestivalPanel";
+import { ScheduleManager } from "./ScheduleManager";
 
 export function AdminDashboard() {
   const festival = useFestivalState();
@@ -17,9 +18,9 @@ export function AdminDashboard() {
       )}
       <AudioPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
       <FestivalPanel state={festival.state} loaded={festival.loaded} />
+      <ScheduleManager state={festival.state} loaded={festival.loaded} />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <ComingSoon title="Schedule editor" phase="Phase 3" />
+      <div className="grid gap-6 md:grid-cols-3">
         <ComingSoon title="Audience moderation" phase="Phase 4" />
         <ComingSoon title="Garden editor" phase="Phase 5" />
         <ComingSoon title="AI drafts" phase="Phase 6" />

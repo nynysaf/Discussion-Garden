@@ -5,7 +5,9 @@ import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles } from "@/lib/captions/caption-feed";
 import { activeScheduleItem } from "@/lib/realtime/festival-state";
+import { AudienceQr } from "./AudienceQr";
 import { CaptionColumn } from "./CaptionColumn";
+import { NowNextStrip } from "./NowNextStrip";
 import { useCaptionFeed } from "./useCaptionFeed";
 
 const EMPTY_MESSAGE: Record<string, string> = {
@@ -56,14 +58,9 @@ export function CaptionsScreen() {
         />
       </section>
 
-      <footer className="col-span-2 flex items-center justify-between gap-6 rounded-2xl bg-white/60 px-[1.5vw] py-[1.2vh] text-[clamp(1rem,1.3vw,1.7rem)] shadow-poster">
-        <p>
-          <span className="font-semibold text-festival-forest">NOW</span>{" "}
-          <span className="opacity-60">Schedule coming soon</span>
-        </p>
-        <div className="flex h-[9vh] w-[9vh] items-center justify-center rounded-xl border-2 border-dashed border-festival-green text-sm opacity-60">
-          QR
-        </div>
+      <footer className="col-span-2 flex h-[13vh] items-center justify-between gap-6 rounded-2xl bg-white/60 px-[1.5vw] py-[1vh] text-[clamp(1rem,1.5vw,2rem)] shadow-poster">
+        <NowNextStrip state={festival.state} className="min-w-0 flex-1" />
+        <AudienceQr className="h-full shrink-0 text-[clamp(0.9rem,1.1vw,1.5rem)]" />
       </footer>
     </main>
   );
