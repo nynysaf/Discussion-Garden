@@ -33,7 +33,7 @@ Useful scripts:
 - Local Supabase Studio (database browser): http://127.0.0.1:54323
 
 Troubleshooting:
-- **Pages hang or 404 in dev** — stop `npm run dev`, delete the `.next` folder, start again (OneDrive can corrupt the cache).
+- **Pages hang or 404 in dev** — stop `npm run dev`, delete the `.next` folder, start again (a full disk or a cloud-synced folder like OneDrive can corrupt the cache — keep the repo outside OneDrive).
 - **Testing with a phone** — open `/captions` on the laptop via its LAN IP (e.g. `http://10.0.0.141:3000/captions`) so the QR points somewhere the phone can reach. A VPN or Windows Firewall can block this.
 
 ## Stack

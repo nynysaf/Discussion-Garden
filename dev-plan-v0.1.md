@@ -1,7 +1,7 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-09-30 evening (Phases 1–3 built; hosted Supabase set up; user testing next session)  
+**Last updated:** 2026-10-01 (repo moved to `C:\dev\Discussion-Garden`; full C: drive found + partly cleared; user testing of Phases 1/3 still pending)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
@@ -91,9 +91,10 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 4 → 8 | Not started |
 
 ### ▶ Resume here (next session)
-**1. Start the machine back up** (agent runs these):
+**1. Start the machine back up** (agent runs these, from **`C:\dev\Discussion-Garden`** — the old OneDrive copy is retired):
+- Check free space on C: first (`Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"`). Under ~5 GB free → Docker breaks; tell the user before doing anything else.
 - Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
-- `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again (OneDrive cache issue).
+- `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again.
 - Sanity: `npm test` (94 pass) and `npm run db:check` (19/19).
 
 **2. User tests** (agent can't do these):
@@ -104,7 +105,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 **3. Then build:** **Phase 4** — `/audience` form + consent line → `/api/submissions` (length, profanity, per-device rate limit) → admin moderation queue → `/room-feed` board with highlighted pin.
 
-**Open decisions for the user:** move the repo out of OneDrive? (stops dev-server freezes) · real festival schedule · Vercel deploy timing.
+**Open decisions for the user:** real festival schedule · Vercel deploy timing · what to clear on the nearly full C: drive (see Blocked / open).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -151,6 +152,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - `/captions` footer → `NowNextStrip` + `AudienceQr` (13vh, links to `<this screen's origin>/audience`).
   - Verified by agent in the browser: add (14:05 round-trips), move, edit, Show on TVs, Next question, delete-while-live (TV drops the question, strip shows "UP NEXT"); TV updates without reload. 92 unit tests pass.
 - 2026-09-30 — Dev server froze **again** (2nd time today, same `.next` fix). Strong sign OneDrive syncing is the cause — see Blocked / open.
+- 2026-10-01 — **Repo moved out of OneDrive to `C:\dev\Discussion-Garden`** (robocopy without `node_modules`/`.next`, then `npm ci`). Git history, remote, and `.env.local` intact; local Supabase data kept (Docker project id is fixed in `supabase/config.toml`, not taken from the folder name). Old copy at `C:\Users\narya\OneDrive\Documents\GitHub\Discussion Garden` is retired — delete it once the user is happy.
+- 2026-10-01 — **C: drive was 100% full (0 GB of 935 GB)** — this broke Docker (storage went read-only) and probably caused the "OneDrive" dev-server freezes too. Freed 8 GB (npm cache + old `node_modules`). Docker Desktop hung on restart → force-quit + `wsl --terminate docker-desktop`. The Supabase `storage-api` image was damaged by the full disk (crash loop, exit 139) → deleted the image so `db:start` re-pulled it. After that: `db:start` clean, `db:check` 19/19, 94 tests pass. Supabase's `vector` log collector restart-loops on this machine; harmless (we don't use it).
 
 ### In progress
 - User browser test of Phase 1 (two browsers, captions + live question) and Phase 3 phone QR scan.
@@ -194,7 +197,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Stale "Live" on TVs if the host tab crashes/closes while live (app_state keeps `live`). Consider a host heartbeat in Phase 7.
 - Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
-- **Repo lives in OneDrive** → `.next` cache corruption froze the dev server twice on 2026-09-30. Fix each time: stop server, delete `.next`, `npm run dev`. Lasting fix: move the repo to e.g. `C:\dev\Discussion-Garden` (needs the user's OK — Cursor workspace paths change).
+- ~~Repo lives in OneDrive~~ — **resolved 2026-10-01**, moved to `C:\dev\Discussion-Garden`.
+- **Laptop disk nearly full** (~8 GB free of 935 GB on 2026-10-01). Biggest folders: Music ~223 GB, Downloads ~83 GB, Videos ~30 GB, `AppData\Local\AINoteTaker` ~24 GB. User to decide what to clear. If this laptop runs `/admin` at the festival it needs real headroom.
 
 ---
 
