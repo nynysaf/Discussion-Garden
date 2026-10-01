@@ -169,7 +169,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 ### In progress
 - Phase 4: user test of 4B (admin panel); then 4C room feed.
-- Hosted Supabase: push the two 2026-10-01 migrations (`npm run db:push:hosted`).
+- Hosted Supabase is in sync: both 2026-10-01 migrations pushed (3/3 applied).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
