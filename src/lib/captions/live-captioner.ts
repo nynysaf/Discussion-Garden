@@ -18,6 +18,10 @@ export type LiveCaptionerOptions = {
   timesliceMs?: number;
 };
 
+/** Browsers hide the mic API on plain-http pages other than localhost. */
+export const INSECURE_PAGE_MIC_MESSAGE =
+  "This page can't use the microphone. Open /admin at http://localhost:3000 (or the https address) instead of a network address like http://10.0.0.x.";
+
 export function describeMicError(error: unknown): string {
   if (error instanceof DOMException) {
     if (error.name === "NotAllowedError") {
@@ -57,6 +61,11 @@ export class LiveCaptioner {
     if (this.wantLive) return;
     this.wantLive = true;
     this.options.onStatus("connecting");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      this.wantLive = false;
+      this.options.onStatus("error", INSECURE_PAGE_MIC_MESSAGE);
+      return;
+    }
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
         audio: micConstraints(deviceId, voiceCleanup),
