@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Connection } from "@/lib/captions/channel";
+import { uniqueId } from "@/lib/unique-id";
 
 /**
  * Calls `onChange` whenever a row in any of `tables` changes, and again every
@@ -12,7 +13,7 @@ export function watchTables(
   onConnection: (connection: Connection) => void,
 ): () => void {
   // Unique topic: supabase-js reuses channels with the same name.
-  let channel = supabase.channel(`watch-${tables.join("-")}-${crypto.randomUUID()}`);
+  let channel = supabase.channel(`watch-${tables.join("-")}-${uniqueId()}`);
   for (const table of tables) {
     channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, onChange);
   }

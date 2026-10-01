@@ -161,7 +161,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **Pause = close the Deepgram connection** (`CloseStream`), so paused time costs nothing; Resume opens a fresh connection. While Live, MediaRecorder keeps sending (silent) audio, so no separate KeepAlive message is needed.
 - 2026-09-30 — **Only one tab can control the mic** (Web Locks). A second `/admin` tab shows a warning instead of starting a second paid stream.
 - 2026-09-30 — **"Now" on the TVs = the item the host put live**, not the clock (sessions run late). With nothing live, the strip shows the day's first item as "UP NEXT". Times are entered and shown in **venue time** (`src/lib/schedule/time.ts`) regardless of the device's clock.
-- 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://192.168.x.x:3000`).
+- 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://10.0.0.141:3000`). `next.config.ts` `allowedDevOrigins` allows private LAN IPs in dev (otherwise Next blocks the page's scripts). Other devices can't load *data* locally — `.env.local` points at `127.0.0.1` Supabase — so multi-device tests need hosted Supabase/Vercel.
+- 2026-09-30 — **Never call `crypto.randomUUID()` directly** in browser code — it's missing on plain-http pages (LAN IP) and crashed `/captions`. Use `uniqueId()` from `src/lib/unique-id.ts`.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open

@@ -4,6 +4,7 @@ import { micConstraints } from "@/lib/audio/mic-constraints";
 import { pickRecorderMimeType } from "@/lib/audio/recorder-mime";
 import { buildListenUrl } from "@/lib/deepgram/listen-url";
 import { parseDeepgramMessage } from "@/lib/deepgram/parse-message";
+import { uniqueId } from "@/lib/unique-id";
 import { BubbleAccumulator, type BubbleUpdate } from "./bubble-accumulator";
 import type { AudioStatus } from "./types";
 
@@ -109,7 +110,7 @@ export class LiveCaptioner {
       ["bearer", token],
     );
     this.socket = socket;
-    this.accumulator = new BubbleAccumulator(crypto.randomUUID());
+    this.accumulator = new BubbleAccumulator(uniqueId());
 
     socket.onopen = () => {
       if (socket !== this.socket) return;
