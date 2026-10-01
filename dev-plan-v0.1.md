@@ -88,21 +88,25 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
-| 4 — Audience → room feed | 4A + 4B user-verified; **4C `/room-feed` board built + agent-verified (screenshot at 1080p); user test pending** |
-| 5 → 8 (incl. 6B layouts) | Not started |
+| 4 — Audience → room feed | Done — user-verified 2026-10-01 (no pre-approval; Hide/Pin/pause sharing) |
+| 5 — Garden | **5A canvas built + agent-verified (15 and 150 nodes at 1080p); user test pending.** 5B admin editor next |
+| 6 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
 **1. Start the machine back up** (agent runs these, from **`C:\dev\Discussion-Garden`** — the old OneDrive copy is retired):
 - Check free space on C: first (`Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"`). Under ~5 GB free → Docker breaks; tell the user before doing anything else.
 - Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
 - `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again.
-- Sanity: `npm test` (95 pass) and `npm run db:check` (19/19).
+- Sanity: `npm test` (139 pass) and `npm run db:check` (19/19).
 
 **2. Testing notes:**
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
 - Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
 
-**3. Then build:** **Phase 5** — garden canvas + Manual editor (copy/adapt Camp-CLAI layout, curves, sprites per §3).
+- Demo garden (made-up labels, **local DB only** — the script refuses any non-127.0.0.1 URL): `npm run garden:demo -- 15`, `-- 150`, or `-- clear`. Demo nodes are tagged `description = '[demo]'`; clear only removes those.
+- Headless screenshot check: `msedge --headless=new --hide-scrollbars --force-prefers-reduced-motion --window-size=1920,1080 --virtual-time-budget=15000 --screenshot=...` (reduced motion, or the 600 ms grow-in gets caught half-faded). Headless Edge leaves an empty strip at the right/bottom of the garden box (it measures before its final resize) — check in a real browser before "fixing" it.
+
+**3. Then build:** **Phase 5B** — admin garden editor (plant seed, create sprout, bloom theme, draw vine, rename, delete, merge, "Hide garden on TVs"). Manual nodes are inserted `published` with `origin_session_id` = active day.
 
 **Open decisions for the user:** real festival schedule · Vercel deploy timing · what to clear on the nearly full C: drive (see Blocked / open).
 
@@ -169,9 +173,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 - 2026-10-01 — **Phase 4C — `/room-feed` board** (DESIGN_GUIDE §5.3): `RoomFeedScreen` uses `useFestivalState` + `useSubmissions` + `roomFeed()`; pinned "Being discussed" card; two-column cards newest first with `.fade-bottom`; "Sharing is paused" pill; Reconnecting pill. Auto-scroll = pure `stepAutoScroll` (`src/lib/submissions/auto-scroll.ts`, hold top 10 s → 24 px/s → hold bottom 6 s → back to top) driven by `useAutoScroll`, which writes `transform` directly (no React re-render per frame) and resets on a new message; off under reduced motion. Read-only (no writes). 121 unit tests pass. Screenshot check via headless Edge at 1920×1080.
 
+- 2026-10-01 — **Phase 5A — garden canvas on `/captions`** (DESIGN_GUIDE §6). 115 Camp-CLAI Plant sprites copied to `public/garden-sprites/{seed,sprout,theme}/` (shrunk to 160 px; user confirmed we own them). Pure helpers in `src/lib/garden/`: `layout.ts` (seeded `d3-force` — every TV computes the identical layout; tier bands theme 0.2 / sprout 0.5 / seed 0.8; label-aware collision so sprite+label boxes never overlap; keeps previous positions as canvas fractions so the garden barely moves when it grows), `labels.ts` (≤ 6 words, wrapped to two lines; in a crowded garden (≥ 60 nodes) only the 12 newest seeds keep labels), `sprites.ts` (stable sprite per node id), `curves.ts` (vine paths). `GardenCanvas` lays out once per change, glides nodes to new spots (CSS transitions), grows in new nodes, draws vines on; sprite errors fall back to tier-coloured circles; honours `garden_hidden`. `useLiveData` hook now shared by `useFestivalState`, `useSubmissions`, `useGarden`. Migration `20261001000003_garden_status_signal.sql`: publishing/unpublishing a node or vine touches `app_state`, because Realtime hides RLS-invisible changes from anonymous TVs (same trick as audience Hide). Pushed to hosted (4/4). 139 unit tests pass; screenshots at 1920×1080 with 15 and 150 demo nodes are readable with no overlapping labels.
+
 ### In progress
-- Phase 4: user test of 4C (room feed: new message appears, Hide removes it, Pin, auto-scroll).
-- Hosted Supabase is in sync: both 2026-10-01 migrations pushed (3/3 applied).
+- Phase 5A: user test of the garden canvas on `/captions` (`npm run garden:demo -- 15` then `-- 150`).
+- Hosted Supabase is in sync: all 2026-10-01 migrations pushed (4/4 applied).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -204,6 +210,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-01 — **No host pre-approval for audience messages** (user decision: "if it's being abused, we'll turn it off"). Messages go to `/room-feed` immediately after the server checks. Host tools: **Sharing open/paused switch**, **Hide/Show** per message, **Pin** one as "being discussed" (`app_state.highlighted_submission_id`; status `highlighted` is unused). Replaces the Approve/Dismiss queue.
 - 2026-10-01 — **`/captions` gets three layouts: Garden · Both · Captions** (PRD v0.2.6, DESIGN_GUIDE §5.1a). Smooth slide (garden grows right / captions grow left); header, live question, Now · Next, QR fixed in all three. Host buttons on `/admin` + optional auto-rotate; TV rotates locally from `app_state` (`captions_layout`, `captions_rotate_seconds`) so it stays read-only. "Hide garden" forces Captions. **Should-have, built as Phase 6B after Hybrid AI**; until then `/captions` is always Both. Cut before Hybrid if behind.
 - 2026-10-01 — **`/admin` (the mic) only works on a secure page:** `http://localhost:3000` locally, `https://` on Vercel. On a plain-http LAN address (`http://10.0.0.x`) browsers hide the mic API; `LiveCaptioner` now shows a plain-English message instead of crashing. LAN addresses are only for phones/TVs.
+- 2026-10-01 — **Garden layout is computed on each screen, deterministically** (seeded randomness, no shared positions table). Same nodes + same canvas size → same picture on every TV. Node positions are not stored in the DB.
+- 2026-10-01 — **Realtime + RLS gotcha:** when a row becomes invisible to a viewer (message hidden, node unpublished), that viewer gets **no** event. Fix pattern: a `security definer` trigger touches `app_state` (`where id = true` — Supabase rejects UPDATE without WHERE), which every screen watches, and screens re-fetch.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open
@@ -275,10 +283,10 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** submit from 2 phones → appear in admin and on the room feed within ~1s; Hide → gone from the room feed within seconds; Pin → pinned; pause sharing → phone shows "paused"; spam 10 rapid submissions → rate-limited with friendly message.
 
 ### Phase 5 — Garden canvas + Manual editor — **MUST**
-- [ ] Copy + adapt layout/curves/sprites (§3); pure helpers in `src/lib/garden/` with unit tests if a runner exists.
-- [ ] `GardenCanvas` renders published nodes/vines with tier bands, sprites, labels, growth animation; freezes after settle.
-- [ ] Admin editor: plant seed, create sprout, bloom theme, draw vine, rename, delete, merge; "Hide garden on TVs".
-- [ ] Verify Camp-CLAI Plant sprites on cream; swap or fall back to circles if they clash.
+- [x] Copy + adapt layout/curves/sprites (§3); pure helpers in `src/lib/garden/` with unit tests if a runner exists. *(5A, 2026-10-01)*
+- [x] `GardenCanvas` renders published nodes/vines with tier bands, sprites, labels, growth animation; freezes after settle. *(5A, 2026-10-01 — user test pending)*
+- [ ] Admin editor: plant seed, create sprout, bloom theme, draw vine, rename, delete, merge; "Hide garden on TVs". *(5B)*
+- [x] Verify Camp-CLAI Plant sprites on cream; swap or fall back to circles if they clash. *(look fine on cream; circle fallback built in)*
 - **Test:** plant 15 nodes across tiers → TV shows seeds low, themes high, no overlaps, no continuous jitter; reduced-motion shows no pulses. Switch active day `day_1` → `day_2` → garden is unchanged and new nodes record `origin_session_id = day_2`. Load ~150 fake nodes (a full two-day garden) → still readable on a 1080p TV, no slowdown.
 
 ### Phase 6 — Hybrid AI synthesis — SHOULD

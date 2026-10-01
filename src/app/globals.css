@@ -73,8 +73,64 @@ body {
   }
 }
 
+/* Garden (DESIGN_GUIDE §6.4): nodes glide to new spots, grow in, vines draw on. */
+.garden-node {
+  transition: transform 1.2s var(--ease-garden);
+}
+
+.garden-grow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: garden-grow 600ms var(--ease-garden) both;
+}
+
+.vine-draw {
+  stroke-dasharray: 1;
+  animation: vine-draw 500ms var(--ease-garden) both;
+}
+
+.vine-fade {
+  animation: vine-fade 500ms var(--ease-garden) both;
+}
+
+@keyframes garden-grow {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes vine-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes vine-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .bubble-enter {
+  .bubble-enter,
+  .garden-grow,
+  .vine-draw,
+  .vine-fade {
     animation: none;
+  }
+
+  .garden-node {
+    transition: none;
   }
 }

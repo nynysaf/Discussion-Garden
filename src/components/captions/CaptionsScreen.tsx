@@ -1,6 +1,8 @@
 "use client";
 
+import { GardenCanvas } from "@/components/garden/GardenCanvas";
 import { LiveQuestion } from "@/components/realtime/LiveQuestion";
+import { useGarden } from "@/components/realtime/useGarden";
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles } from "@/lib/captions/caption-feed";
@@ -18,9 +20,13 @@ const EMPTY_MESSAGE: Record<string, string> = {
 /** Downstairs TV — layout per DESIGN_GUIDE.md §5.1. Read-only. */
 export function CaptionsScreen() {
   const festival = useFestivalState();
+  const garden = useGarden();
   const { feed, connection } = useCaptionFeed(festival.state.appState, festival.loaded);
   const { audioStatus, speakerColoursOn } = feed.status;
-  const offline = connection === "reconnecting" || festival.connection === "reconnecting";
+  const offline =
+    connection === "reconnecting" ||
+    festival.connection === "reconnecting" ||
+    garden.connection === "reconnecting";
   const pill = offline ? "reconnecting" : audioStatus;
 
   return (
@@ -42,11 +48,13 @@ export function CaptionsScreen() {
 
       <section
         aria-label="Garden"
-        className="flex items-center justify-center rounded-[2rem] border-2 border-dashed border-festival-green"
+        className="min-h-0 overflow-hidden rounded-[2rem] border-2 border-festival-green bg-festival-cream"
       >
-        <p className="font-display text-[clamp(1.2rem,2vw,2.5rem)] italic opacity-50">
-          The garden will grow here.
-        </p>
+        <GardenCanvas
+          garden={garden.garden}
+          hidden={festival.state.appState.gardenHidden}
+          className="h-full w-full"
+        />
       </section>
 
       <section aria-label="Live captions" className="flex min-h-0 flex-col">

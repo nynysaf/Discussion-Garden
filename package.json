@@ -15,11 +15,13 @@
     "db:reset": "supabase db reset",
     "db:push:hosted": "node --env-file=.env.local scripts/push-hosted.mjs",
     "host:add": "node --env-file=.env.local scripts/add-host.mjs",
-    "db:check": "node --env-file=.env.local scripts/check-access.mjs"
+    "db:check": "node --env-file=.env.local scripts/check-access.mjs",
+    "garden:demo": "node --env-file=.env.local scripts/garden-demo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
+    "d3-force": "^3.0.0",
     "next": "16.3.8",
     "obscenity": "^0.4.6",
     "qrcode": "^1.5.4",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/d3-force": "^3.0.10",
     "@types/node": "^22.20.4",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",

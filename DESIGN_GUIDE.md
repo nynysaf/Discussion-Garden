@@ -3,7 +3,7 @@
 **Version:** 0.2.2 · 2026-09-30  
 **Applies to:** all four views (`/admin`, `/captions`, `/audience`, `/room-feed`).  
 **Companion:** `prd-v0.2.md` · `dev-plan-v0.1.md`  
-**Changelog:** v0.2.3 `/captions` has three layouts — Garden / Both / Captions — with a slide transition (§5.1a). v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
+**Changelog:** v0.2.4 garden labels wrap to two lines and never overlap (§6). v0.2.3 `/captions` has three layouts — Garden / Both / Captions — with a slide transition (§5.1a). v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
 
 > Tell your AI coding agent: **"Use these tokens as the single source of truth. Never hard-code colors or fonts; always reference the token."**
 
@@ -212,7 +212,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 
 - Each node keeps the **same sprite** every render (stable hash of its id — copy `stableIndex` from Camp-CLAI).
 - If a sprite is missing or doesn't suit the poster style, fall back to a **colored circle** in the tier color with a thin ink outline.
-- **Labels:** `font-caption`, semibold, ink text with a cream halo (`paint-order: stroke; stroke: #FAF8F5; stroke-width: 4px`) so they read over vines. Labels ≤ 6 words; truncate with ellipsis.
+- **Labels:** `font-caption`, semibold, ink text with a cream halo (`paint-order: stroke; stroke: #FAF8F5; stroke-width: 4px`) so they read over vines. Labels ≤ 6 words; truncate with ellipsis; wrap to at most two balanced lines (~18 characters each) so they stay narrow. The layout reserves space for each sprite + label so labels never overlap.
 - **Density over two days:** the garden keeps growing through Sunday (plan for ~150 nodes). When crowded, always label themes and sprouts; show seed labels only for new/recently reinforced seeds so the TV stays readable.
 - **Verify in Phase 5:** do the Camp-CLAI Plant sprites look right on cream next to the poster art? If not, swap the pack — the code doesn't change.
 
