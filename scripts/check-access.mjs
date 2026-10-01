@@ -94,6 +94,47 @@ try {
   check("is_host() is true for a host", isHost.data === true, isHost.error?.message);
   const guestIsHost = await guest.rpc("is_host");
   check("is_host() is false for a non-host", guestIsHost.data === false, guestIsHost.error?.message);
+
+  // ── Garden merge (made-up nodes, tagged for cleanup) ──
+  const tag = `check-${suffix}`;
+  const { data: gn, error: gnError } = await admin
+    .from("garden_nodes")
+    .insert(
+      [["keep", "sprout", 2], ["drop", "sprout", 3], ["theme", "theme", 1], ["seed", "seed", 1], ["other", "seed", 1]].map(
+        ([label, tier, weight]) => ({ label: `${tag} ${label}`, tier, weight, status: "published", description: tag }),
+      ),
+    )
+    .select("id, label");
+  if (gnError) throw gnError;
+  const id = Object.fromEntries(gn.map((n) => [n.label.split(" ")[1], n.id]));
+  const vine = (s, t, kind) => ({ source_node_id: id[s], target_node_id: id[t], kind, status: "published" });
+  await admin.from("garden_vines").insert([
+    vine("drop", "theme", "grows_into"), // duplicate of keep→theme once merged → dropped
+    vine("keep", "theme", "grows_into"),
+    vine("seed", "drop", "grows_into"), // moves to seed→keep
+    vine("drop", "keep", "relates_to"), // would loop → dropped
+    vine("other", "keep", "relates_to"),
+    vine("drop", "other", "relates_to"), // duplicate (reverse direction) → dropped
+  ]);
+  const anonMerge = await anon.rpc("merge_garden_nodes", { keep_id: id.keep, drop_id: id.drop });
+  check("visitor cannot merge garden nodes", Boolean(anonMerge.error));
+  const guestMerge = await guest.rpc("merge_garden_nodes", { keep_id: id.keep, drop_id: id.drop });
+  check("non-host cannot merge garden nodes", Boolean(guestMerge.error));
+  const hostMerge = await host.rpc("merge_garden_nodes", { keep_id: id.keep, drop_id: id.drop });
+  check("host can merge garden nodes", !hostMerge.error, hostMerge.error?.message);
+  const { data: after } = await admin.from("garden_nodes").select("id, weight").eq("description", tag);
+  const { data: keptVines } = await admin
+    .from("garden_vines")
+    .select("source_node_id, target_node_id")
+    .or(`source_node_id.eq.${id.keep},target_node_id.eq.${id.keep}`);
+  const others = (keptVines ?? []).map((v) => (v.source_node_id === id.keep ? v.target_node_id : v.source_node_id)).sort();
+  check(
+    "merge moves vines (no loops/duplicates), adds sizes, removes the duplicate",
+    after.length === 4 &&
+      after.find((n) => n.id === id.keep)?.weight === 5 &&
+      JSON.stringify(others) === JSON.stringify([id.theme, id.seed, id.other].sort()),
+    JSON.stringify({ nodes: after.length, others: others.length }),
+  );
   const hostTranscript = await host.from("transcript_segments").select("id").eq("bubble_id", `check-${suffix}`);
   check("host can read transcripts", !hostTranscript.error && hostTranscript.data.length === 1, hostTranscript.error?.message);
   const hostInsert = await host.from("transcript_segments").upsert(
@@ -162,6 +203,7 @@ try {
     await admin.from("app_state").update(rest).eq("id", true);
   }
   await admin.from("transcript_segments").delete().eq("bubble_id", `check-${suffix}`);
+  await admin.from("garden_nodes").delete().eq("description", `check-${suffix}`);
   await admin.from("hosts").delete().eq("email", hostEmail);
   for (const id of created) await admin.auth.admin.deleteUser(id);
 }

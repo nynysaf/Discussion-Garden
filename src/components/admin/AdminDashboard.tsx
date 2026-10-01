@@ -5,6 +5,7 @@ import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { AudiencePanel } from "./AudiencePanel";
 import { AudioPanel } from "./AudioPanel";
 import { FestivalPanel } from "./FestivalPanel";
+import { GardenPanel } from "./garden/GardenPanel";
 import { ScheduleManager } from "./ScheduleManager";
 
 export function AdminDashboard() {
@@ -21,11 +22,8 @@ export function AdminDashboard() {
       <FestivalPanel state={festival.state} loaded={festival.loaded} />
       <ScheduleManager state={festival.state} loaded={festival.loaded} />
       <AudiencePanel appState={festival.state.appState} stateLoaded={festival.loaded} />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <ComingSoon title="Garden editor" phase="Phase 5" />
-        <ComingSoon title="AI drafts" phase="Phase 6" />
-      </div>
+      <GardenPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
+      <ComingSoon title="AI drafts" phase="Phase 6" />
     </div>
   );
 }
