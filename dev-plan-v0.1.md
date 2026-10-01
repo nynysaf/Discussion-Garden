@@ -88,7 +88,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
-| 4 — Audience → moderation → room feed | **Next** |
+| 4 — Audience → moderation → room feed | **In progress** — 4A (form + `/api/submissions`) built + agent-verified; user phone test pending. Next: 4B moderation queue, 4C room feed |
 | 5 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
@@ -154,8 +154,14 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-01 — **Repo moved out of OneDrive to `C:\dev\Discussion-Garden`** (robocopy without `node_modules`/`.next`, then `npm ci`). Git history, remote, and `.env.local` intact; local Supabase data kept (Docker project id is fixed in `supabase/config.toml`, not taken from the folder name). Old copy at `C:\Users\narya\OneDrive\Documents\GitHub\Discussion Garden` is retired — delete it once the user is happy.
 - 2026-10-01 — **C: drive was 100% full (0 GB of 935 GB)** — this broke Docker (storage went read-only) and probably caused the "OneDrive" dev-server freezes too. Freed 8 GB (npm cache + old `node_modules`). Docker Desktop hung on restart → force-quit + `wsl --terminate docker-desktop`. The Supabase `storage-api` image was damaged by the full disk (crash loop, exit 139) → deleted the image so `db:start` re-pulled it. After that: `db:start` clean, `db:check` 19/19, 94 tests pass. Supabase's `vector` log collector restart-loops on this machine; harmless (we don't use it).
 
+- 2026-10-01 — **Phase 4A — audience form + `/api/submissions`:**
+  - `src/lib/submissions/` — `limits.ts` (body ≤ 500, name ≤ 40; matches the DB checks), `validate.ts` (`cleanText`, `validateSubmission`), `profanity.ts` (`obscenity` package, English dataset), `rate-limit.ts` (`checkRateLimit`, `DEVICE_RULES` 3/min + 12/hour, `FLOOD_RULES` 60/min across everyone). `src/lib/supabase/admin.ts` — server-only secret-key client.
+  - `/api/submissions` — validate → anonymous `dg_device` cookie (httpOnly, 30 days; stored only as a SHA-256 `device_hash`) → rate limits counted from the DB → insert as `pending` with the active day. Friendly errors: 400 empty/too long, 422 profanity, 429 + `Retry-After`, 500.
+  - `/audience` — `AudienceForm` (textarea with characters-left count, optional name/tag, consent line, "Sent — thank you" + sprout + "Send another").
+  - Agent-verified against local Supabase: good → 201 pending `day_1`; profanity → 422; empty → 400; 4th rapid send → 429; public sees 0 pending rows. 110 unit tests pass.
+
 ### In progress
-- Phase 4 build (starting 2026-10-01).
+- Phase 4: user phone test of 4A; then 4B moderation queue and 4C room feed.
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -184,6 +190,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **"Now" on the TVs = the item the host put live**, not the clock (sessions run late). With nothing live, the strip shows the day's first item as "UP NEXT". Times are entered and shown in **venue time** (`src/lib/schedule/time.ts`) regardless of the device's clock.
 - 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://10.0.0.141:3000`). `next.config.ts` `allowedDevOrigins` allows private LAN IPs in dev (otherwise Next blocks the page's scripts). Other devices can't load *data* locally — `.env.local` points at `127.0.0.1` Supabase — so multi-device tests need hosted Supabase/Vercel.
 - 2026-09-30 — **Never call `crypto.randomUUID()` directly** in browser code — it's missing on plain-http pages (LAN IP) and crashed `/captions`. Use `uniqueId()` from `src/lib/unique-id.ts`.
+- 2026-10-01 — **Audience rate limit = anonymous per-phone cookie, counted in the DB**, not by IP (venue Wi-Fi puts every phone behind one IP) and not in server memory (Vercel runs several instances). Plus a room-wide flood cap so a cookie-clearing script can't bury the host queue. Profanity is **rejected with a "please rephrase"** before reaching the host; hosts still moderate everything.
 - 2026-10-01 — **`/captions` gets three layouts: Garden · Both · Captions** (PRD v0.2.6, DESIGN_GUIDE §5.1a). Smooth slide (garden grows right / captions grow left); header, live question, Now · Next, QR fixed in all three. Host buttons on `/admin` + optional auto-rotate; TV rotates locally from `app_state` (`captions_layout`, `captions_rotate_seconds`) so it stays read-only. "Hide garden" forces Captions. **Should-have, built as Phase 6B after Hybrid AI**; until then `/captions` is always Both. Cut before Hybrid if behind.
 - 2026-10-01 — **`/admin` (the mic) only works on a secure page:** `http://localhost:3000` locally, `https://` on Vercel. On a plain-http LAN address (`http://10.0.0.x`) browsers hide the mic API; `LiveCaptioner` now shows a plain-English message instead of crashing. LAN addresses are only for phones/TVs.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
@@ -250,8 +257,8 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** set active item on admin → both TVs update; QR scanned from a phone opens `/audience`. *(Agent-verified 2026-09-30 except the phone scan — user to confirm.)*
 
 ### Phase 4 — Audience → moderation → room feed — **MUST**
-- [ ] `/audience` form + confirmation + consent line.
-- [ ] `/api/submissions`: length limit, profanity check, per-device rate limit, insert.
+- [x] `/audience` form + confirmation + consent line. *(4A, 2026-10-01)*
+- [x] `/api/submissions`: length limit, profanity check, per-device rate limit, insert. *(4A, 2026-10-01)*
 - [ ] Admin moderation queue: Approve / Highlight / Dismiss (realtime).
 - [ ] `/room-feed` board + highlighted pin.
 - **Test:** submit from 2 phones → appear in admin within ~1s; approve → room feed shows it; highlight → pinned; spam 10 rapid submissions → rate-limited with friendly message.
