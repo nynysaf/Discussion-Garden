@@ -1,7 +1,7 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-09-30 (Phase 1 data + realtime spine on local Supabase; captions now travel via Supabase Realtime)  
+**Last updated:** 2026-09-30 evening (Phases 1–3 built; hosted Supabase set up; user testing next session)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
@@ -14,7 +14,7 @@
 
 ### Colleague / new-agent checklist
 1. Pull latest `main`. Never commit `.env.local` or real keys (see `.cursorrules` → Secrets).
-2. Copy `.env.example` → `.env.local`; fill values from the team's password manager / Vercel.
+2. Copy `.env.example` → `.env.local`; fill values from the team's password manager / Vercel. `.env.local` points the app at **local** Supabase; `SUPABASE_ACCESS_TOKEN` + `SUPABASE_DB_PASSWORD` there are only for pushing to the hosted project (§7).
 3. `npm install` → start Docker Desktop → `npm run db:start` (local Supabase; put its URL + publishable + secret keys in `.env.local`) → `npm run host:add -- email "password"` → `npm run dev` → open http://localhost:3000.
 4. Read **§4 Progress & Decisions** before writing code.
 5. Build **one module at a time** from §5; verify with its test checklist; update §4; commit to `main`.
@@ -43,10 +43,10 @@
 | Repo | Standalone, **public** GitHub repo (confirmed 2026-09-30) deployed on Vercel Hobby | Simple deploys; forces good secret hygiene |
 | Deepgram plan | **Free $200 credit** (pay-as-you-go tier, no card). Nova-3 English streaming + diarization ≈ $0.41–0.58 per live hour | Whole festival + testing ≈ $15–20 of credit |
 | Live STT | Browser → Deepgram WebSocket, using a short-lived token from `/api/deepgram-token` | Vercel functions can't hold long audio sockets; lowest latency; key stays server-side |
-| Caption fan-out | Supabase Realtime **broadcast** channel (`captions:{sessionId}`) for interim + final text; only **final** segments saved to `transcript_segments` | Interim words change many times per second — too chatty for DB writes |
+| Caption fan-out | Supabase Realtime **private broadcast** channel `captions` (hosts send, everyone listens) + `captions-hello` for catch-up; only **finished** bubbles saved to `transcript_segments` | Interim words change many times per second — too chatty for DB writes |
 | Garden/feed/state sync | Supabase Realtime **Postgres changes** on `garden_nodes`, `garden_vines`, `audience_submissions`, `app_state` | TVs update automatically when rows change; on reconnect, re-fetch |
 | AI scheduler | Admin tab calls `/api/synthesis` every ~35s while Live and mode ≠ Manual | No background job service needed for a 2-day event |
-| Host auth | Supabase Auth email/password; host emails in an allowlist (env or `hosts` table) | Reuses Camp-CLAI patterns; displays + audience need no login |
+| Host auth | Supabase Auth email/password; allowlist in the `public.hosts` table (checked by RLS via `is_host()`); sign-ups disabled | Reuses Camp-CLAI patterns; displays + audience need no login |
 | Audience writes | `/api/submissions` server route: length check, profanity check, per-device rate limit, then insert with the secret key | Anonymous inserts shouldn't hit the DB directly |
 | Garden layout | `d3-force` + `forceY` per tier (seeds low, themes high) + collide; freeze after settle | Garden-bed shape, calm on TVs |
 | Garden scope | One festival-wide garden; `sessions` = days (`day_1`, `day_2`) for transcripts/exports only | Sunday keeps growing Saturday's garden |
@@ -81,11 +81,30 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ## 4. Progress & Decisions (living log)
 
 ### Current phase
-**Phase 0 — nearly done** (only Vercel left). **Phase 1 — built on local Supabase, awaiting host browser test.** **Phase 2 — speaker separation verified by user; captions now travel over Supabase Realtime** (any device / browser, not just same-browser tabs).
+| Phase | Status |
+| :--- | :--- |
+| 0 — Setup | Done except **Vercel** |
+| 1 — Data + realtime spine | Built + agent-verified (local). **User browser test pending** |
+| 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
+| 3 — Schedule + live question + QR | Built + agent-verified. **User test pending** (phone QR scan) |
+| Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
+| 4 → 8 | Not started |
 
-**Phase 3 — built and agent-verified** (phone QR scan pending).
+### ▶ Resume here (next session)
+**1. Start the machine back up** (agent runs these):
+- Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
+- `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again (OneDrive cache issue).
+- Sanity: `npm test` (94 pass) and `npm run db:check` (19/19).
 
-**Next session:** (1) user tests Phase 1 in two browsers + scans the QR with a phone, (2) Phase 4 — audience form → moderation → room feed, (3) hosted Supabase is set up — remaining: Vercel + real hosts + private `watchTables` channel (see "Going to hosted Supabase" in §7).
+**2. User tests** (agent can't do these):
+- **Phase 3 phone test:** on the laptop open `http://10.0.0.141:3000/captions` (LAN IP — re-check with `Get-NetIPAddress` if Wi-Fi changed) → scan the QR with a phone on the same Wi-Fi → `/audience` placeholder opens. If it can't connect: turn off the VPN (ProTUN) and allow Node through Windows Firewall.
+- **Phase 3 admin test:** `/admin` → add an item, Next question →, watch `/captions` update.
+- **Phase 1 test:** captions + live question in two different browsers (sign in to `/admin` in one, `/captions` in the other).
+- Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
+
+**3. Then build:** **Phase 4** — `/audience` form + consent line → `/api/submissions` (length, profanity, per-device rate limit) → admin moderation queue → `/room-feed` board with highlighted pin.
+
+**Open decisions for the user:** move the repo out of OneDrive? (stops dev-server freezes) · real festival schedule · Vercel deploy timing.
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
