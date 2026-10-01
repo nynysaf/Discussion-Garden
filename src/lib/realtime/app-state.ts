@@ -10,6 +10,7 @@ export type AppState = {
   gardenHidden: boolean;
   speakerColoursOn: boolean;
   highlightedSubmissionId: string | null;
+  submissionsOpen: boolean;
 };
 
 export type AppStateRow = {
@@ -20,10 +21,11 @@ export type AppStateRow = {
   garden_hidden: boolean;
   speaker_colours_on: boolean;
   highlighted_submission_id: string | null;
+  submissions_open: boolean;
 };
 
 export const APP_STATE_COLUMNS =
-  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id";
+  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open";
 
 const AUDIO_STATUSES: AudioStatus[] = [
   "idle",
@@ -43,6 +45,7 @@ export const DEFAULT_APP_STATE: AppState = {
   gardenHidden: false,
   speakerColoursOn: true,
   highlightedSubmissionId: null,
+  submissionsOpen: true,
 };
 
 /** Database row → app shape, with safe defaults for anything unexpected. */
@@ -60,6 +63,7 @@ export function toAppState(row: Partial<AppStateRow> | null | undefined): AppSta
     gardenHidden: row.garden_hidden === true,
     speakerColoursOn: row.speaker_colours_on !== false,
     highlightedSubmissionId: row.highlighted_submission_id ?? null,
+    submissionsOpen: row.submissions_open !== false,
   };
 }
 
@@ -71,6 +75,7 @@ const COLUMN_FOR: Record<keyof AppState, keyof AppStateRow> = {
   gardenHidden: "garden_hidden",
   speakerColoursOn: "speaker_colours_on",
   highlightedSubmissionId: "highlighted_submission_id",
+  submissionsOpen: "submissions_open",
 };
 
 /** App-shaped change → database columns (only the keys provided). */

@@ -1,6 +1,6 @@
 # Discussion Garden
 
-Live captions, schedule prompts, a moderated audience feed, and a growing "garden" of ideas for the *We Create Our Futures* festival (garden live Oct 17 & 18, 2026).
+Live captions, schedule prompts, a live audience feed, and a growing "garden" of ideas for the *We Create Our Futures* festival (garden live Oct 17 & 18, 2026).
 
 ## Docs
 - Product: `prd-v0.2.md`

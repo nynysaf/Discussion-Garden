@@ -1,17 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { BODY_MAX, NAME_TAG_MAX } from "@/lib/submissions/limits";
+import { BODY_MAX, NAME_TAG_MAX, SUBMISSIONS_CLOSED_MESSAGE } from "@/lib/submissions/limits";
 
 const field =
   "w-full rounded-xl border border-festival-ink/25 bg-festival-cream px-3 py-3 text-base";
 
-type Phase = "editing" | "sending" | "sent";
+type Phase = "editing" | "sending" | "sent" | "closed";
 
-export function AudienceForm() {
+export function AudienceForm({ initiallyOpen }: { initiallyOpen: boolean }) {
   const [body, setBody] = useState("");
   const [nameTag, setNameTag] = useState("");
-  const [phase, setPhase] = useState<Phase>("editing");
+  const [phase, setPhase] = useState<Phase>(initiallyOpen ? "editing" : "closed");
   const [error, setError] = useState<string | null>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
@@ -34,7 +34,13 @@ export function AudienceForm() {
         setPhase("sent");
         return;
       }
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      const data = (await res.json().catch(() => null)) as
+        | { error?: string; closed?: boolean }
+        | null;
+      if (data?.closed) {
+        setPhase("closed");
+        return;
+      }
       setError(data?.error ?? "Couldn't send right now. Please try again in a moment.");
       setPhase("editing");
     } catch {
@@ -48,14 +54,28 @@ export function AudienceForm() {
     requestAnimationFrame(() => bodyRef.current?.focus());
   }
 
+  if (phase === "closed") {
+    return (
+      <section className="mt-8 flex flex-col items-center text-center" aria-live="polite">
+        <Sprout />
+        <p className="mt-4 text-lg">{SUBMISSIONS_CLOSED_MESSAGE}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-6 min-h-11 rounded-full border border-festival-forest px-6 py-3 font-semibold text-festival-forest transition hover:bg-festival-forest/10"
+        >
+          Check again
+        </button>
+      </section>
+    );
+  }
+
   if (phase === "sent") {
     return (
       <section className="mt-8 flex flex-col items-center text-center" aria-live="polite">
         <Sprout />
         <h2 className="mt-4 font-display text-3xl font-semibold">Sent — thank you!</h2>
-        <p className="mt-2 opacity-80">
-          A host will read it. If it&apos;s approved, it may appear on the screen upstairs.
-        </p>
+        <p className="mt-2 opacity-80">It&apos;s now on the screen in the discussion room upstairs.</p>
         <button
           type="button"
           onClick={sendAnother}
@@ -103,8 +123,9 @@ export function AudienceForm() {
       </label>
 
       <p className="text-sm opacity-80">
-        A host reviews every message before it appears on a screen. Please don&apos;t include
-        phone numbers, emails, or other personal details.
+        Your message appears on the screen in the discussion room upstairs, and hosts can remove
+        it. Please be kind, and don&apos;t include phone numbers, emails, or other personal
+        details.
       </p>
 
       <button

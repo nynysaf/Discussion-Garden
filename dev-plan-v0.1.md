@@ -22,7 +22,7 @@
 ### Do not break
 - **Captions never depend on AI.** Synthesis errors must not stop or slow captions.
 - **Displays are read-only.** `/captions` and `/room-feed` never write to the database.
-- **Nothing unmoderated on a TV.** Audience text needs host approval; AI nodes need approval in Hybrid.
+- **Hosts stay in control of every TV.** Audience messages go live without pre-approval (2026-10-01), but the host can always Hide one (gone from the TV in seconds) or pause sharing. AI nodes need approval in Hybrid.
 - **The Deepgram and OpenAI keys stay server-side.** The browser only ever gets a short-lived Deepgram token.
 - **Transcripts are private.** `transcript_segments` is host-only under RLS.
 
@@ -31,7 +31,7 @@
 ## 1. Product framing (summary)
 - **Upstairs:** live discussion + mic + host laptop (`/admin`) + TV showing the audience feed (`/room-feed`).
 - **Downstairs:** overflow room TV with captions + live question + garden + schedule + QR (`/captions`).
-- **Phones:** `/audience` — zero-login submissions, moderated.
+- **Phones:** `/audience` — zero-login messages, shown on the room TV straight away (host can hide / pause).
 - **Garden:** seeds (soil) → sprouts (stems) → themes (blooms); vines connect them. Modes: Manual (boot default) · Hybrid (expected) · Auto.
 - **Out of scope:** translation, audio storage, audience → garden promotion, CLara integration.
 
@@ -88,7 +88,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
-| 4 — Audience → moderation → room feed | **In progress** — 4A (form + `/api/submissions`) built + agent-verified; user phone test pending. Next: 4B moderation queue, 4C room feed |
+| 4 — Audience → room feed | **In progress** — 4A form + API user-verified; 4B admin "Audience messages" panel built + agent-verified (user test pending). Next: 4C `/room-feed` board |
 | 5 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
@@ -102,7 +102,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
 - Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
 
-**3. Then build:** **Phase 4** — `/audience` form + consent line → `/api/submissions` (length, profanity, per-device rate limit) → admin moderation queue → `/room-feed` board with highlighted pin.
+**3. Then build:** **Phase 4C** — `/room-feed` board: visible messages newest first, slow auto-scroll, pinned message large with "Being discussed" badge (DESIGN_GUIDE §5.3); reuse `useSubmissions` + `roomFeed()`.
 
 **Open decisions for the user:** real festival schedule · Vercel deploy timing · what to clear on the nearly full C: drive (see Blocked / open).
 
@@ -160,8 +160,16 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - `/audience` — `AudienceForm` (textarea with characters-left count, optional name/tag, consent line, "Sent — thank you" + sprout + "Send another").
   - Agent-verified against local Supabase: good → 201 pending `day_1`; profanity → 422; empty → 400; 4th rapid send → 429; public sees 0 pending rows. 110 unit tests pass.
 
+- 2026-10-01 — **Phase 4B — no pre-approval; host "Audience messages" panel:**
+  - Migrations: `20261001000001_open_submissions.sql` (`app_state.submissions_open`, submissions default to `approved`); `20261001000002_feed_hide_signal.sql` (trigger: a status change touches `app_state` and unpins a hidden message).
+  - Why the trigger: **Realtime filters row changes through RLS**, so when a message becomes `dismissed` the public TVs receive *nothing* (verified) and would keep showing it. Every screen already watches `app_state`, so touching it makes them re-fetch. Gotcha found while testing: Supabase rejects `UPDATE` without `WHERE` even inside a trigger — the trigger uses `where id = true`.
+  - `/api/submissions` refuses with 403 + `closed: true` when sharing is paused and inserts as `approved`. `/audience` shows a "Sharing is paused" state (server-checked on load, and on a 403).
+  - `src/lib/submissions/feed.ts` (`fetchSubmissions`, `roomFeed` → pinned + others newest first, hidden never shown), `submissions-db.ts` (host writes), `useSubmissions` hook (watches `audience_submissions` + `app_state`). `AudiencePanel` on `/admin`: open/paused switch, live list, Pin/Unpin, Hide/Show.
+  - Agent-verified: open → 201 visible; paused → 403 + paused page; anon can't insert directly or flip the switch; hide → TV is notified and pin clears; `db:check` 19/19; 115 unit tests pass.
+
 ### In progress
-- Phase 4: user phone test of 4A; then 4B moderation queue and 4C room feed.
+- Phase 4: user test of 4B (admin panel); then 4C room feed.
+- Hosted Supabase: push the two 2026-10-01 migrations (`npm run db:push:hosted`).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -190,7 +198,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-09-30 — **"Now" on the TVs = the item the host put live**, not the clock (sessions run late). With nothing live, the strip shows the day's first item as "UP NEXT". Times are entered and shown in **venue time** (`src/lib/schedule/time.ts`) regardless of the device's clock.
 - 2026-09-30 — **QR only on `/captions`** (PRD §4). It encodes the address the TV was opened with + `/audience`, so no config: on Vercel it points at Vercel; for a local phone test open `/captions` via the laptop's LAN address (e.g. `http://10.0.0.141:3000`). `next.config.ts` `allowedDevOrigins` allows private LAN IPs in dev (otherwise Next blocks the page's scripts). Other devices can't load *data* locally — `.env.local` points at `127.0.0.1` Supabase — so multi-device tests need hosted Supabase/Vercel.
 - 2026-09-30 — **Never call `crypto.randomUUID()` directly** in browser code — it's missing on plain-http pages (LAN IP) and crashed `/captions`. Use `uniqueId()` from `src/lib/unique-id.ts`.
-- 2026-10-01 — **Audience rate limit = anonymous per-phone cookie, counted in the DB**, not by IP (venue Wi-Fi puts every phone behind one IP) and not in server memory (Vercel runs several instances). Plus a room-wide flood cap so a cookie-clearing script can't bury the host queue. Profanity is **rejected with a "please rephrase"** before reaching the host; hosts still moderate everything.
+- 2026-10-01 — **Audience rate limit = anonymous per-phone cookie, counted in the DB**, not by IP (venue Wi-Fi puts every phone behind one IP) and not in server memory (Vercel runs several instances). Plus a room-wide flood cap so a cookie-clearing script can't bury the host queue. Profanity is **rejected with a "please rephrase"** before it's saved.
+- 2026-10-01 — **No host pre-approval for audience messages** (user decision: "if it's being abused, we'll turn it off"). Messages go to `/room-feed` immediately after the server checks. Host tools: **Sharing open/paused switch**, **Hide/Show** per message, **Pin** one as "being discussed" (`app_state.highlighted_submission_id`; status `highlighted` is unused). Replaces the Approve/Dismiss queue.
 - 2026-10-01 — **`/captions` gets three layouts: Garden · Both · Captions** (PRD v0.2.6, DESIGN_GUIDE §5.1a). Smooth slide (garden grows right / captions grow left); header, live question, Now · Next, QR fixed in all three. Host buttons on `/admin` + optional auto-rotate; TV rotates locally from `app_state` (`captions_layout`, `captions_rotate_seconds`) so it stays read-only. "Hide garden" forces Captions. **Should-have, built as Phase 6B after Hybrid AI**; until then `/captions` is always Both. Cut before Hybrid if behind.
 - 2026-10-01 — **`/admin` (the mic) only works on a secure page:** `http://localhost:3000` locally, `https://` on Vercel. On a plain-http LAN address (`http://10.0.0.x`) browsers hide the mic API; `LiveCaptioner` now shows a plain-English message instead of crashing. LAN addresses are only for phones/TVs.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
@@ -256,12 +265,12 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] Live Question header on `/captions` and `/room-feed`; "Now · Next" schedule strip; QR to `/audience` (`qrcode` package, as in Camp-CLAI).
 - **Test:** set active item on admin → both TVs update; QR scanned from a phone opens `/audience`. *(Agent-verified 2026-09-30 except the phone scan — user to confirm.)*
 
-### Phase 4 — Audience → moderation → room feed — **MUST**
+### Phase 4 — Audience → room feed — **MUST**
 - [x] `/audience` form + confirmation + consent line. *(4A, 2026-10-01)*
 - [x] `/api/submissions`: length limit, profanity check, per-device rate limit, insert. *(4A, 2026-10-01)*
-- [ ] Admin moderation queue: Approve / Highlight / Dismiss (realtime).
+- [x] Admin "Audience messages" panel: Sharing open/paused, Hide/Show, Pin/Unpin (realtime). *(4B, 2026-10-01 — replaces the Approve/Dismiss queue)*
 - [ ] `/room-feed` board + highlighted pin.
-- **Test:** submit from 2 phones → appear in admin within ~1s; approve → room feed shows it; highlight → pinned; spam 10 rapid submissions → rate-limited with friendly message.
+- **Test:** submit from 2 phones → appear in admin and on the room feed within ~1s; Hide → gone from the room feed within seconds; Pin → pinned; pause sharing → phone shows "paused"; spam 10 rapid submissions → rate-limited with friendly message.
 
 ### Phase 5 — Garden canvas + Manual editor — **MUST**
 - [ ] Copy + adapt layout/curves/sprites (§3); pure helpers in `src/lib/garden/` with unit tests if a runner exists.
@@ -299,7 +308,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 3. Drop the `/captions` layout switcher (Phase 6B) — the TV stays on Both.
 4. Drop Hybrid (Manual only) — garden still works.
 5. Drop garden PNG export (keep JSON + transcript).
-**Never cut:** captions, live question, moderation.
+**Never cut:** captions, live question, host Hide + pause sharing for audience messages.
 
 ---
 

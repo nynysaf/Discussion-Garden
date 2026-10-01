@@ -13,6 +13,7 @@ describe("toAppState", () => {
         garden_hidden: true,
         speaker_colours_on: false,
         highlighted_submission_id: null,
+        submissions_open: false,
       }),
     ).toEqual({
       activeSessionId: "s1",
@@ -22,15 +23,17 @@ describe("toAppState", () => {
       gardenHidden: true,
       speakerColoursOn: false,
       highlightedSubmissionId: null,
+      submissionsOpen: false,
     });
   });
 
-  it("falls back to safe defaults (boots in Manual, colours on)", () => {
+  it("falls back to safe defaults (boots in Manual, colours on, submissions open)", () => {
     expect(toAppState(null)).toEqual(DEFAULT_APP_STATE);
     expect(toAppState({ synthesis_mode: "turbo", audio_status: "??" })).toMatchObject({
       synthesisMode: "manual",
       audioStatus: "idle",
       speakerColoursOn: true,
+      submissionsOpen: true,
     });
   });
 });

@@ -7,6 +7,7 @@ import {
   FLOOD_RULES,
   lookbackMs,
 } from "@/lib/submissions/rate-limit";
+import { SUBMISSIONS_CLOSED_MESSAGE } from "@/lib/submissions/limits";
 import { validateSubmission } from "@/lib/submissions/validate";
 
 const DEVICE_COOKIE = "dg_device";
@@ -73,11 +74,19 @@ export async function POST(request: Request) {
         .select("created_at")
         .gte("created_at", since(FLOOD_RULES))
         .limit(FLOOD_RULES[0].max + 1),
-      supabase.from("app_state").select("active_session_id").limit(1).maybeSingle(),
+      supabase
+        .from("app_state")
+        .select("active_session_id, submissions_open")
+        .limit(1)
+        .maybeSingle(),
     ]);
     if (mine.error) throw mine.error;
     if (everyone.error) throw everyone.error;
     if (state.error) throw state.error;
+
+    if (state.data?.submissions_open === false) {
+      return reply(403, { error: SUBMISSIONS_CLOSED_MESSAGE, closed: true });
+    }
 
     const times = (rows: { created_at: string }[]) => rows.map((r) => Date.parse(r.created_at));
 
@@ -96,6 +105,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.from("audience_submissions").insert({
       body: checked.value.body,
       name_tag: checked.value.nameTag,
+      status: "approved",
       session_id: state.data?.active_session_id ?? null,
       device_hash: deviceHash,
     });

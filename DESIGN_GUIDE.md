@@ -187,7 +187,7 @@ Only the **middle band** changes. The header (title + live question) and the bot
 **Motion:** a new bubble fades + rises ~10px over 250ms; the column scrolls smoothly. Reduced motion: bubbles simply appear.
 
 ### 5.3 `/room-feed` layout
-Live question banner on top; highlighted submission pinned large with a marigold "Being discussed" badge (ink text); approved submissions scroll slowly beneath as cream cards with `shadow-poster`.
+Live question banner on top; highlighted submission pinned large with a marigold "Being discussed" badge (ink text); visible audience messages scroll slowly beneath as cream cards with `shadow-poster`.
 
 ---
 
@@ -233,7 +233,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - After submit: warm confirmation with a small sprout illustration and "Send another".
 
 ## 8. Admin view (`/admin`)
-- Functional first: light cream background, clear sections (Audio · Schedule · Garden · Drafts · Moderation).
+- Functional first: light cream background, clear sections (Audio · Schedule · Audience messages · Garden · Drafts).
 - **Audio status** is the loudest element: large pill (Live = forest, Paused = marigold with ink text, Reconnecting/Offline = terracotta with ink text) + word.
 - Destructive actions (Stop, Delete node, Hide garden) require confirmation.
 - Icons: thin rounded line icons (Lucide), 1.5px stroke.

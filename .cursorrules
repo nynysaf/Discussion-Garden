@@ -1,5 +1,5 @@
 # Project Context
-- Product: **Discussion Garden** — live captions, schedule prompts, moderated audience feed, and a growing "garden" knowledge graph for the *We Create Our Futures* festival.
+- Product: **Discussion Garden** — live captions, schedule prompts, a live audience feed, and a growing "garden" knowledge graph for the *We Create Our Futures* festival.
 - Source of truth: `prd-v0.2.md` (product), `dev-plan-v0.1.md` (roadmap + progress log), `DESIGN_GUIDE.md` (UI). Read §4 of the Dev Plan before coding.
 - Four views: `/admin` (host, upstairs), `/captions` (downstairs overflow TV), `/audience` (phones, zero login), `/room-feed` (upstairs TV).
 - Dates: festival Oct 16–18, 2026. **Garden live Sat Oct 17 & Sun Oct 18, 11:00–17:00.** No fixed build calendar — work in Dev Plan phase order as time allows.
@@ -12,7 +12,7 @@
 # Festival guardrails (never break)
 - **Captions never depend on AI.** Synthesis failures must not stop, delay, or crash captions.
 - **Displays are read-only.** `/captions` and `/room-feed` never write to the database.
-- **Nothing unmoderated on a public TV.** Audience submissions need host approval; AI garden nodes need approval in Hybrid mode.
+- **Hosts stay in control of every public TV.** Audience messages show on `/room-feed` straight away (no pre-approval, decided 2026-10-01) but only after the server's length/profanity/rate-limit checks; the host must always be able to **Hide** any message and **pause sharing** from `/admin`, and a hidden message must leave the TV within seconds. AI garden nodes need approval in Hybrid mode.
 - **Keys stay server-side.** Deepgram and OpenAI keys only in server code; the browser gets a short-lived Deepgram token.
 - **Transcripts are private** (host-only RLS). **Never store audio.**
 - Audience submissions do **not** become garden nodes (decided 2026-09-30).

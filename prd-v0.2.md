@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.6  
+**Version:** 0.2.7  
 **Last updated:** 2026-10-01  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.7 (2026-10-01):** **No pre-approval for audience messages.** They appear on `/room-feed` as soon as they pass the server checks (length, profanity, per-phone rate limit). The host can **Hide** any message, **Pin** one as "being discussed", and **pause sharing** with one switch if it's abused. Replaces the Approve/Dismiss moderation queue.
 - **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
 - **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. "Now" = the item the host put live, not the clock (sessions run late).
 - **v0.2.4 (2026-09-30):** Host allowlist is a `hosts` table (checked by RLS), not an env var; public sign-up disabled. `transcript_segments` gains `bubble_id` (unique) so saves can be retried safely. Caption broadcast uses a **private** realtime channel — only hosts can send to the TVs.
@@ -73,13 +74,13 @@ Both days grow **the same garden**. Sunday opens with Saturday's garden already 
  │ • Mic intake (Web Audio)      │──── audio (WebSocket) ────►  Deepgram streaming STT
  │ • Schedule / live question    │◄─── interim + final text ──┘
  │ • Garden editor + draft queue │
- │ • Moderation queue            │──── final segments + edits ─►  Supabase (Postgres + Realtime)
+ │ • Audience messages (hide/pin)│──── final segments + edits ─►  Supabase (Postgres + Realtime)
  └───────────────────────────────┘                                     │
             │ every ~35s (Hybrid/Auto only)                            │ Realtime broadcast + row changes
             ▼                                                          ▼
    /api/synthesis → LLM (JSON proposals) ──► drafts / nodes    ┌─────────────────────────────┐
                                                                │ DOWNSTAIRS TV — /captions   │
- Phones — /audience ──► /api/submissions ──► moderation ──────►│ UPSTAIRS TV  — /room-feed   │
+ Phones — /audience ──► /api/submissions ──► checks ──────────►│ UPSTAIRS TV  — /room-feed   │
                                                                └─────────────────────────────┘
 ```
 
@@ -110,7 +111,7 @@ Requires host login (1–3 host accounts).
 * **Synthesis mode toggle:** Manual · Hybrid · Auto (see §5). Boots in **Manual**.
 * **Garden editor:** plant seeds, create sprouts, bloom themes, draw vines, edit/rename/delete, merge duplicates.
 * **Draft queue (Hybrid):** AI proposals listed with Approve / Edit / Reject; "Approve all" for speed.
-* **Moderation queue:** incoming audience submissions with Approve / Highlight / Dismiss.
+* **Audience messages:** live list of everything sent from `/audience` (already on the room TV), with **Hide / Show** and **Pin / Unpin** ("being discussed now"), plus a **Sharing open / paused** switch.
 * **Kill switches:** "Hide garden on TVs", "Freeze captions", and "Speaker colours" on/off.
 * **Downstairs TV layout** *(Should)*: Garden · Both · Captions buttons, plus an optional auto-rotate (on/off + seconds per view). See View 2.
 
@@ -158,12 +159,13 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 
 ### View 3: Participant Mobile Entry (`/audience`)
 * **Zero login.** Text field (question, story, or reaction) + optional name/tag.
-* **Consent line:** short note that submissions are moderated and may be shown on screens.
+* **Consent line:** short note that messages appear on the upstairs screen straight away, hosts can remove them, and not to include personal details.
+* **Paused state:** when the host pauses sharing, the page says so instead of showing the form.
 * **Confirmation:** friendly "Sent — thank you" state; allow another submission.
 * **Limits:** max length (~500 chars), rate limit per device, basic profanity check before it reaches the host.
 
 ### View 4: Upstairs Room Feed (`/room-feed`) — discussion-room TV
-* **Community board:** auto-scrolling list of host-approved submissions.
+* **Community board:** auto-scrolling list of audience messages (newest first); hidden ones disappear within seconds.
 * **Highlight badge:** the submission the host marks as "being discussed now" is pinned and emphasized.
 * **Live question** shown at top for context.
 
@@ -201,13 +203,13 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id`, `captions_layout` (`garden`/`both`/`captions`), `captions_rotate_seconds` (null = off) | Public read, host write |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`), `captions_rotate_seconds` (null = off) | Public read, host write |
 | `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
 | `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
 | `garden_vines` | `id`, `source_node_id`, `target_node_id`, `kind` (grows_into/relates_to), `status`, `origin`, `origin_session_id` | Public read of `published` only |
 | `synthesis_runs` | `id`, `session_id`, `window_start`, `window_end`, `mode`, `raw_output`, `error`, `created_at` | Host only (debug/audit) |
-| `audience_submissions` | `id`, `session_id`, `body`, `name_tag`, `status` (pending/approved/highlighted/dismissed), `device_hash`, `created_at` | Public read of approved/highlighted only; inserts via server route |
+| `audience_submissions` | `id`, `session_id`, `body`, `name_tag`, `status` (`approved` = on the TV, `dismissed` = hidden; `pending`/`highlighted` unused), `device_hash` (SHA-256 of an anonymous cookie), `created_at` | Public read of visible messages only; inserts via server route |
 
 - There is **one garden for the whole festival**. Garden tables have no session filter; `origin_session_id` records provenance only.
 - Displays read with the public (anon) key and see only what RLS allows. Writes from the host go through authenticated requests; audience inserts go through a server route that rate-limits.
@@ -222,7 +224,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 - **Deepgram opt-out:** every connection sends `mip_opt_out=true`, so Deepgram keeps audio only as long as needed to transcribe it and never uses it for model training. Without this flag, Deepgram may store samples — which would contradict the signage.
 - **Voices are anonymous** on every screen (animal emoji only).
 - Audience name/tag is optional; no emails or phone numbers collected.
-- Nothing from the audience reaches a TV without host approval.
+- Audience messages reach the upstairs TV without pre-approval, after automatic checks (length, profanity, rate limit). The host can hide any message within seconds or pause sharing entirely.
 
 ### Failure handling
 | Failure | Behavior |
@@ -256,7 +258,7 @@ Transcript segments and synthesis runs are tagged by day (`day_1`, `day_2`) so o
 **Must have (festival fails without these)**
 1. Live captions upstairs mic → downstairs TV as one-sentence speech bubbles, colour-coded by speaker (with single-colour fallback), with pause/resume and reconnect.
 2. Schedule + live question on all screens.
-3. Audience submission → moderation → upstairs room feed.
+3. Audience submission → upstairs room feed, with host Hide / Pin / pause sharing.
 4. Garden canvas on `/captions` with **Manual** editing, persisting across both days.
 
 **Should have**
