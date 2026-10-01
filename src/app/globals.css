@@ -55,6 +55,11 @@ body {
   .fade-top {
     mask-image: linear-gradient(to bottom, transparent 0%, black 18%);
   }
+
+  /* Room-feed cards fade out at the bottom edge instead of being cut off. */
+  .fade-bottom {
+    mask-image: linear-gradient(to top, transparent 0%, black 12%);
+  }
 }
 
 @keyframes bubble-rise {

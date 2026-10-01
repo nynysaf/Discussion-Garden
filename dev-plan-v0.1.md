@@ -88,7 +88,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
-| 4 — Audience → room feed | **In progress** — 4A form + API user-verified; 4B admin "Audience messages" panel built + agent-verified (user test pending). Next: 4C `/room-feed` board |
+| 4 — Audience → room feed | 4A + 4B user-verified; **4C `/room-feed` board built + agent-verified (screenshot at 1080p); user test pending** |
 | 5 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
@@ -102,7 +102,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
 - Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
 
-**3. Then build:** **Phase 4C** — `/room-feed` board: visible messages newest first, slow auto-scroll, pinned message large with "Being discussed" badge (DESIGN_GUIDE §5.3); reuse `useSubmissions` + `roomFeed()`.
+**3. Then build:** **Phase 5** — garden canvas + Manual editor (copy/adapt Camp-CLAI layout, curves, sprites per §3).
 
 **Open decisions for the user:** real festival schedule · Vercel deploy timing · what to clear on the nearly full C: drive (see Blocked / open).
 
@@ -167,8 +167,10 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - `src/lib/submissions/feed.ts` (`fetchSubmissions`, `roomFeed` → pinned + others newest first, hidden never shown), `submissions-db.ts` (host writes), `useSubmissions` hook (watches `audience_submissions` + `app_state`). `AudiencePanel` on `/admin`: open/paused switch, live list, Pin/Unpin, Hide/Show.
   - Agent-verified: open → 201 visible; paused → 403 + paused page; anon can't insert directly or flip the switch; hide → TV is notified and pin clears; `db:check` 19/19; 115 unit tests pass.
 
+- 2026-10-01 — **Phase 4C — `/room-feed` board** (DESIGN_GUIDE §5.3): `RoomFeedScreen` uses `useFestivalState` + `useSubmissions` + `roomFeed()`; pinned "Being discussed" card; two-column cards newest first with `.fade-bottom`; "Sharing is paused" pill; Reconnecting pill. Auto-scroll = pure `stepAutoScroll` (`src/lib/submissions/auto-scroll.ts`, hold top 10 s → 24 px/s → hold bottom 6 s → back to top) driven by `useAutoScroll`, which writes `transform` directly (no React re-render per frame) and resets on a new message; off under reduced motion. Read-only (no writes). 121 unit tests pass. Screenshot check via headless Edge at 1920×1080.
+
 ### In progress
-- Phase 4: user test of 4B (admin panel); then 4C room feed.
+- Phase 4: user test of 4C (room feed: new message appears, Hide removes it, Pin, auto-scroll).
 - Hosted Supabase is in sync: both 2026-10-01 migrations pushed (3/3 applied).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
@@ -269,7 +271,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] `/audience` form + confirmation + consent line. *(4A, 2026-10-01)*
 - [x] `/api/submissions`: length limit, profanity check, per-device rate limit, insert. *(4A, 2026-10-01)*
 - [x] Admin "Audience messages" panel: Sharing open/paused, Hide/Show, Pin/Unpin (realtime). *(4B, 2026-10-01 — replaces the Approve/Dismiss queue)*
-- [ ] `/room-feed` board + highlighted pin.
+- [x] `/room-feed` board + highlighted pin. *(4C, 2026-10-01)*
 - **Test:** submit from 2 phones → appear in admin and on the room feed within ~1s; Hide → gone from the room feed within seconds; Pin → pinned; pause sharing → phone shows "paused"; spam 10 rapid submissions → rate-limited with friendly message.
 
 ### Phase 5 — Garden canvas + Manual editor — **MUST**

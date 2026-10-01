@@ -188,6 +188,10 @@ Only the **middle band** changes. The header (title + live question) and the bot
 
 ### 5.3 `/room-feed` layout
 Live question banner on top; highlighted submission pinned large with a marigold "Being discussed" badge (ink text); visible audience messages scroll slowly beneath as cream cards with `shadow-poster`.
+- Cards: two columns, **newest first**, ~1.8vw text (≈ 35px at 1080p); name tag (if any) as "— name" at 75% size. The bottom edge fades out (`.fade-bottom`) rather than cutting a card in half.
+- **Auto-scroll only when the cards overflow:** hold at the top 10 s → scroll at ~24 px/s → hold at the bottom 6 s → glide back to the top (1.2 s). A new message jumps back to the top so the room sees it. Reduced motion: no scrolling — newest cards show, older ones fade at the bottom.
+- Pinned card: marigold 4px border, ~2.4vw semibold text, max 6 lines.
+- "Sharing is paused" shows as a small grey pill above the cards; "Reconnecting…" pill in the header if the TV loses its connection.
 
 ---
 
