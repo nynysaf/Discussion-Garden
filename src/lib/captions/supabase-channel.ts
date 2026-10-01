@@ -55,9 +55,11 @@ export function createSupabaseCaptionChannel(supabase: SupabaseClient): CaptionC
   return {
     send(message) {
       const channel = message.type === "hello" ? hello : captions;
-      void channel
-        .send({ type: "broadcast", event: EVENT, payload: message })
-        .catch(() => undefined);
+      const delivery =
+        channel.state === "joined"
+          ? channel.send({ type: "broadcast", event: EVENT, payload: message })
+          : channel.httpSend(EVENT, message);
+      void delivery.catch(() => undefined);
     },
     subscribe(handler) {
       handlers.add(handler);

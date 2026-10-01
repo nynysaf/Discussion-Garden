@@ -121,8 +121,12 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - `/captions` + `/room-feed` show the live question.
   - Verified by agent: `npm run db:check` → **19/19 access checks pass** (visitor can't read transcripts or write anything; non-host can't either; non-host broadcast doesn't reach TVs; public-channel spoof doesn't reach the private channel); `/admin` → 307 to `/login` when signed out; token route 401 signed out; browser login → `/admin` works; live question change in DB → `/captions` updated without reload. 73 unit tests pass.
 
+- 2026-09-30 — **Dev server froze** (every page hung, then 404s after restart). Cause: corrupted `.next` cache — likely OneDrive syncing the folder while Next.js writes to it. Fix: stop the server, delete `.next`, `npm run dev`. If it recurs, move the repo out of OneDrive (e.g. `C:\dev\Discussion-Garden`). Also: caption sends before the channel is joined now use `httpSend()` explicitly (Supabase deprecates the silent REST fallback).
+- 2026-09-30 — User created a **hosted Supabase project** (not yet linked; `.env.local` still points at local Supabase).
+
 ### In progress
 - User browser test of Phase 1 (two browsers, captions + live question).
+- Link the hosted Supabase project and push the schema (see §7 "Going to hosted Supabase").
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
 ### Decisions (must remember)
