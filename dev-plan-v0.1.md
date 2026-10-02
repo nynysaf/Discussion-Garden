@@ -102,13 +102,18 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 **2. Testing notes:**
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
 - Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
-
-- Demo garden (made-up labels, **local DB only** — the script refuses any non-127.0.0.1 URL): `npm run garden:demo -- 15`, `-- 150`, or `-- clear`. Demo nodes are tagged `description = '[demo]'`; clear only removes those.
+- Demo garden (made-up labels, **local DB only** — the script refuses any non-127.0.0.1 URL): `npm run garden:demo -- 15`, `-- 150`, or `-- clear`. Demo nodes are tagged `description = '[demo]'`; clear only removes those. The local DB currently holds 14 demo ideas (left over from the 5B merge/delete test). The hosted garden is empty.
 - Headless screenshot check: `msedge --headless=new --hide-scrollbars --force-prefers-reduced-motion --window-size=1920,1080 --virtual-time-budget=15000 --screenshot=...` (reduced motion, or the 600 ms grow-in gets caught half-faded). Headless Edge leaves an empty strip at the right/bottom of the garden box (it measures before its final resize) — check in a real browser before "fixing" it.
 
-**3. Then build:** finish Phase 5 (user test of the 5B editor, then the day-switch test in §5 Phase 5), then **Phase 6 — Hybrid AI synthesis**.
+**3. First, finish Phase 5 with the day-switch check** (Phases 5A and 5B are user-verified; this is the last box):
+1. User: in `/admin` → Festival day = day 1 → plant seed "Day one test".
+2. User: switch Festival day to day 2 → garden on `/captions` and the admin preview must not change.
+3. User: plant seed "Day two test".
+4. Agent: query `garden_nodes` (secret key, local) → each seed's `origin_session_id` must match its day (`sessions.slug` `day_1` / `day_2`); then delete both test seeds. Tick Phase 5 in §5 and the status table.
 
-**Open decisions for the user:** real festival schedule · Vercel deploy timing · what to clear on the nearly full C: drive (see Blocked / open).
+**4. Then build:** **Phase 6 — Hybrid AI synthesis** (§5 Phase 6; PRD §5 synthesis contract). Remember the guardrails: captions never depend on AI; AI garden nodes are drafts until a host approves them in Hybrid mode; OpenAI key server-side only; check current OpenAI docs instead of memory.
+
+**Open decisions for the user:** real festival schedule · Vercel deploy timing · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -228,7 +233,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
 - ~~Repo lives in OneDrive~~ — **resolved 2026-10-01**, moved to `C:\dev\Discussion-Garden`.
-- **Laptop disk nearly full** (~8 GB free of 935 GB on 2026-10-01). Biggest folders: Music ~223 GB, Downloads ~83 GB, Videos ~30 GB, `AppData\Local\AINoteTaker` ~24 GB. User to decide what to clear. If this laptop runs `/admin` at the festival it needs real headroom.
+- **Laptop disk is tight:** 48 GB free of 935 GB at the end of 2026-10-01 (was 0 GB that morning). The old OneDrive copy of this repo (`C:\Users\narya\OneDrive\Documents\GitHub\Discussion Garden`) still exists and can be deleted by the user. Biggest folders: Music ~223 GB, Downloads ~83 GB, Videos ~30 GB, `AppData\Local\AINoteTaker` ~24 GB. User to decide what to clear. If this laptop runs `/admin` at the festival it needs real headroom.
 
 ---
 
