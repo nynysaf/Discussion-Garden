@@ -16,7 +16,8 @@
     "db:push:hosted": "node --env-file=.env.local scripts/push-hosted.mjs",
     "host:add": "node --env-file=.env.local scripts/add-host.mjs",
     "db:check": "node --env-file=.env.local scripts/check-access.mjs",
-    "garden:demo": "node --env-file=.env.local scripts/garden-demo.mjs"
+    "garden:demo": "node --env-file=.env.local scripts/garden-demo.mjs",
+    "transcript:demo": "node --env-file=.env.local scripts/transcript-demo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
