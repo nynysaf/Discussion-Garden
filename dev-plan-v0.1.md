@@ -89,7 +89,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
 | Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
 | 4 — Audience → room feed | Done — user-verified 2026-10-01 (no pre-approval; Hide/Pin/pause sharing) |
-| 5 — Garden | 5A canvas user-verified 2026-10-01 (15 → 150 live, readable, settles, fills box). 5B admin editor user-verified 2026-10-01. Day-switch check pending |
+| 5 — Garden | 5A canvas user-verified 2026-10-01 (15 → 150 live, readable, settles, fills box). 5B admin editor user-verified 2026-10-01. Day-switch check user-verified 2026-10-05. **Done** |
 | 6 → 8 (incl. 6B layouts) | Not started |
 
 ### ▶ Resume here (next session)
@@ -101,17 +101,13 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 **2. Testing notes:**
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
-- Local `/admin` login: the user's own host account, or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
+- Local `/admin` login: `host@example.com` (password reset 2026-10-05; the user has it — never write it here), or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
 - Demo garden (made-up labels, **local DB only** — the script refuses any non-127.0.0.1 URL): `npm run garden:demo -- 15`, `-- 150`, or `-- clear`. Demo nodes are tagged `description = '[demo]'`; clear only removes those. The local DB currently holds 14 demo ideas (left over from the 5B merge/delete test). The hosted garden is empty.
 - Headless screenshot check: `msedge --headless=new --hide-scrollbars --force-prefers-reduced-motion --window-size=1920,1080 --virtual-time-budget=15000 --screenshot=...` (reduced motion, or the 600 ms grow-in gets caught half-faded). Headless Edge leaves an empty strip at the right/bottom of the garden box (it measures before its final resize) — check in a real browser before "fixing" it.
 
-**3. First, finish Phase 5 with the day-switch check** (Phases 5A and 5B are user-verified; this is the last box):
-1. User: in `/admin` → Festival day = day 1 → plant seed "Day one test".
-2. User: switch Festival day to day 2 → garden on `/captions` and the admin preview must not change.
-3. User: plant seed "Day two test".
-4. Agent: query `garden_nodes` (secret key, local) → each seed's `origin_session_id` must match its day (`sessions.slug` `day_1` / `day_2`); then delete both test seeds. Tick Phase 5 in §5 and the status table.
+**3. Phase 5 is done** (day-switch check user-verified 2026-10-05).
 
-**4. Then build:** **Phase 6 — Hybrid AI synthesis** (§5 Phase 6; PRD §5 synthesis contract). Remember the guardrails: captions never depend on AI; AI garden nodes are drafts until a host approves them in Hybrid mode; OpenAI key server-side only; check current OpenAI docs instead of memory.
+**4. Next build:** **Phase 6 — Hybrid AI synthesis** (§5 Phase 6; PRD §5 synthesis contract). Remember the guardrails: captions never depend on AI; AI garden nodes are drafts until a host approves them in Hybrid mode; OpenAI key server-side only; check current OpenAI docs instead of memory.
 
 **Open decisions for the user:** real festival schedule · Vercel deploy timing · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
 
@@ -180,11 +176,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 - 2026-10-01 — **Phase 5A — garden canvas on `/captions`** (DESIGN_GUIDE §6). 115 Camp-CLAI Plant sprites copied to `public/garden-sprites/{seed,sprout,theme}/` (shrunk to 160 px; user confirmed we own them). Pure helpers in `src/lib/garden/`: `layout.ts` (seeded `d3-force` — every TV computes the identical layout; tier bands theme 0.2 / sprout 0.5 / seed 0.8; label-aware collision so sprite+label boxes never overlap; keeps previous positions as canvas fractions so the garden barely moves when it grows), `labels.ts` (≤ 6 words, wrapped to two lines; in a crowded garden (≥ 60 nodes) only the 12 newest seeds keep labels), `sprites.ts` (stable sprite per node id), `curves.ts` (vine paths). `GardenCanvas` lays out once per change, glides nodes to new spots (CSS transitions), grows in new nodes, draws vines on; sprite errors fall back to tier-coloured circles; honours `garden_hidden`. `useLiveData` hook now shared by `useFestivalState`, `useSubmissions`, `useGarden`. Migration `20261001000003_garden_status_signal.sql`: publishing/unpublishing a node or vine touches `app_state`, because Realtime hides RLS-invisible changes from anonymous TVs (same trick as audience Hide). Pushed to hosted (4/4). 139 unit tests pass; screenshots at 1920×1080 with 15 and 150 demo nodes are readable with no overlapping labels.
 
-### In progress
 - 2026-10-01 — **Phase 5B — Garden panel on `/admin`** (`src/components/admin/garden/`). Live preview (same `GardenCanvas` as the TVs); **Plant** form (Seed / Sprout / Theme + optional "grows into" the next tier up; shows "The TV will show: …" when the label gets shortened; keeps tier + parent selected for fast entry); searchable idea list grouped by tier; per-idea editor: rename, change tier, size −/+ ("Mentioned again"), list/remove vines, connect (defaults to "grows into" for the next tier up, else "relates to"; hides ideas already connected), **merge** into a duplicate, delete (confirm). **"Hide garden on TVs"** switch (confirm before hiding). Manual edits insert as `published`, `origin = manual`, `origin_session_id` = active day. Merge = Postgres function `merge_garden_nodes(keep_id, drop_id)` (migration `20261001000004`, `security invoker` so RLS applies + explicit host check): moves vines without loops/duplicates, adds weights, unions transcript sources, deletes the duplicate — all-or-nothing. Pure helpers in `src/lib/garden/edit.ts` (7 tests); writes in `garden-edit-db.ts`; shared `useHostAction` hook. `db:check` gained 4 merge checks (23/23). Pushed to hosted (5/5). 146 unit tests pass.
 
+- 2026-10-05 — **Phase 5 day-switch check — user-verified.** Switching Festival day on `/admin` left the garden on `/captions` and the admin preview unchanged; seeds planted under each day recorded the matching `origin_session_id` (`day_1` / `day_2`, checked in the local DB, both directions). Test seeds deleted; local garden back to 18 ideas (14 `[demo]` + 4 manual).
+
 ### In progress
-- Phase 5: day-switch check (`day_1` → `day_2`: garden unchanged; new ideas record `origin_session_id` = `day_2`).
 - Hosted Supabase is in sync: all 2026-10-01 migrations pushed (5/5 applied).
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
@@ -295,7 +291,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] `GardenCanvas` renders published nodes/vines with tier bands, sprites, labels, growth animation; freezes after settle. *(5A, 2026-10-01 — user-verified)*
 - [x] Admin editor: plant seed, create sprout, bloom theme, draw vine, rename, delete, merge; "Hide garden on TVs". *(5B, 2026-10-01 — user-verified)*
 - [x] Verify Camp-CLAI Plant sprites on cream; swap or fall back to circles if they clash. *(look fine on cream; circle fallback built in)*
-- **Test:** plant 15 nodes across tiers → TV shows seeds low, themes high, no overlaps, no continuous jitter; reduced-motion shows no pulses. Switch active day `day_1` → `day_2` → garden is unchanged and new nodes record `origin_session_id = day_2`. Load ~150 fake nodes (a full two-day garden) → still readable on a 1080p TV, no slowdown.
+- **Test:** plant 15 nodes across tiers → TV shows seeds low, themes high, no overlaps, no continuous jitter; reduced-motion shows no pulses. Switch active day `day_1` → `day_2` → garden is unchanged and new nodes record `origin_session_id = day_2`. Load ~150 fake nodes (a full two-day garden) → still readable on a 1080p TV, no slowdown. *(All passed — day-switch user-verified 2026-10-05.)*
 
 ### Phase 6 — Hybrid AI synthesis — SHOULD
 - [ ] `/api/synthesis` (host-only): builds window + current garden → OpenAI JSON → validates → inserts **draft** nodes/vines (Hybrid) or **published** (Auto); logs to `synthesis_runs`.
