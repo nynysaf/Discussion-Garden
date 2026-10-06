@@ -1,4 +1,16 @@
 import type { Tier, VineKind } from "@/lib/garden/types";
+import type { SynthesisMode } from "@/lib/realtime/app-state";
+
+/** What POST /api/synthesis returns on success. */
+export type SynthesisResult =
+  | { status: "skipped"; reason: "manual" | "quiet" }
+  | {
+      status: "ok";
+      mode: SynthesisMode;
+      runId: string;
+      added: { nodes: number; vines: number; reinforce: number };
+      dropped: number;
+    };
 
 export type WindowSegment = { id: string; text: string; createdAt: string };
 

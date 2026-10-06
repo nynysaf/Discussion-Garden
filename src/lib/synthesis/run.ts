@@ -5,19 +5,11 @@ import type { SynthesisMode } from "@/lib/realtime/app-state";
 import { compactGarden } from "./garden-context";
 import { requestProposal, type ModelReply } from "./openai";
 import { buildUserMessage, SYSTEM_PROMPT } from "./prompt";
-import type { NodeRef, SynthesisPlan, WindowSegment } from "./types";
+import type { NodeRef, SynthesisPlan, SynthesisResult, WindowSegment } from "./types";
 import { planFromProposal } from "./validate";
 import { buildWindow, WINDOW_MAX_AGE_MS } from "./window";
 
-export type SynthesisResult =
-  | { status: "skipped"; reason: "manual" | "quiet" }
-  | {
-      status: "ok";
-      mode: SynthesisMode;
-      runId: string;
-      added: { nodes: number; vines: number; reinforce: number };
-      dropped: number;
-    };
+export type { SynthesisResult };
 
 /** A failed run that has already been logged; `message` is safe to show the host. */
 export class SynthesisError extends Error {}
