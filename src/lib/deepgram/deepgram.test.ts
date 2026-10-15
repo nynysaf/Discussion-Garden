@@ -19,9 +19,14 @@ describe("buildListenUrl", () => {
     expect(params.get("utterance_end_ms")).toBe("1500");
   });
 
+  it("waits half a second of silence before locking words in", () => {
+    expect(params.get("endpointing")).toBe("500");
+  });
+
   it("allows overrides", () => {
-    const url = new URL(buildListenUrl({ utteranceEndMs: 2000 }));
+    const url = new URL(buildListenUrl({ utteranceEndMs: 2000, endpointingMs: 300 }));
     expect(url.searchParams.get("utterance_end_ms")).toBe("2000");
+    expect(url.searchParams.get("endpointing")).toBe("300");
   });
 });
 
