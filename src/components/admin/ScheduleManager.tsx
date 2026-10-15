@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowDown, ArrowUp, CalendarClock, Pencil, SkipForward, Trash2, Tv } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FestivalState, ScheduleItem } from "@/lib/realtime/festival-state";
@@ -23,12 +24,17 @@ import {
 } from "@/lib/schedule/schedule-db";
 import { toVenueIso, venueTime } from "@/lib/schedule/time";
 import { createClient } from "@/lib/supabase/client";
+import {
+  dangerButton,
+  errorNotice,
+  input,
+  outlineButton,
+  Panel,
+  primaryButton,
+  secondaryButton,
+} from "./ui";
 
-const input = "rounded-xl border border-festival-ink/20 bg-festival-cream px-3 py-2";
-const primaryButton =
-  "rounded-full bg-festival-forest px-4 py-1.5 font-semibold text-festival-cream transition hover:brightness-110 disabled:opacity-40";
-const secondaryButton =
-  "rounded-full border border-festival-forest px-3 py-1 text-sm font-semibold text-festival-forest transition hover:bg-festival-forest/10 disabled:opacity-40";
+const ICON = { "aria-hidden": true, size: 16, strokeWidth: 1.75 } as const;
 
 const EMPTY_DRAFT: ScheduleDraft = { title: "", question: "", time: "" };
 
@@ -60,7 +66,7 @@ function ItemForm({
   }
 
   return (
-    <form onSubmit={submit} className="grid gap-3 md:grid-cols-[8rem_1fr]">
+    <form onSubmit={submit} className="grid gap-3 @md:grid-cols-[8rem_1fr]">
       <label className="flex flex-col gap-1">
         <span className="text-sm font-semibold">Time</span>
         <input
@@ -79,7 +85,7 @@ function ItemForm({
           onChange={(e) => setDraft({ ...draft, title: e.target.value })}
         />
       </label>
-      <label className="flex flex-col gap-1 md:col-span-2">
+      <label className="flex flex-col gap-1 @md:col-span-2">
         <span className="text-sm font-semibold">Live question (shown on the TVs when this item is live)</span>
         <textarea
           className={input}
@@ -89,7 +95,7 @@ function ItemForm({
           onChange={(e) => setDraft({ ...draft, question: e.target.value })}
         />
       </label>
-      <div className="flex items-center gap-3 md:col-span-2">
+      <div className="flex items-center gap-3 @md:col-span-2">
         <button type="submit" className={primaryButton} disabled={disabled}>
           {submitLabel}
         </button>
@@ -150,9 +156,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
   }
 
   return (
-    <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <h2 className="font-display text-3xl font-semibold">Schedule &amp; live question</h2>
-
+    <Panel id="schedule" title={<>Schedule &amp; live question</>} icon={CalendarClock}>
       <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Which day to edit">
         {sessions.map((s) => (
           <button
@@ -163,11 +167,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
               setPickedDay(s.id);
               setEditingId(null);
             }}
-            className={`rounded-full px-4 py-1.5 font-semibold transition ${
-              s.id === dayId
-                ? "bg-festival-forest text-festival-cream"
-                : "border border-festival-forest text-festival-forest hover:bg-festival-forest/10"
-            }`}
+            className={s.id === dayId ? primaryButton : outlineButton}
           >
             {s.title} · {s.date}
             {s.id === appState.activeSessionId && " (on TVs)"}
@@ -183,7 +183,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
           </p>
           {next && (
             <button type="button" className={primaryButton} disabled={disabled} onClick={() => void run((sb) => setLiveItem(sb, next.id))}>
-              {now ? "Next question →" : "Start with first item →"}
+              <SkipForward {...ICON} /> {now ? "Next question" : "Start with first item"}
             </button>
           )}
           {liveId && (
@@ -201,7 +201,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
       )}
 
       {error && (
-        <p className="mt-3 rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-3 ${errorNotice}`} role="alert">
           {error}
         </p>
       )}
@@ -248,7 +248,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
               <div className="flex flex-wrap items-center gap-2">
                 {isActiveDay && !live && (
                   <button type="button" className={secondaryButton} disabled={disabled} onClick={() => void run((sb) => setLiveItem(sb, item.id))}>
-                    Show on TVs
+                    <Tv {...ICON} /> Show on TVs
                   </button>
                 )}
                 <button
@@ -258,7 +258,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
                   aria-label={`Move ${item.title} up`}
                   onClick={() => void run((sb) => applySortUpdates(sb, moveItem(items, item.id, -1)))}
                 >
-                  ↑
+                  <ArrowUp {...ICON} />
                 </button>
                 <button
                   type="button"
@@ -267,13 +267,13 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
                   aria-label={`Move ${item.title} down`}
                   onClick={() => void run((sb) => applySortUpdates(sb, moveItem(items, item.id, 1)))}
                 >
-                  ↓
+                  <ArrowDown {...ICON} />
                 </button>
                 <button type="button" className={secondaryButton} disabled={disabled} onClick={() => setEditingId(item.id)}>
-                  Edit
+                  <Pencil {...ICON} /> Edit
                 </button>
-                <button type="button" className={secondaryButton} disabled={disabled} onClick={() => remove(item)}>
-                  Delete
+                <button type="button" className={dangerButton} disabled={disabled} onClick={() => remove(item)}>
+                  <Trash2 {...ICON} /> Delete
                 </button>
               </div>
             </li>
@@ -298,6 +298,6 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
           />
         </div>
       )}
-    </section>
+    </Panel>
   );
 }

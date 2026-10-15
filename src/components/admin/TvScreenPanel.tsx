@@ -1,5 +1,6 @@
 "use client";
 
+import { Tv } from "lucide-react";
 import { useState } from "react";
 import { useCaptionsView } from "@/components/captions/useCaptionsView";
 import {
@@ -17,6 +18,7 @@ import {
   toggleInRotation,
 } from "@/lib/captions/screen-control";
 import type { FestivalState } from "@/lib/realtime/festival-state";
+import { errorNotice, input, Panel, Toggle } from "./ui";
 import { useHostAction } from "./useHostAction";
 
 const SECONDS_CHOICES = [10, 15, 20, 30, 45, 60, 90, 120];
@@ -44,11 +46,13 @@ export function TvScreenPanel({ state, loaded }: Props) {
   const nowIso = () => new Date().toISOString();
 
   return (
-    <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h2 className="font-display text-3xl font-semibold">TV screen</h2>
+    <Panel
+      id="tv"
+      title="TV screen"
+      icon={Tv}
+      actions={
         <p className="text-sm" aria-live="polite">
-          <span className="opacity-70">On the downstairs TV now: </span>
+          <span className="opacity-70">Downstairs TV now: </span>
           <strong>{VIEW_LABELS[shown]}</strong>
           {upcoming && (
             <span className="opacity-70">
@@ -57,13 +61,15 @@ export function TvScreenPanel({ state, loaded }: Props) {
             </span>
           )}
         </p>
-      </div>
-      <p className="mt-1 text-sm opacity-70">
-        Pick what <code>/captions</code> shows, or let it rotate. The live question, Now · Next and QR stay
-        on every view; Highlight keeps a one-line caption.
-      </p>
-
-      <div role="radiogroup" aria-label="TV view" className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      }
+      description={
+        <>
+          Pick what <code>/captions</code> shows, or let it rotate. The live question, Now · Next and QR
+          stay on every view; Highlight keeps a one-line caption.
+        </>
+      }
+    >
+      <div role="radiogroup" aria-label="TV view" className="mt-4 grid grid-cols-2 gap-3 @lg:grid-cols-4">
         {CAPTIONS_VIEWS.map((view) => {
           const isShown = view === shown;
           const canShow = available.includes(view);
@@ -90,29 +96,23 @@ export function TvScreenPanel({ state, loaded }: Props) {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-festival-ink/10 pt-4">
-        <button
-          type="button"
-          role="switch"
-          aria-checked={rotating}
+        <Toggle
+          on={rotating}
+          onLabel="Auto-rotate on"
+          offLabel="Auto-rotate off"
+          ariaLabel="Auto-rotate the TV views"
           disabled={disabled}
           onClick={() =>
             void run((c) =>
               saveScreenPatch(c, rotating ? stopRotation(shown) : startRotation(shown, seconds, nowIso())),
             )
           }
-          className={`rounded-full px-4 py-1.5 font-semibold transition disabled:opacity-40 ${
-            rotating
-              ? "bg-festival-forest text-festival-cream hover:brightness-110"
-              : "border border-festival-forest text-festival-forest hover:bg-festival-forest/10"
-          }`}
-        >
-          {rotating ? "Auto-rotate on" : "Auto-rotate off"}
-        </button>
+        />
 
         <label className="flex items-center gap-2 text-sm font-semibold">
           Every
           <select
-            className="rounded-xl border border-festival-ink/20 bg-festival-cream px-2 py-1 disabled:opacity-50"
+            className={`${input} py-1`}
             disabled={disabled}
             value={rotating ? (appState.captionsRotateSeconds ?? seconds) : seconds}
             onChange={(e) => {
@@ -157,11 +157,11 @@ export function TvScreenPanel({ state, loaded }: Props) {
         </p>
       )}
       {error && (
-        <p className="mt-3 rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-3 ${errorNotice}`} role="alert">
           {error}
         </p>
       )}
-    </section>
+    </Panel>
   );
 }
 

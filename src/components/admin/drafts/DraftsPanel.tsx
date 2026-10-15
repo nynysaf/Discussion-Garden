@@ -1,12 +1,13 @@
 "use client";
 
+import { Sparkles, WandSparkles } from "lucide-react";
 import { useState } from "react";
 import { useDrafts } from "@/components/realtime/useDrafts";
 import type { AppState, SynthesisMode } from "@/lib/realtime/app-state";
 import { venueTime } from "@/lib/schedule/time";
 import { approveAllSteps, buildQueue, describeResult } from "@/lib/synthesis/drafts";
 import { approveAll, requestSuggestions, setSynthesisMode } from "@/lib/synthesis/drafts-db";
-import { primaryButton, secondaryButton } from "../garden/styles";
+import { errorNotice, Panel, primaryButton, secondaryButton } from "../ui";
 import { useHostAction } from "../useHostAction";
 import { DraftCard } from "./DraftCard";
 
@@ -56,11 +57,16 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
   }
 
   return (
-    <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="font-display text-3xl font-semibold">
+    <Panel
+      id="drafts"
+      title={
+        <>
           AI drafts {loaded && queue.length > 0 && <span className="font-normal opacity-70">({queue.length})</span>}
-        </h2>
+        </>
+      }
+      icon={Sparkles}
+      description={MODES.find((m) => m.mode === mode)?.hint}
+      actions={
         <div role="radiogroup" aria-label="Garden AI mode" className="flex rounded-full bg-festival-forest/10 p-1">
           {MODES.map((m) => (
             <button
@@ -82,9 +88,8 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
             </button>
           ))}
         </div>
-      </div>
-      <p className="mt-2 text-sm opacity-70">{MODES.find((m) => m.mode === mode)?.hint}</p>
-
+      }
+    >
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button
           type="button"
@@ -92,6 +97,7 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
           disabled={!stateLoaded || mode === "manual" || suggesting}
           onClick={() => void suggestNow()}
         >
+          <WandSparkles aria-hidden size={16} strokeWidth={1.75} />
           {suggesting ? "Asking the AI…" : "Suggest now"}
         </button>
         <span className="text-sm opacity-70">
@@ -116,7 +122,7 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
         </p>
       )}
       {(error ?? loadError) && (
-        <p className="mt-3 rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-3 ${errorNotice}`} role="alert">
           {error ?? `Can't load drafts: ${loadError}`}
         </p>
       )}
@@ -139,6 +145,6 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
           <DraftCard key={`${item.type}:${item.id}`} item={item} busy={busy} run={run} />
         ))}
       </ul>
-    </section>
+    </Panel>
   );
 }

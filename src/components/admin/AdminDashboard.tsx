@@ -1,6 +1,7 @@
 "use client";
 
 import { useFestivalState } from "@/components/realtime/useFestivalState";
+import { AdminStatusBar } from "./AdminStatusBar";
 import { AudiencePanel } from "./AudiencePanel";
 import { AudioPanel } from "./AudioPanel";
 import { DraftsPanel } from "./drafts/DraftsPanel";
@@ -8,24 +9,35 @@ import { FestivalPanel } from "./FestivalPanel";
 import { GardenPanel } from "./garden/GardenPanel";
 import { ScheduleManager } from "./ScheduleManager";
 import { TvScreenPanel } from "./TvScreenPanel";
+import { errorNotice } from "./ui";
 
 export function AdminDashboard() {
   const festival = useFestivalState();
+  const { state, loaded } = festival;
 
   return (
-    <div className="mt-8 flex flex-col gap-6">
+    <>
+      <AdminStatusBar state={state} loaded={loaded} />
       {festival.error && (
-        <p className="rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-4 ${errorNotice}`} role="alert">
           Can&apos;t load festival state: {festival.error}
         </p>
       )}
-      <AudioPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
-      <TvScreenPanel state={festival.state} loaded={festival.loaded} />
-      <FestivalPanel state={festival.state} loaded={festival.loaded} />
-      <ScheduleManager state={festival.state} loaded={festival.loaded} />
-      <AudiencePanel appState={festival.state.appState} stateLoaded={festival.loaded} />
-      <GardenPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
-      <DraftsPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
-    </div>
+      <div className="mt-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <div className="flex flex-col gap-6">
+          <AudioPanel appState={state.appState} stateLoaded={loaded} />
+          <TvScreenPanel state={state} loaded={loaded} />
+          <FestivalPanel state={state} loaded={loaded} />
+          <ScheduleManager state={state} loaded={loaded} />
+        </div>
+        <div className="flex flex-col gap-6">
+          <DraftsPanel appState={state.appState} stateLoaded={loaded} />
+          <AudiencePanel appState={state.appState} stateLoaded={loaded} />
+        </div>
+        <div className="xl:col-span-2">
+          <GardenPanel appState={state.appState} stateLoaded={loaded} />
+        </div>
+      </div>
+    </>
   );
 }

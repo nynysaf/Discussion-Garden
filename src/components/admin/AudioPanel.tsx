@@ -5,16 +5,15 @@ import Link from "next/link";
 import { CaptionColumn } from "@/components/captions/CaptionColumn";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles, voicesHeard } from "@/lib/captions/caption-feed";
+import { Mic, Pause, Play, Square } from "lucide-react";
 import { voiceFor } from "@/lib/captions/voice-slot";
 import type { AppState } from "@/lib/realtime/app-state";
+import { errorNotice, input, outlineButton, Panel, primaryButton, warnNotice } from "./ui";
 import { useHostCaptions } from "./useHostCaptions";
 
 type Props = { appState: AppState; stateLoaded: boolean };
 
-const primaryButton =
-  "rounded-full bg-festival-forest px-5 py-2 font-semibold text-festival-cream transition hover:brightness-110 disabled:opacity-40";
-const secondaryButton =
-  "rounded-full border border-festival-forest px-5 py-2 font-semibold text-festival-forest transition hover:bg-festival-forest/10 disabled:opacity-40";
+const ICON = { "aria-hidden": true, size: 18, strokeWidth: 1.5 } as const;
 
 export function AudioPanel({ appState, stateLoaded }: Props) {
   const host = useHostCaptions(appState, stateLoaded);
@@ -32,48 +31,48 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
   };
 
   return (
-    <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-3xl font-semibold">Live captions</h2>
-        <StatusPill status={audioStatus} className="text-lg" />
-      </div>
-
+    <Panel
+      id="captions"
+      title="Live captions"
+      icon={Mic}
+      actions={<StatusPill status={audioStatus} className="text-lg" />}
+    >
       {host.detail && (
-        <p className="mt-3 rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-3 ${errorNotice}`} role="alert">
           {host.detail}
         </p>
       )}
       {host.blockedByOtherTab && (
-        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="alert">
+        <p className={`mt-3 ${warnNotice}`} role="alert">
           Captions are already running in another tab of this browser. Use that
           tab, or close it first.
         </p>
       )}
       {host.transcriptBacklog > 0 && (
-        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+        <p className={`mt-3 ${warnNotice}`} role="status">
           {host.transcriptBacklog} transcript line
           {host.transcriptBacklog === 1 ? "" : "s"} waiting to save — retrying.
           Captions are unaffected.
         </p>
       )}
       {host.stateSaveError && (
-        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+        <p className={`mt-3 ${warnNotice}`} role="status">
           Couldn&apos;t update the TVs&apos; status (Live / Paused). Captions still
           flow; check the connection.
         </p>
       )}
       {stateLoaded && !appState.activeSessionId && (
-        <p className="mt-3 rounded-xl bg-festival-marigold/25 px-4 py-2" role="status">
+        <p className={`mt-3 ${warnNotice}`} role="status">
           No festival day selected — the transcript will be saved without a day.
         </p>
       )}
 
-      <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+      <div className="mt-5 grid gap-6 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="flex flex-col gap-5">
           <label className="flex flex-col gap-1">
             <span className="text-sm font-semibold">Microphone</span>
             <select
-              className="rounded-xl border border-festival-ink/20 bg-festival-cream px-3 py-2"
+              className={input}
               value={host.deviceId}
               onChange={(e) => host.setDeviceId(e.target.value)}
               disabled={!canStart}
@@ -131,23 +130,23 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
 
           <div className="flex flex-wrap gap-3">
             {canStart && (
-              <button type="button" className={primaryButton} onClick={() => void host.start()}>
-                Start captions
+              <button type="button" className={`${primaryButton} px-5 py-2`} onClick={() => void host.start()}>
+                <Mic {...ICON} /> Start captions
               </button>
             )}
             {isActive && (
-              <button type="button" className={secondaryButton} onClick={host.pause}>
-                Pause
+              <button type="button" className={`${outlineButton} px-5 py-2`} onClick={host.pause}>
+                <Pause {...ICON} /> Pause
               </button>
             )}
             {audioStatus === "paused" && (
-              <button type="button" className={primaryButton} onClick={() => void host.resume()}>
-                Resume
+              <button type="button" className={`${primaryButton} px-5 py-2`} onClick={() => void host.resume()}>
+                <Play {...ICON} /> Resume
               </button>
             )}
             {!canStart && (
-              <button type="button" className={secondaryButton} onClick={confirmStop}>
-                Stop
+              <button type="button" className={`${outlineButton} px-5 py-2`} onClick={confirmStop}>
+                <Square {...ICON} /> Stop
               </button>
             )}
           </div>
@@ -198,13 +197,13 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
         <div className="flex flex-col">
           <span className="text-sm font-semibold">Preview</span>
           <CaptionColumn
-            className="mt-1 h-96 rounded-2xl bg-festival-cream p-4 text-lg"
+            className="mt-1 h-64 rounded-2xl bg-festival-cream p-4 text-lg @3xl:h-96"
             bubbles={visibleBubbles(host.feed, 10)}
             speakerColoursOn={speakerColoursOn}
             emptyMessage="Captions will appear here once you start."
           />
         </div>
       </div>
-    </section>
+    </Panel>
   );
 }

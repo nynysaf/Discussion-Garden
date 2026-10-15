@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, EyeOff, MessageSquare, Pin, PinOff } from "lucide-react";
 import { useState } from "react";
 import { useSubmissions } from "@/components/realtime/useSubmissions";
 import type { AppState } from "@/lib/realtime/app-state";
@@ -10,9 +11,9 @@ import {
   setSubmissionsOpen,
 } from "@/lib/submissions/submissions-db";
 import { createClient } from "@/lib/supabase/client";
+import { errorNotice, Panel, secondaryButton, Toggle } from "./ui";
 
-const secondaryButton =
-  "rounded-full border border-festival-forest px-3 py-1 text-sm font-semibold text-festival-forest transition hover:bg-festival-forest/10 disabled:opacity-40";
+const ICON = { "aria-hidden": true, size: 16, strokeWidth: 1.75 } as const;
 
 type Props = { appState: AppState; stateLoaded: boolean };
 
@@ -36,32 +37,31 @@ export function AudiencePanel({ appState, stateLoaded }: Props) {
   }
 
   return (
-    <section className="rounded-3xl bg-white/60 p-6 shadow-poster">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="font-display text-3xl font-semibold">Audience messages</h2>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={open}
+    <Panel
+      id="audience"
+      title="Audience messages"
+      icon={MessageSquare}
+      actions={
+        <Toggle
+          on={open}
+          onLabel="Sharing open"
+          offLabel="Sharing paused"
+          ariaLabel="Audience sharing"
+          offIsWarning
           disabled={!stateLoaded || busy}
           onClick={() => void run((s) => setSubmissionsOpen(s, !open))}
-          className={`rounded-full px-4 py-1.5 font-semibold transition disabled:opacity-40 ${
-            open
-              ? "bg-festival-forest text-festival-cream hover:brightness-110"
-              : "bg-festival-terracotta/20 text-festival-ink hover:bg-festival-terracotta/30"
-          }`}
-        >
-          {open ? "Sharing open — tap to pause" : "Sharing paused — tap to reopen"}
-        </button>
-      </div>
-      <p className="mt-2 text-sm opacity-70">
-        Messages from <code>/audience</code> appear on the room TV straight away. Hide anything that
-        shouldn&apos;t be there; pin one to show it&apos;s being discussed.
-        {loaded && ` ${visibleCount} on the TV.`}
-      </p>
-
+        />
+      }
+      description={
+        <>
+          Messages from <code>/audience</code> appear on the room TV straight away. Hide anything that
+          shouldn&apos;t be there; pin one to show it&apos;s being discussed.
+          {loaded && ` ${visibleCount} on the TV.`}
+        </>
+      }
+    >
       {(error ?? loadError) && (
-        <p className="mt-3 rounded-xl bg-festival-terracotta/15 px-4 py-2" role="alert">
+        <p className={`mt-3 ${errorNotice}`} role="alert">
           {error ?? `Can't load messages: ${loadError}`}
         </p>
       )}
@@ -103,6 +103,7 @@ export function AudiencePanel({ appState, stateLoaded }: Props) {
                       disabled={busy}
                       onClick={() => void run((c) => setHighlighted(c, pinned ? null : s.id))}
                     >
+                      {pinned ? <PinOff {...ICON} /> : <Pin {...ICON} />}
                       {pinned ? "Unpin" : "Pin"}
                     </button>
                   )}
@@ -112,6 +113,7 @@ export function AudiencePanel({ appState, stateLoaded }: Props) {
                     disabled={busy}
                     onClick={() => void run((c) => setSubmissionHidden(c, s.id, !s.hidden))}
                   >
+                    {s.hidden ? <Eye {...ICON} /> : <EyeOff {...ICON} />}
                     {s.hidden ? "Show" : "Hide"}
                   </button>
                 </div>
@@ -120,6 +122,6 @@ export function AudiencePanel({ appState, stateLoaded }: Props) {
           );
         })}
       </ul>
-    </section>
+    </Panel>
   );
 }
