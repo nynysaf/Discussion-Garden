@@ -1,10 +1,18 @@
 // Create (or reset the password of) a host account and add it to the allowlist.
 // Usage: npm run host:add -- someone@example.com "a long password"
+//        npm run host:add -- someone@example.com        (asks for the password)
 // Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local.
+import { createInterface } from "node:readline/promises";
 import { createClient } from "@supabase/supabase-js";
 
-const [emailArg, password] = process.argv.slice(2);
+const [emailArg, passwordArg] = process.argv.slice(2);
 const email = emailArg?.trim().toLowerCase();
+let password = passwordArg;
+if (email && !password) {
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  password = (await rl.question(`Password for ${email} (8+ chars): `)).trim();
+  rl.close();
+}
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const secret = process.env.SUPABASE_SECRET_KEY;
 

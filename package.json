@@ -14,6 +14,7 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:push:hosted": "node --env-file=.env.local scripts/push-hosted.mjs",
+    "hosted": "node --env-file=.env.local scripts/with-hosted.mjs",
     "host:add": "node --env-file=.env.local scripts/add-host.mjs",
     "db:check": "node --env-file=.env.local scripts/check-access.mjs",
     "garden:demo": "node --env-file=.env.local scripts/garden-demo.mjs",
