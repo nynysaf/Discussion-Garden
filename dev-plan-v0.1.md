@@ -91,14 +91,16 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 4 — Audience → room feed | Done — user-verified 2026-10-01 (no pre-approval; Hide/Pin/pause sharing) |
 | 5 — Garden | 5A canvas user-verified 2026-10-01 (15 → 150 live, readable, settles, fills box). 5B admin editor user-verified 2026-10-01. Day-switch check user-verified 2026-10-05. **Done** |
 | 6 — Hybrid AI | 6.1 engine + 6.2 AI drafts panel done 2026-10-05 (agent-verified; 6.2 browser check by user pending). 6.3 timer: next |
-| 6B → 8 | Not started |
+| 6B — `/captions` views | Done 2026-10-14 — Garden · Both · Captions · **Highlight** + auto-rotate playlist (agent-verified; user check on production pending) |
+| `/admin` polish | Done 2026-10-14 — status bar, two columns, shared panel set (agent-verified) |
+| 7 → 8 | Not started |
 
 ### ▶ Resume here (next session)
 **1. Start the machine back up** (agent runs these, from **`C:\dev\Discussion-Garden`** — the old OneDrive copy is retired):
 - Check free space on C: first (`Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"`). Under ~5 GB free → Docker breaks; tell the user before doing anything else.
 - Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
 - `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again. Gotcha: if another project's dev server already holds port 3000, Next quietly moves this app to 3001 — check the port it prints (`netstat -ano | findstr :3000` shows the owner).
-- Sanity: `npm test` (166 pass) and `npm run db:check` (23/23).
+- Sanity: `npm test` (201 pass) and `npm run db:check` (23/23). Against hosted: `npm run hosted -- scripts/check-access.mjs`.
 
 **2. Testing notes:**
 - Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
@@ -108,11 +110,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 
 **3. Phase 5 is done** (day-switch check user-verified 2026-10-05).
 
-**4. First:** if the user hasn't reported it yet, ask how the **6.2 AI drafts panel browser check** went (checklist in the 2026-10-05 6.2 log entry below).
+**4. First:** if the user hasn't reported them yet, ask how the **6B TV views check on production** went (checklist in the 2026-10-14 6B log entry below) and the **6.2 AI drafts panel browser check** (checklist in the 2026-10-05 6.2 entry). **Hosted Supabase pauses after ~7 days without traffic** — open production before Fri Oct 16.
 **5. Next build:** **Phase 6.3 — automatic timer**: call `requestSuggestions()` (`src/lib/synthesis/drafts-db.ts`) every ~35 s from the tab that owns the mic (`useHostCaptions` / controller lock), only while `audio_status = live` and mode ≠ Manual; skip a tick if the previous call is still running; show the result/error with the same non-blocking notice as "Suggest now"; switching to Manual stops it at once. Captions must never wait on it.
 - Test without a mic: set Hybrid, `npm run transcript:demo -- 1` (then `-- 2` for a stretch that revisits ideas; `-- clear` removes it), press "Suggest now". The AI only reads talk from the **last 10 minutes** since the previous successful run, so re-add sample talk if it says "Not enough new talk".
 
-**Open decisions for the user:** real festival schedule · Vercel deploy timing · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
+**Open decisions for the user:** real festival schedule · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -191,9 +193,12 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - **User browser checklist (pending):** log in → switch to Hybrid → `npm run transcript:demo -- 1` (agent runs it) → Suggest now → drafts appear with reasons + "From the talk" → Edit one (rename, Approve with changes) → Reject one → `/captions` shows only approved ideas → Approve all → switch Auto (confirm appears) then back to Manual → Suggest now is disabled in Manual.
 
 - 2026-10-14 — **Live on Vercel: https://discussion-garden.vercel.app.** User imported the GitHub repo in the Vercel dashboard (every push to `main` deploys production); CLI linked (`.vercel/`, git-ignored). Env vars had been imported from `.env.local` (local Supabase URL + admin-only secrets) — replaced with hosted values via the Vercel API and the access token/DB password/`HOST_EMAILS` removed. Hosted Supabase **was paused** (free-tier inactivity) — restored. Auth `site_url` set. New `npm run hosted -- <script>` runs any script against hosted; `host:add` now asks for the password when it's left out. Agent-verified: production bundle points at hosted Supabase; `/admin` → 307 login; token + synthesis routes 401 signed out; a `[smoke test]` audience message was public as `approved`, then deleted; `db:check` 23/23 on hosted. **User-verified on production:** host login, mic on https, captions + live question on a second device, QR → message → room feed + admin, Suggest now.
+- 2026-10-14 — **Phase 6B — `/captions` views + Highlight** (PRD v0.2.8, DESIGN_GUIDE §5.1a/§5.1b). Migration `20261014000001_captions_views` (local + hosted): `app_state.captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (text[] playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since`. Pure helpers, all unit-tested: `src/lib/captions/layout.ts` (`availableViews`, `effectiveView`, `currentView`, `nextRotation`, `bandUnder`, `refitPlan`), `screen-control.ts` (admin patches), `src/lib/schedule/countdown.ts`. `/captions`: middle band slides (900 ms; panel frames move, contents sized in container units and re-fit once), fade under reduced motion; **Highlight** = full-screen cross-fade overlay (`HighlightScreen`: Now discussing / Coming up, question, Up next + countdown, one-line `CaptionTicker`, QR). `/admin` **TV screen** panel: four view cards with sketches (unavailable ones disabled with a reason), Auto-rotate switch, "Every N seconds", playlist ticks, live readout "Downstairs TV now: Both · Captions in 12s". Agent-verified: four views at 1920×1080, admin → TV switch, rotation readout, slide/re-fit timing via CDP.
+  - **User checklist on production (pending):** open `/captions` on two devices → pick each view on `/admin` (both TVs change within ~1 s; header/strip/QR never move) → Highlight shows the live question + Up next → Auto-rotate on at 10 s with all four ticked → both TVs change together; reload one mid-rotation → it lands on the same view → Hide garden → only Captions/Highlight remain → turn rotation off.
+- 2026-10-14 — **`/admin` polish** (DESIGN_GUIDE §8). `src/components/admin/ui.tsx`: `Panel` (icon title, actions, description, jump-link id), `Toggle` switch (state in words; terracotta when an "off" needs attention), shared primary/outline/small/danger buttons and notices; `garden/styles.ts` re-exports them. Lucide icons (`lucide-react`). Sticky **`AdminStatusBar`**: captions status, question on the TVs, current TV view + next rotation, Up next, **Next question**, jump links. Two columns at ≥ 1280 px (captions/TV/day/schedule | AI drafts/audience), garden full width with canvas + planting beside the idea list. Panels use container queries. Page 5,300 → 3,630 px tall at 1600 px wide. 201 unit tests; typecheck + lint clean.
 
 ### In progress
-- Hosted Supabase is in sync: all migrations through 2026-10-05 pushed (6/6 applied).
+- Hosted Supabase is in sync: all migrations through 2026-10-14 pushed.
 - Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; remaining real hosts.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
@@ -231,6 +236,10 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-01 — **`/admin` (the mic) only works on a secure page:** `http://localhost:3000` locally, `https://` on Vercel. On a plain-http LAN address (`http://10.0.0.x`) browsers hide the mic API; `LiveCaptioner` now shows a plain-English message instead of crashing. LAN addresses are only for phones/TVs.
 - 2026-10-01 — **Garden layout is computed on each screen, deterministically** (seeded randomness, no shared positions table). Same nodes + same canvas size → same picture on every TV. Node positions are not stored in the DB.
 - 2026-10-01 — **Realtime + RLS gotcha:** when a row becomes invisible to a viewer (message hidden, node unpublished), that viewer gets **no** event. Fix pattern: a `security definer` trigger touches `app_state` (`where id = true` — Supabase rejects UPDATE without WHERE), which every screen watches, and screens re-fetch.
+- 2026-10-14 — **Only `/captions` rotates, driven from `/admin`.** Rotation = a playlist of ticked views + one seconds-per-view setting. Every TV computes the current view from `app_state` (selected view, playlist, seconds, **`captions_rotate_since`** anchor) and the clock — no timers in the DB, no writes from TVs, all screens in step, a reload lands on the same view. Picking a view while rotating restarts the rotation from that view.
+- 2026-10-14 — **Highlight = full-screen takeover with a one-line caption ticker** (captions never fully disappear). Left out of the playlist when the day has no live or upcoming item.
+- 2026-10-14 — **`npm run hosted -- <script>`** runs any script against hosted Supabase: it fetches the URL/keys with `SUPABASE_ACCESS_TOKEN` and passes them only to the child process (never printed or written to disk).
+- 2026-10-14 — **`/admin` UI lives in one place** (`src/components/admin/ui.tsx`): new panels use `Panel` + `Toggle` + the shared buttons, never their own class strings.
 - 2026-09-30 — Test runner = **Vitest** (`npm test`); pure helpers live in `src/lib/**` with `*.test.ts` beside them.
 
 ### Blocked / open
@@ -315,12 +324,12 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] Draft queue UI: Approve / Edit / Reject / Approve all; `reinforce` bumps weight on approve. *(6.2, 2026-10-05 — agent-verified; user browser check pending)*
 - **Test:** 5 minutes of sample talk → drafts arrive, no near-duplicates of existing nodes; force an API error → admin notice, captions unaffected; switch to Manual → timer stops.
 
-### Phase 6B — `/captions` layouts: Garden · Both · Captions — SHOULD (after Phase 6)
-- [ ] Migration: `app_state.captions_layout` (`garden`/`both`/`captions`, default `both`) + `captions_rotate_seconds` (null = off).
-- [ ] Pure helper `src/lib/captions/layout.ts`: `effectiveLayout(selected, gardenHidden)` and `nextRotation(current, elapsed, seconds)`, with unit tests.
-- [ ] `/captions`: middle band animates between layouts per DESIGN_GUIDE §5.1a (transform/clip-path slide; cross-fade under reduced motion); garden re-fits once after the slide.
-- [ ] `/admin`: Garden · Both · Captions buttons + auto-rotate on/off + seconds.
-- **Test:** each button → TV slides within ~1s, header/strip/QR never move; auto-rotate at 20s cycles all three and survives a TV reload; "Hide garden" → Captions; reduced-motion → fade only; full-screen captions stay readable from the back row.
+### Phase 6B — `/captions` views: Garden · Both · Captions · Highlight — SHOULD — **done 2026-10-14**
+- [x] Migration: `app_state.captions_layout` (`garden`/`both`/`captions`/`highlight`, default `both`) + `captions_rotation` + `captions_rotate_seconds` (null = off) + `captions_rotate_since`.
+- [x] Pure helper `src/lib/captions/layout.ts`: `effectiveView`, `currentView`, `nextRotation` (+ band/re-fit helpers), with unit tests.
+- [x] `/captions`: middle band slides between layouts per DESIGN_GUIDE §5.1a (cross-fade under reduced motion); contents re-fit once. Highlight takeover per §5.1b.
+- [x] `/admin`: TV screen panel — four view cards + auto-rotate switch + seconds + playlist.
+- **Test:** each button → TV slides within ~1s, header/strip/QR never move; auto-rotate at 20s cycles the ticked views and survives a TV reload; "Hide garden" → Captions; reduced-motion → fade only; full-screen captions stay readable from the back row.
 
 ### Phase 7 — Hardening + export + rehearsal — SHOULD (rehearsal itself is a must before Sat Oct 17)
 - [ ] Export: festival garden JSON + PNG (with each node's origin day); transcript text per day (host-only).

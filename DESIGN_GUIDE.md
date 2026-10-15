@@ -1,9 +1,9 @@
 # Discussion Garden — Visual Design Guide
 
-**Version:** 0.2.2 · 2026-09-30  
+**Version:** 0.2.5 · 2026-10-14  
 **Applies to:** all four views (`/admin`, `/captions`, `/audience`, `/room-feed`).  
 **Companion:** `prd-v0.2.md` · `dev-plan-v0.1.md`  
-**Changelog:** v0.2.4 garden labels wrap to two lines and never overlap (§6). v0.2.3 `/captions` has three layouts — Garden / Both / Captions — with a slide transition (§5.1a). v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
+**Changelog:** v0.2.5 fourth `/captions` view, **Highlight** — a full-screen takeover of the live question and what's next, with a one-line caption ticker (§5.1b); host-driven auto-rotate playlist (§5.1a); `/admin` gets a sticky status bar, two columns and one shared panel/button/switch set (§8). v0.2.4 garden labels wrap to two lines and never overlap (§6). v0.2.3 `/captions` has three layouts — Garden / Both / Captions — with a slide transition (§5.1a). v0.2.2 voices get garden-animal emoji (self-hosted SVG) instead of "Voice N" labels; no names ever. v0.2.1 caption speech bubbles colour-coded per speaker (§5.2), captions move to a tall right column, schedule becomes a Now · Next strip. v0.2 split out of the original PRD; Tailwind v4 tokens; contrast rules; TV display rules; garden canvas spec (light "poster paper" canvas, confirmed 2026-09-30).
 
 > Tell your AI coding agent: **"Use these tokens as the single source of truth. Never hard-code colors or fonts; always reference the token."**
 
@@ -152,12 +152,35 @@ Only the **middle band** changes. The header (title + live question) and the bot
 ```
 
 - **Both → Garden:** the garden panel grows to the right over the caption column. **Both → Captions:** the caption column grows to the left over the garden. Going back reverses the motion.
-- **Motion:** one slow, calm slide (~800–1000 ms, ease-in-out). Animate `transform`/`clip-path`, not `width`, so the garden canvas and bubbles don't re-layout every frame. After the slide, the garden re-fits to its new size once and settles (no jitter).
+- **Motion:** one slow, calm slide (900 ms, ease-in-out). Only the panel frames move; their contents keep a fixed size during the slide (container units), so the garden canvas and bubbles don't re-layout every frame. A shrinking panel re-fits straight away; a growing one re-fits once after the slide and settles (no jitter).
 - **Full-screen captions:** don't stretch bubbles across 16:9. Keep a readable centred column (~60–70ch max) and allow the caption size to go up one step. Bubbles keep their alternating indent, colours, and animal emoji.
 - **Full-screen garden:** the same garden, fit to the wider area. No captions overlay.
-- **Reduced motion:** a ~200 ms cross-fade instead of the slide.
-- **Garden hidden** (admin kill switch) → always Captions, whatever layout is selected.
-- **Auto-rotate:** each layout holds for the host's chosen time (e.g. 60 s). The rotation never interrupts a slide that's already running.
+- **Reduced motion:** a short cross-fade (~500 ms) instead of the slide.
+- **Garden hidden** (admin kill switch) → always Captions, whatever layout is selected; Garden and Both drop out of the rotation.
+- **Auto-rotate:** the host ticks which views are in the playlist and picks one hold time (10–120 s, default 20 s). The rotation starts from the view the host picked and goes in the fixed order Garden → Both → Captions → Highlight, skipping unticked or unavailable views; it needs at least two. Every TV works out the current view from the same start time saved in `app_state`, so all screens stay in step and a reloaded TV lands on the right view without sliding.
+
+### 5.1b `/captions` Highlight view *(decided 2026-10-14)*
+
+A **full-screen takeover** (cross-fade, ~700 ms) for the moments between talks, or to put the question in front of the room.
+
+```
+┌──────────────────────────────────────────────────────┐
+│ DISCUSSION GARDEN                          ● LIVE    │
+│                                                      │
+│  ● NOW DISCUSSING                                    │
+│  "What future are you walking in with today?"        │  ← Cormorant italic, very large, ≤ 3 lines
+│   Opening circle                                     │
+│                                                      │
+│  ┌ UP NEXT · 11:30 · Neighbourhood commons · Starts in 12 min ┐
+│                                                      │
+│ 🦔 …the last line of the live captions        [QR]   │  ← one-line ticker, never wraps
+└──────────────────────────────────────────────────────┘
+```
+
+- **Label:** "Now discussing" when an item is live; "Coming up" (showing the next item) when nothing is live yet. Hidden from the playlist when the day has neither.
+- **Countdown:** "Starts in N min" under an hour, "Starts in H h M min" under six hours, "Starting soon" in the last minute or once the time has passed; nothing further out.
+- **Caption ticker:** the latest bubble's animal emoji plus its tail, on one line. Short text is left-aligned; a fade on the left edge appears only when the text overflows. Captions stay visible on every view — they never depend on AI.
+- The QR code stays, so the audience can still write in.
 
 ### 5.2 Caption bubbles & speaker colours
 
@@ -237,9 +260,12 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - After submit: warm confirmation with a small sprout illustration and "Send another".
 
 ## 8. Admin view (`/admin`)
-- Functional first: light cream background, clear sections (Audio · Schedule · Audience messages · Garden · Drafts).
+- Functional first: light cream background, clear sections (Live captions · TV screen · Festival day · Schedule · AI drafts · Audience messages · Garden).
+- **Sticky status bar** at the top: captions status pill, the question on the TVs, the current TV view (and the next one if rotating), "Up next", a **Next question** button, and jump links to every panel. A host mid-talk never has to scroll to act.
+- **Layout:** two columns on wide screens (≥ 1280 px) — left: captions, TV screen, festival day, schedule; right: AI drafts, audience messages; the garden spans the full width below (canvas + planting beside the idea list). One column below that. Panels adapt to their own width (container queries), not the window.
+- **One component set** (`src/components/admin/ui.tsx`): `Panel` (title with icon in a soft green circle, optional actions and description), primary / outline / small / danger buttons, and a `Toggle` switch that always says its state in words; "off" states that need attention (sharing paused, garden hidden) turn terracotta.
 - **Audio status** is the loudest element: large pill (Live = forest, Paused = marigold with ink text, Reconnecting/Offline = terracotta with ink text) + word.
-- Destructive actions (Stop, Delete node, Hide garden) require confirmation.
+- Destructive actions (Stop, Delete, Hide garden) require confirmation; Delete uses the terracotta danger button.
 - Icons: thin rounded line icons (Lucide), 1.5px stroke.
 
 ## 9. Accessibility checklist

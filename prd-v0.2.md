@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.7  
-**Last updated:** 2026-10-01  
+**Version:** 0.2.8  
+**Last updated:** 2026-10-14  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.8 (2026-10-14):** Live on Vercel. `/captions` gets a fourth view, **Highlight**: a full-screen takeover of the live question (or "Coming up" before anything is live) and the next item with a countdown, keeping a one-line caption ticker and the QR. Auto-rotate becomes a **playlist** — the host ticks which views rotate and sets one hold time (10–120 s); all TVs stay in step. `/admin` gets a sticky status bar (captions status, question on the TVs, current TV view, **Next question**) and a two-column layout.
 - **v0.2.7 (2026-10-01):** **No pre-approval for audience messages.** They appear on `/room-feed` as soon as they pass the server checks (length, profanity, per-phone rate limit). The host can **Hide** any message, **Pin** one as "being discussed", and **pause sharing** with one switch if it's abused. Replaces the Approve/Dismiss moderation queue.
 - **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
 - **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. "Now" = the item the host put live, not the clock (sessions run late).
@@ -113,7 +114,8 @@ Requires host login (1–3 host accounts).
 * **Draft queue (Hybrid):** AI proposals listed with Approve / Edit / Reject; "Approve all" for speed.
 * **Audience messages:** live list of everything sent from `/audience` (already on the room TV), with **Hide / Show** and **Pin / Unpin** ("being discussed now"), plus a **Sharing open / paused** switch.
 * **Kill switches:** "Hide garden on TVs", "Freeze captions", and "Speaker colours" on/off.
-* **Downstairs TV layout** *(Should)*: Garden · Both · Captions buttons, plus an optional auto-rotate (on/off + seconds per view). See View 2.
+* **Downstairs TV layout** *(Should)*: Garden · Both · Captions · Highlight buttons, plus an optional auto-rotate (on/off, which views are in the playlist, one seconds-per-view setting). See View 2.
+* **Status bar:** always visible at the top — captions status, the question on the TVs, what the TV is showing, and a **Next question** button.
 
 ### View 2: Downstairs Captions & Garden (`/captions`) — overflow TV
 Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
@@ -128,8 +130,9 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
   * **Garden** — the garden slides out to the right and fills the whole middle band, covering the captions.
   * **Captions** — the captions slide out to the left and fill the whole middle band, covering the garden.
   * The header, live question, Now · Next strip, and QR code stay put in every layout; only the middle band changes.
-  * The host picks the layout on `/admin`; an optional auto-rotate cycles the layouts on a timer. The TV reads the choice from `app_state` and does the rotating itself, so it stays read-only.
-  * "Hide garden on TVs" always wins: the TV shows Captions.
+  * **Highlight** *(added 2026-10-14)* — a full-screen takeover: "Now discussing" + the live question in large type, the title, an **Up next** card with a countdown, a one-line caption ticker, and the QR. Shows "Coming up" before anything is live; left out when the day has no items. See DESIGN_GUIDE §5.1b.
+  * The host picks the layout on `/admin`; an optional auto-rotate cycles the ticked layouts on a timer. The TV reads the choice and the rotation start time from `app_state` and does the rotating itself, so it stays read-only and every TV shows the same view.
+  * "Hide garden on TVs" always wins: the TV shows Captions (Garden and Both drop out of the rotation).
   * `prefers-reduced-motion`: switch with a short fade instead of a slide.
 
 ### 4.1 Caption bubbles & speaker separation
@@ -203,7 +206,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`), `captions_rotate_seconds` (null = off) | Public read, host write |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (views in the playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since` (rotation start, shared by all TVs) | Public read, host write |
 | `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
 | `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
