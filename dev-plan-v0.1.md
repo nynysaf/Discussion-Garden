@@ -83,11 +83,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ### Current phase
 | Phase | Status |
 | :--- | :--- |
-| 0 — Setup | Done except **Vercel** |
+| 0 — Setup | Done — **live on Vercel 2026-10-14** (https://discussion-garden.vercel.app), user-verified |
 | 1 — Data + realtime spine | Done — user-verified 2026-10-01 (two browsers) |
 | 2 — Live captions | Working; speaker separation user-verified. Wi-Fi-drop + 60-min run still to do |
 | 3 — Schedule + live question + QR | Done — user-verified 2026-10-01 (schedule → TV, phone QR scan) |
-| Hosted Supabase | Linked, schema + seed pushed, sign-ups off, `db:check` 19/19. Not yet used by the app |
+| Hosted Supabase | Used by production since 2026-10-14. All migrations pushed, sign-ups off, `db:check` 23/23 against hosted |
 | 4 — Audience → room feed | Done — user-verified 2026-10-01 (no pre-approval; Hide/Pin/pause sharing) |
 | 5 — Garden | 5A canvas user-verified 2026-10-01 (15 → 150 live, readable, settles, fills box). 5B admin editor user-verified 2026-10-01. Day-switch check user-verified 2026-10-05. **Done** |
 | 6 — Hybrid AI | 6.1 engine + 6.2 AI drafts panel done 2026-10-05 (agent-verified; 6.2 browser check by user pending). 6.3 timer: next |
@@ -121,7 +121,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Garden: **one shared garden** across both days; never reset between days
 - Rehearsal at venue: **Fri Oct 16 (target — confirm access)**
 - Daily topic schedule / live questions: **TBD**
-- Production URL: **TBD**
+- Production URL: **https://discussion-garden.vercel.app** (Vercel project `discussion-garden`, deploys every push to `main`)
 
 ### Shipped
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
@@ -190,9 +190,11 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
   - Agent-verified twice against real OpenAI + local DB (no browser — the Cursor browser hung): `/admin` renders the panel for a host; anon reads 0 drafts / reinforcements / quotes; the panel's own functions: approve-with-edit → published under the new name, reject → gone, reject "mentioned again", Approve all → queue empty, only approved ideas public. Test rows removed and weights restored; mode back to Manual.
   - **User browser checklist (pending):** log in → switch to Hybrid → `npm run transcript:demo -- 1` (agent runs it) → Suggest now → drafts appear with reasons + "From the talk" → Edit one (rename, Approve with changes) → Reject one → `/captions` shows only approved ideas → Approve all → switch Auto (confirm appears) then back to Manual → Suggest now is disabled in Manual.
 
+- 2026-10-14 — **Live on Vercel: https://discussion-garden.vercel.app.** User imported the GitHub repo in the Vercel dashboard (every push to `main` deploys production); CLI linked (`.vercel/`, git-ignored). Env vars had been imported from `.env.local` (local Supabase URL + admin-only secrets) — replaced with hosted values via the Vercel API and the access token/DB password/`HOST_EMAILS` removed. Hosted Supabase **was paused** (free-tier inactivity) — restored. Auth `site_url` set. New `npm run hosted -- <script>` runs any script against hosted; `host:add` now asks for the password when it's left out. Agent-verified: production bundle points at hosted Supabase; `/admin` → 307 login; token + synthesis routes 401 signed out; a `[smoke test]` audience message was public as `approved`, then deleted; `db:check` 23/23 on hosted. **User-verified on production:** host login, mic on https, captions + live question on a second device, QR → message → room feed + admin, Suggest now.
+
 ### In progress
-- Hosted Supabase is in sync: all 2026-10-01 migrations pushed (5/5 applied).
-- Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; real hosts; Vercel.
+- Hosted Supabase is in sync: all migrations through 2026-10-05 pushed (6/6 applied).
+- Hosted follow-ups (§7): private channel for `watchTables` before turning off Realtime public access; remaining real hosts.
 - Remaining Phase 2 checks: Wi-Fi drop, 60-minute run.
 
 ### Decisions (must remember)
@@ -237,7 +239,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - TV count, resolution, and what device runs the browser on each TV.
 - Mic hardware and whether we can take a feed from the venue PA/mixer.
 - Who operates `/admin` during sessions (host vs dedicated operator).
-- Accounts still needed: Vercel project, OpenAI API key. (Hosted Supabase done.) (Deepgram Member key + public GitHub repo done.)
+- Accounts: all done (Vercel project, OpenAI key, hosted Supabase, Deepgram Member key, public GitHub repo).
 - Stale "Live" on TVs if the host tab crashes/closes while live (app_state keeps `live`). Consider a host heartbeat in Phase 7.
 - Two host **laptops** could both press Start (Web Lock only covers one browser). Runbook: only one admin laptop runs captions.
 - Official poster art / fonts license for the garden frame.
@@ -256,7 +258,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] Add Tailwind v4 tokens + fonts from `DESIGN_GUIDE.md` §3–4 (`src/app/globals.css`, `layout.tsx`).
 - [x] `.env.example` with placeholder names only (see §6).
 - [x] Create **public** GitHub repo, push `main`.
-- [ ] Connect Vercel, add env vars in Vercel.
+- [x] Connect Vercel, add env vars in Vercel. *(2026-10-14)*
 - [x] Sign up for Deepgram (free $200 credit, no card). Console → API Keys → Create Key → Advanced → **Member** permission. Store it only in `.env.local` / Vercel as `DEEPGRAM_API_KEY`.
 - **Test:** home page renders in cream/ink with Cormorant title; Vercel preview deploys from `main`.
 
@@ -365,10 +367,11 @@ Hosted project: **`mjjzfqyrskvhngwstjoz`** ("Discussion Garden", `us-east-1`), U
 - [ ] Replace the made-up schedule with the real one (once known).
 - [ ] **Realtime "Allow public access" OFF** (`private_only`). **Not yet — would break TVs:** `watchTables` (postgres_changes) uses public channels. First move it to a private channel + add a `realtime.messages` select policy for its topic, verify against current Supabase docs, then flip.
 - [x] **Sign-ups disabled** (`disable_signup = true`, set via Management API).
-- [ ] Put the hosted URL + publishable + secret keys in Vercel env vars. Keys can be read with the access token (`GET /v1/projects/<ref>/api-keys?reveal=true`) — never print them.
-- [ ] `host:add` each real host (1–3) against hosted: set `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SECRET_KEY` in the shell first (shell vars win over `--env-file`). Password typed by the user, not in chat.
-- [x] `db:check` against hosted (same shell-var trick) → **19/19 pass** (2026-09-30).
-- [ ] Hosted `site_url` is still `http://localhost:3000` — set to the Vercel URL at deploy.
+- [x] Put the hosted URL + publishable + secret keys in Vercel env vars (2026-10-14, set through the Vercel + Supabase APIs, values never printed). Vercel holds only what the app needs at runtime: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_URL`, `SUPABASE_SECRET_KEY`, `DEEPGRAM_API_KEY`, `OPENAI_API_KEY` (production + preview). **Not** the Supabase access token or DB password.
+- [ ] `host:add` each real host (1–3) against hosted: `npm run hosted -- scripts/add-host.mjs someone@example.com` (asks for the password; the user types it in their own terminal, never in chat). The user's own account was added 2026-10-14.
+- [x] `db:check` against hosted: `npm run hosted -- scripts/check-access.mjs` → **23/23 pass** (2026-10-14). `npm run hosted -- <script>` fetches the hosted keys with the access token and passes them only to the child process.
+- [x] Hosted Auth `site_url` = https://discussion-garden.vercel.app; redirect list = production + `http://localhost:3000/**` (2026-10-14).
+- [ ] **Keep the hosted project awake.** Free Supabase projects pause after ~7 days without traffic (it was paused on 2026-10-14 and had to be restored). Open production `/captions` at least once in the days before the festival; check `GET /v1/projects/<ref>` → `ACTIVE_HEALTHY` on Fri Oct 16.
 
 ### Fri Oct 16 (setup + rehearsal)
 - [ ] Test every TV browser loads its URL full-screen (F11 / kiosk) and survives a Wi-Fi toggle.
