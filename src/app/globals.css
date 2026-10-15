@@ -60,6 +60,82 @@ body {
   .fade-bottom {
     mask-image: linear-gradient(to top, transparent 0%, black 12%);
   }
+
+  /* One-line caption ticker: the start of a long sentence fades out on the left. */
+  .fade-left {
+    mask-image: linear-gradient(to right, transparent 0%, black 10%);
+  }
+}
+
+/*
+ * /captions middle band (DESIGN_GUIDE §5.1a). The panel frames slide (left/right on
+ * childless-in-layout boxes); their contents are sized in the band's container units, so
+ * the garden and bubbles don't resize every frame — they re-fit once (`data-fit`).
+ * The second `width`/`right` lines win where container units exist; the % lines are a
+ * fallback for older TV browsers.
+ */
+.view-band {
+  container-type: size;
+}
+
+.band-slide {
+  transition:
+    left 900ms ease-in-out,
+    right 900ms ease-in-out,
+    opacity 900ms ease-in-out;
+}
+
+.garden-frame {
+  right: calc(42% + 1vw);
+}
+.garden-frame[data-band="garden"] {
+  right: 0;
+}
+.garden-frame[data-band="captions"] {
+  right: 100%;
+  opacity: 0;
+}
+
+.garden-fit {
+  width: calc(58% - 1vw);
+  width: calc(58cqw - 1vw);
+}
+.garden-fit[data-fit="garden"] {
+  width: 100%;
+  width: 100cqw;
+}
+
+.captions-panel {
+  left: calc(58% + 1vw);
+}
+.captions-panel[data-band="captions"] {
+  left: 0;
+}
+.captions-panel[data-band="garden"] {
+  left: 100%;
+  opacity: 0;
+}
+
+.captions-fit {
+  right: 0;
+  width: calc(42% - 1vw);
+  width: calc(42cqw - 1vw);
+}
+.captions-fit[data-fit="captions"] {
+  right: 12.5%;
+  width: 75%;
+  right: calc((100cqw - min(100cqw, 75vw)) / 2);
+  width: min(100cqw, 75vw);
+}
+
+/* Highlight takes over the whole screen with a cross-fade (kept under reduced motion). */
+.highlight-layer {
+  transition: opacity 700ms ease-in-out;
+}
+
+/* Reduced motion: no slide — the band fades in once per change instead. */
+.view-fade-cover {
+  display: none;
 }
 
 @keyframes bubble-rise {
@@ -130,7 +206,23 @@ body {
     animation: none;
   }
 
-  .garden-node {
+  .garden-node,
+  .band-slide {
     transition: none;
+  }
+
+  .view-fade-cover {
+    display: block;
+    pointer-events: none;
+    animation: cover-fade 500ms ease-out forwards;
+  }
+}
+
+@keyframes cover-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

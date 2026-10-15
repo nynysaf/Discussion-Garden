@@ -7,6 +7,7 @@ import { DraftsPanel } from "./drafts/DraftsPanel";
 import { FestivalPanel } from "./FestivalPanel";
 import { GardenPanel } from "./garden/GardenPanel";
 import { ScheduleManager } from "./ScheduleManager";
+import { TvScreenPanel } from "./TvScreenPanel";
 
 export function AdminDashboard() {
   const festival = useFestivalState();
@@ -19,6 +20,7 @@ export function AdminDashboard() {
         </p>
       )}
       <AudioPanel appState={festival.state.appState} stateLoaded={festival.loaded} />
+      <TvScreenPanel state={festival.state} loaded={festival.loaded} />
       <FestivalPanel state={festival.state} loaded={festival.loaded} />
       <ScheduleManager state={festival.state} loaded={festival.loaded} />
       <AudiencePanel appState={festival.state.appState} stateLoaded={festival.loaded} />

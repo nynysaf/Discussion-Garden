@@ -14,6 +14,10 @@ describe("toAppState", () => {
         speaker_colours_on: false,
         highlighted_submission_id: null,
         submissions_open: false,
+        captions_layout: "highlight",
+        captions_rotation: ["captions", "garden", "bogus", "garden"],
+        captions_rotate_seconds: 20,
+        captions_rotate_since: "2026-10-17T15:00:00Z",
       }),
     ).toEqual({
       activeSessionId: "s1",
@@ -24,6 +28,18 @@ describe("toAppState", () => {
       speakerColoursOn: false,
       highlightedSubmissionId: null,
       submissionsOpen: false,
+      captionsLayout: "highlight",
+      captionsRotation: ["garden", "captions"],
+      captionsRotateSeconds: 20,
+      captionsRotateSince: "2026-10-17T15:00:00Z",
+    });
+  });
+
+  it("falls back to the Both view with auto-rotate off", () => {
+    expect(toAppState({ captions_layout: "sideways" })).toMatchObject({
+      captionsLayout: "both",
+      captionsRotateSeconds: null,
+      captionsRotateSince: null,
     });
   });
 

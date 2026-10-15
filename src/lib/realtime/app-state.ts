@@ -1,3 +1,10 @@
+import {
+  cleanRotation,
+  isCaptionsView,
+  CAPTIONS_VIEWS,
+  type CaptionsView,
+  type ViewSettings,
+} from "@/lib/captions/layout";
 import type { AudioStatus } from "@/lib/captions/types";
 
 export type SynthesisMode = "manual" | "hybrid" | "auto";
@@ -11,6 +18,10 @@ export type AppState = {
   speakerColoursOn: boolean;
   highlightedSubmissionId: string | null;
   submissionsOpen: boolean;
+  captionsLayout: CaptionsView;
+  captionsRotation: CaptionsView[];
+  captionsRotateSeconds: number | null;
+  captionsRotateSince: string | null;
 };
 
 export type AppStateRow = {
@@ -22,10 +33,14 @@ export type AppStateRow = {
   speaker_colours_on: boolean;
   highlighted_submission_id: string | null;
   submissions_open: boolean;
+  captions_layout: string;
+  captions_rotation: string[];
+  captions_rotate_seconds: number | null;
+  captions_rotate_since: string | null;
 };
 
 export const APP_STATE_COLUMNS =
-  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open";
+  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open, captions_layout, captions_rotation, captions_rotate_seconds, captions_rotate_since";
 
 const AUDIO_STATUSES: AudioStatus[] = [
   "idle",
@@ -46,6 +61,10 @@ export const DEFAULT_APP_STATE: AppState = {
   speakerColoursOn: true,
   highlightedSubmissionId: null,
   submissionsOpen: true,
+  captionsLayout: "both",
+  captionsRotation: CAPTIONS_VIEWS,
+  captionsRotateSeconds: null,
+  captionsRotateSince: null,
 };
 
 /** Database row → app shape, with safe defaults for anything unexpected. */
@@ -64,6 +83,22 @@ export function toAppState(row: Partial<AppStateRow> | null | undefined): AppSta
     speakerColoursOn: row.speaker_colours_on !== false,
     highlightedSubmissionId: row.highlighted_submission_id ?? null,
     submissionsOpen: row.submissions_open !== false,
+    captionsLayout: isCaptionsView(row.captions_layout) ? row.captions_layout : "both",
+    captionsRotation: Array.isArray(row.captions_rotation)
+      ? cleanRotation(row.captions_rotation)
+      : CAPTIONS_VIEWS,
+    captionsRotateSeconds:
+      typeof row.captions_rotate_seconds === "number" ? row.captions_rotate_seconds : null,
+    captionsRotateSince: row.captions_rotate_since ?? null,
+  };
+}
+
+export function captionsViewSettings(state: AppState): ViewSettings {
+  return {
+    selected: state.captionsLayout,
+    rotation: state.captionsRotation,
+    rotateSeconds: state.captionsRotateSeconds,
+    rotateSince: state.captionsRotateSince,
   };
 }
 
@@ -76,6 +111,10 @@ const COLUMN_FOR: Record<keyof AppState, keyof AppStateRow> = {
   speakerColoursOn: "speaker_colours_on",
   highlightedSubmissionId: "highlighted_submission_id",
   submissionsOpen: "submissions_open",
+  captionsLayout: "captions_layout",
+  captionsRotation: "captions_rotation",
+  captionsRotateSeconds: "captions_rotate_seconds",
+  captionsRotateSince: "captions_rotate_since",
 };
 
 /** App-shaped change → database columns (only the keys provided). */
