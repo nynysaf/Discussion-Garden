@@ -26,4 +26,6 @@ export interface CaptionChannel {
   subscribe(handler: (message: CaptionMessage) => void): () => void;
   /** Called immediately with the current state, then on every change. */
   onConnection(handler: (connection: Connection) => void): () => void;
+  /** Host only: broadcast send failed (TVs may not see captions). */
+  onSendError?(handler: (detail: string) => void): () => void;
 }

@@ -32,6 +32,7 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
   const [blockedByOtherTab, setBlockedByOtherTab] = useState(false);
   const [transcriptBacklog, setTranscriptBacklog] = useState(0);
   const [stateSaveError, setStateSaveError] = useState(false);
+  const [broadcastError, setBroadcastError] = useState<string | null>(null);
 
   const feedRef = useRef(feed);
   const statusRef = useRef<CaptionStatus>(INITIAL_FEED.status);
@@ -58,6 +59,12 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
   }, [stateLoaded, appState.speakerColoursOn]);
 
   const publish = useCallback((message: CaptionMessage) => {
+    // Keep feedRef in sync immediately so a TV's "hello" snapshot isn't empty
+    // while React is still applying the same update.
+    feedRef.current = feedReducer(feedRef.current, message);
+    if (message.type === "status" || message.type === "snapshot") {
+      statusRef.current = message.status;
+    }
     dispatch(message);
     getCaptionChannel().send(message);
   }, []);
@@ -119,6 +126,10 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
       snapshotTimerRef.current = setTimeout(sendSnapshot, wait);
     });
 
+    const stopSendErrors = channel.onSendError?.((detail) => {
+      setBroadcastError(detail);
+    });
+
     const transcript = new TranscriptQueue(async (rows) => {
       const { error } = await supabase
         .from("transcript_segments")
@@ -160,6 +171,7 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
       document.removeEventListener("visibilitychange", onVisible);
       navigator.mediaDevices?.removeEventListener("devicechange", refreshDevices);
       unsubscribe();
+      stopSendErrors?.();
       if (snapshotTimerRef.current) clearTimeout(snapshotTimerRef.current);
       captioner.stop();
       clearInterval(flushTimer);
@@ -180,6 +192,7 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
       releaseLockRef.current = release;
       setBlockedByOtherTab(false);
     }
+    setBroadcastError(null);
     await captionerRef.current?.start(deviceId || undefined, voiceCleanup);
     await refreshDevices();
     await keepAwake();
@@ -217,6 +230,7 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
     blockedByOtherTab,
     transcriptBacklog,
     stateSaveError,
+    broadcastError,
     start,
     pause,
     resume,

@@ -61,6 +61,13 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
           flow; check the connection.
         </p>
       )}
+      {host.broadcastError && (
+        <p className={`mt-3 ${errorNotice}`} role="alert">
+          Captions aren&apos;t reaching the TVs ({host.broadcastError}). Preview
+          on this page still works. Try Stop, refresh this page, then Start
+          again.
+        </p>
+      )}
       {stateLoaded && !appState.activeSessionId && (
         <p className={`mt-3 ${warnNotice}`} role="status">
           No festival day selected — the transcript will be saved without a day.
