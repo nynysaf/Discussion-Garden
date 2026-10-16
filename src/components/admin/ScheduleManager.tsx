@@ -148,8 +148,8 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
   }
 
   const calendarLine = clockSession
-    ? `Today (venue calendar): ${clockSession.title} · ${clockSession.date} — TVs, captions, and transcript saving use this day.`
-    : `Today (venue calendar): ${calendarDate} — no festival day yet. Now · Next can still show the next block (e.g. Saturday morning). Editing below does not change what the TVs use.`;
+    ? `Today (venue calendar): ${clockSession.title} · ${clockSession.date} — TVs, captions, transcripts, and new garden ideas use this day.`
+    : `Today (venue calendar): ${calendarDate} — outside Fri–Sun. Now · Next can still show the next block. Editing below does not change what the TVs use.`;
 
   return (
     <Panel

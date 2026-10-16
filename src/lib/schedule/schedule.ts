@@ -20,8 +20,8 @@ export function timedItems(schedule: ScheduleItem[]): ScheduleItem[] {
 }
 
 /**
- * Festival session whose `date` matches the venue calendar today.
- * Friday before the garden opens → null (TVs still show Saturday as UP NEXT via timedItems).
+ * Festival session whose `date` matches the venue calendar today
+ * (`day_0` Friday · `day_1` Saturday · `day_2` Sunday).
  */
 export function sessionForClock(
   sessions: FestivalSession[],

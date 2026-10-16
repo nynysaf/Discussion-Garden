@@ -8,10 +8,9 @@ import { sessionForClock } from "@/lib/schedule/schedule";
 import { createClient } from "@/lib/supabase/client";
 
 /**
- * Keep `app_state.active_session_id` aligned with the venue calendar day.
- * Editing another day's schedule in the admin UI must not call this — only the clock does.
- * Days outside the festival (e.g. Friday) leave the DB row alone so rehearsal can still file
- * under the seeded day until Saturday/Sunday arrive.
+ * Keep `app_state.active_session_id` aligned with the venue calendar day
+ * (`day_0` / `day_1` / `day_2`). Editing another day's schedule must not call this —
+ * only the clock does. Outside those three dates the DB row is left alone.
  */
 export function useSyncCalendarSession(state: FestivalState, loaded: boolean) {
   const nowMs = useNow(60_000);

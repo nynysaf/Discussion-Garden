@@ -121,9 +121,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
 - Discussion Garden live: **Sat Oct 17 & Sun Oct 18, 11:00–17:00** (venue-local; assumed Eastern — confirm)
-- Session slugs: **`day_1`** (Oct 17) · **`day_2`** (Oct 18) — for transcript/export partitioning only
-- Garden: **one shared garden** across both days; never reset between days
-- Rehearsal at venue: **Fri Oct 16 (target — confirm access)**
+- Session slugs: **`day_0`** (Oct 16 Friday) · **`day_1`** (Oct 17) · **`day_2`** (Oct 18) — for transcript/export partitioning only
+- Garden: **one shared garden** across all days; never reset between days (Friday planting is fine)
+- Friday Oct 16: opening/venue — captions, transcript download, and garden OK under `day_0`
 - Daily topic schedule / live questions: **TBD**
 - Production URL: **https://discussion-garden.vercel.app** (Vercel project `discussion-garden`, deploys every push to `main`)
 
@@ -206,6 +206,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-16 — **Live inquiries + polish (PRD v0.2.11):** Schedule vs Live question panels side-by-side; `live_inquiries` + activations; footer auto-rotates 10s; adaptive inquiry type; collapse = icon top-right; transcript download includes inquiry markers. Migration pushed. 221 tests. **User browser check pending.**
 - 2026-10-16 — **Clock Now · Next + admin board (PRD v0.2.12):** Now/Next follows the computer/venue clock from each item's `starts_at` (no more Mark as Now). Festival day picker lives inside Schedule. `/admin` default columns: left = Captions · TV · Schedule; right = AI drafts · Live question · Audience; Garden full width. Drag the grip to reorder panels or move them between columns (saved in localStorage).
 - 2026-10-16 — **Calendar day vs edit day:** Schedule shows today's venue calendar day; day buttons only choose which list to edit (no TV switch). Now · Next uses all timed blocks across both days (Friday → Saturday morning UP NEXT). `active_session_id` auto-syncs from the calendar when `/admin` is open so captions/transcripts stay on today while you edit Sunday.
+- 2026-10-16 — **Friday `day_0` session** (PRD v0.2.14): migration + seed so opening night can record captions, download Friday's transcript, and plant into the shared garden. Hosted migration applied same day.
 
 ### In progress
 - Hosted Supabase is in sync: all migrations through 2026-10-14 pushed.

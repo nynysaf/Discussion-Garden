@@ -53,14 +53,16 @@ describe("venueCalendarDate", () => {
 
 describe("sessionForClock", () => {
   const sessions: FestivalSession[] = [
+    { id: "s0", slug: "day_0", title: "Friday", date: "2026-10-16" },
     { id: "s1", slug: "day_1", title: "Saturday", date: "2026-10-17" },
     { id: "s2", slug: "day_2", title: "Sunday", date: "2026-10-18" },
   ];
 
-  it("matches today's festival session and is null on other days", () => {
+  it("matches today's festival session and is null outside the three days", () => {
+    expect(sessionForClock(sessions, Date.parse("2026-10-16T18:00:00-04:00"))?.id).toBe("s0");
     expect(sessionForClock(sessions, Date.parse("2026-10-17T12:00:00-04:00"))?.id).toBe("s1");
     expect(sessionForClock(sessions, Date.parse("2026-10-18T09:00:00-04:00"))?.id).toBe("s2");
-    expect(sessionForClock(sessions, Date.parse("2026-10-16T15:00:00-04:00"))).toBeNull();
+    expect(sessionForClock(sessions, Date.parse("2026-10-15T15:00:00-04:00"))).toBeNull();
   });
 });
 

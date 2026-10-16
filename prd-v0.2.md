@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.13  
+**Version:** 0.2.14  
 **Last updated:** 2026-10-16  
-**Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
+**Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00 · **Friday `day_0`:** captions / transcript / garden provenance OK  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.14 (2026-10-16):** Session **`day_0` (Friday Oct 16)** added so opening-night captions, transcript download, and garden planting file under Friday. Still one shared garden; Sat/Sun unchanged.
 - **v0.2.13 (2026-10-16):** Schedule **shows** the venue calendar day; day buttons only **edit** that day's list (do not switch TVs). Now · Next spans both days by clock (e.g. Friday shows Saturday morning as UP NEXT). Captions/transcript day follows the calendar (`active_session_id` syncs from the clock on `/admin`), not which day is open in the editor.
 - **v0.2.12 (2026-10-16):** **Now · Next** follows the computer/venue clock from each schedule item's start time (host Mark-as-Now removed). Festival day picker lives inside Schedule. `/admin` columns: left Captions · TV · Schedule; right AI drafts · Live question · Audience; Garden spans both. Panels can be dragged between columns (per-browser layout).
 - **v0.2.11 (2026-10-16):** **Live inquiries** are a separate log from the timed **Schedule** (admin side-by-side). Host adds/switches inquiries quickly; activations appear as `--- Live inquiry: … ---` markers in the transcript download. Both/Captions footer **auto-alternates every 10s** (schedule ↔ inquiry+QR) while an inquiry is live. Inquiry type scales with length. Admin collapse controls are icon-only (top right).
@@ -60,14 +61,14 @@
 ### 2.1 Schedule
 | Date | What | Sessions |
 | :--- | :--- | :--- |
-| Fri Oct 16 | Festival day 1 — Discussion Garden **not** live | Venue setup + full rehearsal (target) |
+| Fri Oct 16 | Opening / venue — captions + garden OK | `day_0` (transcripts & provenance; same shared garden) |
 | Sat Oct 17 | Discussion Garden live 11:00–17:00 | `day_1` |
 | Sun Oct 18 | Discussion Garden live 11:00–17:00 | `day_2` |
 
 Times are venue-local (assumed Eastern, UTC-4 — confirm). Schedule items (topics / live questions) sit inside each day.
 
 ### 2.2 One garden, two days
-Both days grow **the same garden**. Sunday opens with Saturday's garden already on screen and keeps growing it. Sessions (`day_1`, `day_2`) only split the private transcript and exports; they never filter or reset the garden. Each node remembers which day it first appeared (`origin_session_id`), so a later "which day did this come from" tint or filter is possible without changing the data.
+All three days grow **the same garden**. Sunday opens with Friday/Saturday's garden already on screen and keeps growing it. Sessions (`day_0`, `day_1`, `day_2`) only split the private transcript and exports; they never filter or reset the garden. Each node remembers which day it first appeared (`origin_session_id`), so a later "which day did this come from" tint or filter is possible without changing the data.
 
 ---
 
@@ -209,7 +210,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 
 | Table | Key columns | Visibility |
 | :--- | :--- | :--- |
-| `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
+| `sessions` | `id`, `slug` (`day_0`, `day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
 | `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `active_live_inquiry_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id`, `submissions_open`, `captions_layout`, `captions_rotation`, `captions_rotate_seconds`, `captions_rotate_since`, `captions_font_scale`, `captions_footer` (legacy) | Public read, host write |
 | `live_inquiries` | `body`, `session_id`, `last_activated_at` | Public read, host write |
