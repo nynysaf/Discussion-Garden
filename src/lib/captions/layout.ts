@@ -45,7 +45,7 @@ export type ViewSettings = {
 
 export type ViewContext = {
   gardenHidden: boolean;
-  /** There is a live question or an upcoming item to show. */
+  /** Something is live on the TVs (Highlight only then — not "coming up"). */
   hasHighlight: boolean;
 };
 

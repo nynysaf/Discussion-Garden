@@ -76,6 +76,7 @@ export function AudienceForm({ initiallyOpen }: { initiallyOpen: boolean }) {
         <Sprout />
         <h2 className="mt-4 font-display text-3xl font-semibold">Sent — thank you!</h2>
         <p className="mt-2 opacity-80">It&apos;s now on the screen in the discussion room upstairs.</p>
+        <p className="mt-2 opacity-80">Come join us on the 4th floor to discuss!</p>
         <button
           type="button"
           onClick={sendAnother}

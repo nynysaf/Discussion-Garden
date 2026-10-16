@@ -23,7 +23,7 @@ export default async function AudiencePage() {
         Discussion Garden
       </h1>
       <p className="mt-2 text-lg">
-        Share a question or reflection with the discussion upstairs. No login needed.
+        Share a question or reflection with the discussion upstairs.
       </p>
       <AudienceForm initiallyOpen={open} />
     </main>

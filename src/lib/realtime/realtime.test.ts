@@ -34,6 +34,7 @@ describe("toAppState", () => {
       captionsRotateSeconds: 20,
       captionsRotateSince: "2026-10-17T15:00:00Z",
       captionsFontScale: 125,
+      captionsFooter: "schedule",
     });
   });
 

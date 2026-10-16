@@ -27,7 +27,7 @@ export function useCaptionsView(state: FestivalState) {
     dayItems(state.schedule, appState.activeSessionId),
     appState.activeScheduleItemId,
   );
-  const context = { gardenHidden: appState.gardenHidden, hasHighlight: Boolean(now || next) };
+  const context = { gardenHidden: appState.gardenHidden, hasHighlight: Boolean(now) };
   const settings = captionsViewSettings(appState);
   return {
     nowMs,

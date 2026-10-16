@@ -1,14 +1,15 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.9  
+**Version:** 0.2.10  
 **Last updated:** 2026-10-15  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
-- **v0.2.9 (2026-10-15):** Host can **download each day's transcript** as a text file. Optional **Save audio to this laptop** on `/admin` writes a WebM only to the host computer (never uploaded); room signage must say audio may be kept locally when that switch is on. Caption size on `/captions` is host-adjustable (75–175%). `/captions/lab` is an offline layout sandbox. Hybrid/Auto auto-suggest runs ~every 35s on the mic tab while Live.
+- **v0.2.10 (2026-10-15):** `/captions` header keeps **Discussion Garden** and shows **Join us on the 4th floor** (live question leaves the header). **Garden** has no footer (canvas expands). **Both / Captions** footer is host-picked: **Schedule** (Now · Next, no QR) or **Live inquiry + QR**. Highlight only while something is live: large live question, caption ticker, QR — no title, no Up next. Audience thank-you adds the 4th-floor invite; drops "No login needed". Layout lab removed. Admin panels collapse to save space.
+- **v0.2.9 (2026-10-15):** Host can **download each day's transcript** as a text file. Optional **Save audio to this laptop** on `/admin` writes a WebM only to the host computer (never uploaded); room signage must say audio may be kept locally when that switch is on. Caption size on `/captions` is host-adjustable (75–175%). Hybrid/Auto auto-suggest runs ~every 35s on the mic tab while Live.
 - **v0.2.8 (2026-10-14):** Live on Vercel. `/captions` gets a fourth view, **Highlight**: a full-screen takeover of the live question (or "Coming up" before anything is live) and the next item with a countdown, keeping a one-line caption ticker and the QR. Auto-rotate becomes a **playlist** — the host ticks which views rotate and sets one hold time (10–120 s); all TVs stay in step. `/admin` gets a sticky status bar (captions status, question on the TVs, current TV view, **Next question**) and a two-column layout.
 - **v0.2.7 (2026-10-01):** **No pre-approval for audience messages.** They appear on `/room-feed` as soon as they pass the server checks (length, profanity, per-phone rate limit). The host can **Hide** any message, **Pin** one as "being discussed", and **pause sharing** with one switch if it's abused. Replaces the Approve/Dismiss moderation queue.
 - **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
@@ -207,7 +208,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (views in the playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since` (rotation start, shared by all TVs), `captions_font_scale` (75–175, default 100) | Public read, host write |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (views in the playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since` (rotation start, shared by all TVs), `captions_font_scale` (75–175, default 100), `captions_footer` (`schedule`/`inquiry`) | Public read, host write |
 | `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
 | `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |

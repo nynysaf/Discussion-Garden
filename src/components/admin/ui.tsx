@@ -1,5 +1,7 @@
-import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+"use client";
+
+import { ChevronDown, type LucideIcon } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 
 // Shared /admin look (DESIGN_GUIDE §8): one panel shell, one set of buttons, one switch.
 
@@ -21,6 +23,8 @@ export const dangerButton = `${base} border border-festival-terracotta px-3 py-1
 export const errorNotice = "rounded-xl bg-festival-terracotta/15 px-4 py-2";
 export const warnNotice = "rounded-xl bg-festival-marigold/25 px-4 py-2";
 
+const panelStorageKey = (id: string) => `dg-admin-panel-open:${id}`;
+
 type PanelProps = {
   id: string;
   title: ReactNode;
@@ -30,8 +34,32 @@ type PanelProps = {
   children: ReactNode;
 };
 
-/** A titled /admin section. `id` is the jump-link target from the status bar. */
+/** A titled /admin section. `id` is the jump-link target from the status bar. Collapsible. */
 export function Panel({ id, title, icon: Icon, actions, description, children }: PanelProps) {
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(panelStorageKey(id));
+      if (stored === "0") setOpen(false);
+      if (stored === "1") setOpen(true);
+    } catch {
+      // private mode / blocked storage — keep default open
+    }
+  }, [id]);
+
+  function toggle() {
+    setOpen((was) => {
+      const next = !was;
+      try {
+        window.localStorage.setItem(panelStorageKey(id), next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }
+
   return (
     <section
       id={id}
@@ -39,16 +67,37 @@ export function Panel({ id, title, icon: Icon, actions, description, children }:
       className="@container scroll-mt-28 rounded-3xl bg-white/60 p-5 shadow-poster sm:p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <h2 id={`${id}-title`} className="flex items-center gap-3 font-display text-3xl font-semibold">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-festival-green/35 text-festival-forest">
-            <Icon aria-hidden size={22} strokeWidth={1.5} />
-          </span>
-          {title}
-        </h2>
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <h2 id={`${id}-title`} className="flex items-center gap-3 font-display text-3xl font-semibold">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-festival-green/35 text-festival-forest">
+              <Icon aria-hidden size={22} strokeWidth={1.5} />
+            </span>
+            {title}
+          </h2>
+          <button
+            type="button"
+            className={secondaryButton}
+            aria-expanded={open}
+            aria-controls={`${id}-body`}
+            onClick={toggle}
+          >
+            <ChevronDown
+              aria-hidden
+              size={16}
+              strokeWidth={1.75}
+              className={`transition-transform ${open ? "" : "-rotate-90"}`}
+            />
+            {open ? "Collapse" : "Expand"}
+          </button>
+        </div>
+        {actions && open && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
-      {description && <div className="mt-2 text-sm opacity-75">{description}</div>}
-      {children}
+      {open && (
+        <div id={`${id}-body`}>
+          {description && <div className="mt-2 text-sm opacity-75">{description}</div>}
+          {children}
+        </div>
+      )}
     </section>
   );
 }

@@ -159,28 +159,30 @@ Only the **middle band** changes. The header (title + live question) and the bot
 - **Garden hidden** (admin kill switch) → always Captions, whatever layout is selected; Garden and Both drop out of the rotation.
 - **Auto-rotate:** the host ticks which views are in the playlist and picks one hold time (10–120 s, default 20 s). The rotation starts from the view the host picked and goes in the fixed order Garden → Both → Captions → Highlight, skipping unticked or unavailable views; it needs at least two. Every TV works out the current view from the same start time saved in `app_state`, so all screens stay in step and a reloaded TV lands on the right view without sliding.
 
-### 5.1b `/captions` Highlight view *(decided 2026-10-14)*
+### 5.1b `/captions` Highlight view *(decided 2026-10-14; simplified 2026-10-15)*
 
-A **full-screen takeover** (cross-fade, ~700 ms) for the moments between talks, or to put the question in front of the room.
+A **full-screen takeover** (cross-fade, ~700 ms) only while a question is **live** on the TVs.
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│ DISCUSSION GARDEN                          ● LIVE    │
+│                                            (status)  │
 │                                                      │
-│  ● NOW DISCUSSING                                    │
-│  "What future are you walking in with today?"        │  ← Cormorant italic, very large, ≤ 3 lines
-│   Opening circle                                     │
+│  ● LIVE INQUIRY                                      │
+│  "What future are you walking in with today?"        │  ← question text (not schedule title)
 │                                                      │
-│  ┌ UP NEXT · 11:30 · Neighbourhood commons · Starts in 12 min ┐
-│                                                      │
-│ 🦔 …the last line of the live captions        [QR]   │  ← one-line ticker, never wraps
+│ 🦔 …the last line of the live captions        [QR]   │
 └──────────────────────────────────────────────────────┘
 ```
 
-- **Label:** "Now discussing" when an item is live; "Coming up" (showing the next item) when nothing is live yet. Hidden from the playlist when the day has neither.
-- **Countdown:** "Starts in N min" under an hour, "Starts in H h M min" under six hours, "Starting soon" in the last minute or once the time has passed; nothing further out.
-- **Caption ticker:** the latest bubble's animal emoji plus its tail, on one line. Short text is left-aligned; a fade on the left edge appears only when the text overflows. Captions stay visible on every view — they never depend on AI.
-- The QR code stays, so the audience can still write in.
+- **Unavailable** until something is live (not for "coming up" alone).
+- No "Discussion Garden" title, no Up next strip.
+- **Caption ticker** + **Share a question QR** remain so captions and participation never disappear.
+
+### 5.1c Header & footer *(2026-10-15)*
+
+- **Header** (Garden · Both · Captions): **Discussion Garden** (left) · **Join us on the 4th floor** (right). Live question is not in the header.
+- **Garden:** no footer — middle band uses the full remaining height.
+- **Both / Captions footer** (host picks on `/admin`): **Schedule** = Now · Next only (no QR); **Live inquiry + QR** = `Live inquiry: …` plus Share a question. With no live question, footer stays on Schedule.
 
 ### 5.2 Caption bubbles & speaker colours
 

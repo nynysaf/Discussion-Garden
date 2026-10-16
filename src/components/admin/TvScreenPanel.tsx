@@ -9,6 +9,7 @@ import {
   FONT_SCALE_STEP,
   clampFontScale,
 } from "@/lib/captions/font-scale";
+import { effectiveFooter, type CaptionsFooter } from "@/lib/captions/footer";
 import {
   availableViews,
   CAPTIONS_VIEWS,
@@ -33,15 +34,28 @@ const UNAVAILABLE: Record<CaptionsView, string> = {
   garden: "The garden is hidden on TVs",
   both: "The garden is hidden on TVs",
   captions: "",
-  highlight: "Nothing live or coming up today",
+  highlight: "Nothing is live on the TVs yet",
 };
+
+const FOOTER_OPTIONS: { id: CaptionsFooter; label: string; hint: string }[] = [
+  {
+    id: "schedule",
+    label: "Schedule",
+    hint: "Now · Next strip only (no QR)",
+  },
+  {
+    id: "inquiry",
+    label: "Live inquiry + QR",
+    hint: "Live inquiry text and Share a question QR",
+  },
+];
 
 type Props = { state: FestivalState; loaded: boolean };
 
 /** Picks what the downstairs /captions TV shows (DESIGN_GUIDE §5.1a–b). */
 export function TvScreenPanel({ state, loaded }: Props) {
   const { appState } = state;
-  const { view: shown, context, upcoming } = useCaptionsView(state);
+  const { view: shown, context, upcoming, now } = useCaptionsView(state);
   const { busy, error, run } = useHostAction();
   const rotating = appState.captionsRotateSeconds !== null;
   const [seconds, setSeconds] = useState(appState.captionsRotateSeconds ?? ROTATE_DEFAULT_SECONDS);
@@ -50,6 +64,8 @@ export function TvScreenPanel({ state, loaded }: Props) {
   const rotatable = ticked.filter((v) => available.includes(v));
   const disabled = !loaded || busy;
   const nowIso = () => new Date().toISOString();
+  const hasLiveQuestion = Boolean(now);
+  const footerShown = effectiveFooter(appState.captionsFooter, hasLiveQuestion);
 
   return (
     <Panel
@@ -70,8 +86,8 @@ export function TvScreenPanel({ state, loaded }: Props) {
       }
       description={
         <>
-          Pick what <code>/captions</code> shows, or let it rotate. The live question, Now · Next and QR
-          stay on every view; Highlight keeps a one-line caption.
+          Pick what <code>/captions</code> shows. Garden has no footer. Both and Captions use the
+          bottom banner you pick below. Highlight is only available while something is live.
         </>
       }
     >
@@ -100,6 +116,40 @@ export function TvScreenPanel({ state, loaded }: Props) {
           );
         })}
       </div>
+
+      <fieldset className="mt-5 border-t border-festival-ink/10 pt-4">
+        <legend className="text-sm font-semibold">Bottom banner (Both &amp; Captions)</legend>
+        <div role="radiogroup" aria-label="Bottom banner" className="mt-3 flex flex-wrap gap-3">
+          {FOOTER_OPTIONS.map((opt) => {
+            const selected = footerShown === opt.id;
+            const blocked = opt.id === "inquiry" && !hasLiveQuestion;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                disabled={disabled || blocked}
+                title={blocked ? "Put a question live first" : opt.hint}
+                onClick={() => void run((c) => saveScreenPatch(c, { captionsFooter: opt.id }))}
+                className={`rounded-2xl border-2 px-4 py-2 text-left font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                  selected
+                    ? "border-festival-forest bg-festival-green/30"
+                    : "border-transparent bg-festival-cream hover:border-festival-forest/40"
+                }`}
+              >
+                <span className="block">{opt.label}</span>
+                <span className="block text-sm font-normal opacity-70">{opt.hint}</span>
+              </button>
+            );
+          })}
+        </div>
+        {!hasLiveQuestion && (
+          <p className="mt-2 text-sm opacity-70">
+            Live inquiry + QR stays off until you put a question on the TVs.
+          </p>
+        )}
+      </fieldset>
 
       <label className="mt-5 flex flex-col gap-2 border-t border-festival-ink/10 pt-4">
         <span className="flex items-center justify-between gap-3 text-sm font-semibold">
