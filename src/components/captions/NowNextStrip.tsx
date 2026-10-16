@@ -2,7 +2,7 @@
 
 import { useNow } from "@/components/useNow";
 import type { FestivalState, ScheduleItem } from "@/lib/realtime/festival-state";
-import { dayItems, nowAndNext } from "@/lib/schedule/schedule";
+import { nowAndNext, timedItems } from "@/lib/schedule/schedule";
 import { venueTime } from "@/lib/schedule/time";
 
 function Entry({ label, item, current = false }: { label: string; item: ScheduleItem; current?: boolean }) {
@@ -25,8 +25,7 @@ function Entry({ label, item, current = false }: { label: string; item: Schedule
 export function NowNextStrip({ state, className = "" }: { state: FestivalState; className?: string }) {
   // Schedule blocks are minute-level; refresh often enough to flip on time without busy ticking.
   const nowMs = useNow(15_000);
-  const items = dayItems(state.schedule, state.appState.activeSessionId);
-  const { now, next } = nowAndNext(items, nowMs);
+  const { now, next } = nowAndNext(timedItems(state.schedule), nowMs);
 
   if (!now && !next) {
     return <p className={`opacity-60 ${className}`}>Welcome to the Discussion Garden.</p>;

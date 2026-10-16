@@ -4,7 +4,6 @@ import { ArrowDown, ArrowUp, CalendarClock, Pencil, Trash2 } from "lucide-react"
 import { useState, type FormEvent } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useNow } from "@/components/useNow";
-import { toAppStatePatch } from "@/lib/realtime/app-state";
 import type { FestivalState, ScheduleItem } from "@/lib/realtime/festival-state";
 import {
   TITLE_MAX,
@@ -12,6 +11,8 @@ import {
   moveItem,
   nextSortOrder,
   nowAndNext,
+  sessionForClock,
+  timedItems,
   validateDraft,
   type ScheduleDraft,
   type ValidDraft,
@@ -22,7 +23,7 @@ import {
   deleteScheduleItem,
   updateScheduleItem,
 } from "@/lib/schedule/schedule-db";
-import { toVenueIso, venueTime } from "@/lib/schedule/time";
+import { toVenueIso, venueCalendarDate, venueTime } from "@/lib/schedule/time";
 import { createClient } from "@/lib/supabase/client";
 import {
   dangerButton,
@@ -104,19 +105,22 @@ function ItemForm({
   );
 }
 
-/** Timed discussion blocks for the Now · Next strip — festival day picker included. */
+/** Timed blocks for Now · Next. Day buttons only choose which day to edit — TVs follow the calendar. */
 export function ScheduleManager({ state, loaded }: { state: FestivalState; loaded: boolean }) {
-  const { appState, sessions, schedule } = state;
+  const { sessions, schedule } = state;
   const nowMs = useNow(15_000);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const clockSession = sessionForClock(sessions, nowMs);
+  const [editDayId, setEditDayId] = useState<string | null>(null);
 
-  const dayId = appState.activeSessionId ?? sessions[0]?.id ?? null;
+  const dayId = editDayId ?? clockSession?.id ?? sessions[0]?.id ?? null;
   const day = sessions.find((s) => s.id === dayId) ?? null;
   const items = dayItems(schedule, dayId);
-  const { now: clockNow } = nowAndNext(items, nowMs);
+  const { now: clockNow } = nowAndNext(timedItems(schedule), nowMs);
   const disabled = !loaded || busy;
+  const calendarDate = venueCalendarDate(nowMs);
 
   async function run(action: (supabase: SupabaseClient) => Promise<void>): Promise<boolean> {
     setBusy(true);
@@ -132,32 +136,6 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
     }
   }
 
-  async function selectDay(sessionId: string) {
-    if (sessionId === appState.activeSessionId) return;
-    const label = sessions.find((s) => s.id === sessionId)?.title ?? "that day";
-    if (
-      !window.confirm(
-        `Put ${label} on the TVs? This also files new transcript rows under that day. The garden stays shared.`,
-      )
-    ) {
-      return;
-    }
-    setEditingId(null);
-    await run(async (sb) => {
-      const { error: dbError } = await sb
-        .from("app_state")
-        .update(
-          toAppStatePatch({
-            activeSessionId: sessionId,
-            activeScheduleItemId: null,
-            activeLiveInquiryId: null,
-          }),
-        )
-        .eq("id", true);
-      if (dbError) throw new Error(dbError.message);
-    });
-  }
-
   const fields = (value: ValidDraft) => ({
     title: value.title,
     question: null as string | null,
@@ -169,28 +147,43 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
     void run((sb) => deleteScheduleItem(sb, item.id));
   }
 
+  const calendarLine = clockSession
+    ? `Today (venue calendar): ${clockSession.title} · ${clockSession.date} — TVs, captions, and transcript saving use this day.`
+    : `Today (venue calendar): ${calendarDate} — no festival day yet. Now · Next can still show the next block (e.g. Saturday morning). Editing below does not change what the TVs use.`;
+
   return (
     <Panel
       id="schedule"
       title="Schedule"
       icon={CalendarClock}
-      description="Pick the festival day (on TVs + transcripts), then edit timed blocks. Now · Next follows the computer clock from each item's start time."
+      description="Now · Next follows the computer clock across both days. The day buttons only choose which list you are editing."
     >
-      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Festival day">
+      <p className="mt-4 rounded-2xl bg-festival-denim/10 px-4 py-3 text-sm">{calendarLine}</p>
+
+      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Which day to edit">
         {sessions.map((s) => (
           <button
             key={s.id}
             type="button"
             aria-pressed={s.id === dayId}
             disabled={disabled}
-            onClick={() => void selectDay(s.id)}
+            onClick={() => {
+              setEditDayId(s.id);
+              setEditingId(null);
+            }}
             className={s.id === dayId ? primaryButton : outlineButton}
           >
-            {s.title} · {s.date}
-            {s.id === appState.activeSessionId && " (on TVs)"}
+            Edit {s.title} · {s.date}
+            {s.id === clockSession?.id ? " (today)" : ""}
           </button>
         ))}
       </div>
+
+      {day && clockSession && day.id !== clockSession.id && (
+        <p className="mt-3 text-sm opacity-75">
+          Editing <strong>{day.title}</strong> only — captions and TVs stay on {clockSession.title}.
+        </p>
+      )}
 
       {error && (
         <p className={`mt-3 ${errorNotice}`} role="alert">

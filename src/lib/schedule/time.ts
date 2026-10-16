@@ -2,18 +2,30 @@
 export const VENUE_TIME_ZONE = "America/Toronto";
 export const VENUE_UTC_OFFSET = "-04:00";
 
-const formatter = new Intl.DateTimeFormat("en-CA", {
+const timeFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: VENUE_TIME_ZONE,
   hour: "2-digit",
   minute: "2-digit",
   hourCycle: "h23",
 });
 
+const dateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: VENUE_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 /** "11:00" in venue time, or "" when there's no (valid) time. Same result on any device clock. */
 export function venueTime(iso: string | null): string {
   if (!iso) return "";
   const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : formatter.format(date);
+  return Number.isNaN(date.getTime()) ? "" : timeFormatter.format(date);
+}
+
+/** Venue calendar day as "YYYY-MM-DD" (en-CA in America/Toronto). */
+export function venueCalendarDate(nowMs: number): string {
+  return dateFormatter.format(new Date(nowMs));
 }
 
 /** Combine a festival day ("2026-10-17") and an `<input type="time">` value ("11:00") into a timestamp. */

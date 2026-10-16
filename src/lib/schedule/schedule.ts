@@ -1,4 +1,5 @@
-import type { ScheduleItem } from "@/lib/realtime/festival-state";
+import type { FestivalSession, ScheduleItem } from "@/lib/realtime/festival-state";
+import { venueCalendarDate } from "./time";
 
 export const TITLE_MAX = 80;
 export const QUESTION_MAX = 200;
@@ -11,10 +12,30 @@ export function dayItems(schedule: ScheduleItem[], sessionId: string | null): Sc
     .sort((a, b) => a.sortOrder - b.sortOrder || (a.startsAt ?? "").localeCompare(b.startsAt ?? ""));
 }
 
+/** All schedule blocks in clock order (across both festival days) for Now · Next. */
+export function timedItems(schedule: ScheduleItem[]): ScheduleItem[] {
+  return [...schedule].sort(
+    (a, b) => (a.startsAt ?? "").localeCompare(b.startsAt ?? "") || a.sortOrder - b.sortOrder,
+  );
+}
+
+/**
+ * Festival session whose `date` matches the venue calendar today.
+ * Friday before the garden opens → null (TVs still show Saturday as UP NEXT via timedItems).
+ */
+export function sessionForClock(
+  sessions: FestivalSession[],
+  nowMs: number,
+): FestivalSession | null {
+  const today = venueCalendarDate(nowMs);
+  return sessions.find((s) => s.date === today) ?? null;
+}
+
 /**
  * "Now" = the latest item whose `starts_at` is ≤ the venue/computer clock.
  * "Next" = the following item in running order. Items without a time never become Now;
  * if nothing has started yet, Now is empty and Next is the first item.
+ * Pass `timedItems(schedule)` so Friday can show Saturday morning as UP NEXT.
  */
 export function nowAndNext(
   items: ScheduleItem[],

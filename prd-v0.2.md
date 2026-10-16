@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.12  
+**Version:** 0.2.13  
 **Last updated:** 2026-10-16  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.13 (2026-10-16):** Schedule **shows** the venue calendar day; day buttons only **edit** that day's list (do not switch TVs). Now · Next spans both days by clock (e.g. Friday shows Saturday morning as UP NEXT). Captions/transcript day follows the calendar (`active_session_id` syncs from the clock on `/admin`), not which day is open in the editor.
 - **v0.2.12 (2026-10-16):** **Now · Next** follows the computer/venue clock from each schedule item's start time (host Mark-as-Now removed). Festival day picker lives inside Schedule. `/admin` columns: left Captions · TV · Schedule; right AI drafts · Live question · Audience; Garden spans both. Panels can be dragged between columns (per-browser layout).
 - **v0.2.11 (2026-10-16):** **Live inquiries** are a separate log from the timed **Schedule** (admin side-by-side). Host adds/switches inquiries quickly; activations appear as `--- Live inquiry: … ---` markers in the transcript download. Both/Captions footer **auto-alternates every 10s** (schedule ↔ inquiry+QR) while an inquiry is live. Inquiry type scales with length. Admin collapse controls are icon-only (top right).
 - **v0.2.10 (2026-10-15):** `/captions` header keeps **Discussion Garden** and shows **Join us on the 4th floor** (live question leaves the header). **Garden** has no footer (canvas expands). Highlight only while something is live: large live question, caption ticker, QR. Audience thank-you adds the 4th-floor invite. Admin panels collapse to save space.

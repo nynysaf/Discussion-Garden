@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
-import type { ScheduleItem } from "@/lib/realtime/festival-state";
-import { dayItems, moveItem, nextSortOrder, nowAndNext, validateDraft } from "./schedule";
-import { toVenueIso, venueTime } from "./time";
+import type { FestivalSession, ScheduleItem } from "@/lib/realtime/festival-state";
+import {
+  dayItems,
+  moveItem,
+  nextSortOrder,
+  nowAndNext,
+  sessionForClock,
+  timedItems,
+  validateDraft,
+} from "./schedule";
+import { toVenueIso, venueCalendarDate, venueTime } from "./time";
 
 const item = (id: string, sortOrder: number, sessionId = "d1", startsAt: string | null = null): ScheduleItem => ({
   id,
@@ -33,6 +41,26 @@ describe("toVenueIso", () => {
   it("rejects malformed input", () => {
     expect(toVenueIso("2026-10-18", "25:00")).toBeNull();
     expect(toVenueIso("Oct 18", "13:00")).toBeNull();
+  });
+});
+
+describe("venueCalendarDate", () => {
+  it("returns the venue calendar day", () => {
+    expect(venueCalendarDate(Date.parse("2026-10-16T20:00:00-04:00"))).toBe("2026-10-16");
+    expect(venueCalendarDate(Date.parse("2026-10-17T00:30:00-04:00"))).toBe("2026-10-17");
+  });
+});
+
+describe("sessionForClock", () => {
+  const sessions: FestivalSession[] = [
+    { id: "s1", slug: "day_1", title: "Saturday", date: "2026-10-17" },
+    { id: "s2", slug: "day_2", title: "Sunday", date: "2026-10-18" },
+  ];
+
+  it("matches today's festival session and is null on other days", () => {
+    expect(sessionForClock(sessions, Date.parse("2026-10-17T12:00:00-04:00"))?.id).toBe("s1");
+    expect(sessionForClock(sessions, Date.parse("2026-10-18T09:00:00-04:00"))?.id).toBe("s2");
+    expect(sessionForClock(sessions, Date.parse("2026-10-16T15:00:00-04:00"))).toBeNull();
   });
 });
 
@@ -76,6 +104,26 @@ describe("nowAndNext", () => {
 
   it("handles an empty day", () => {
     expect(nowAndNext([], Date.now())).toEqual({ now: null, next: null });
+  });
+
+  it("on Friday shows Saturday morning as UP NEXT across both days", () => {
+    const both = timedItems([
+      item("sat", 1, "d1", "2026-10-17T11:00:00-04:00"),
+      item("sun", 1, "d2", "2026-10-18T11:00:00-04:00"),
+    ]);
+    const friday = Date.parse("2026-10-16T15:00:00-04:00");
+    expect(nowAndNext(both, friday)).toEqual({ now: null, next: both[0] });
+  });
+});
+
+describe("timedItems", () => {
+  it("orders every day's blocks by start time", () => {
+    const schedule = [
+      item("sun", 1, "d2", "2026-10-18T11:00:00-04:00"),
+      item("sat-late", 2, "d1", "2026-10-17T16:00:00-04:00"),
+      item("sat-early", 1, "d1", "2026-10-17T11:00:00-04:00"),
+    ];
+    expect(timedItems(schedule).map((i) => i.id)).toEqual(["sat-early", "sat-late", "sun"]);
   });
 });
 

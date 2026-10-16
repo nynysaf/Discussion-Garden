@@ -15,7 +15,7 @@ import {
 } from "@/lib/captions/layout";
 import { captionsViewSettings } from "@/lib/realtime/app-state";
 import type { FestivalState } from "@/lib/realtime/festival-state";
-import { dayItems, nowAndNext } from "@/lib/schedule/schedule";
+import { nowAndNext, timedItems } from "@/lib/schedule/schedule";
 
 export const SLIDE_MS = 900;
 
@@ -23,7 +23,7 @@ export const SLIDE_MS = 900;
 export function useCaptionsView(state: FestivalState) {
   const nowMs = useNow(1000);
   const { appState } = state;
-  const { now, next } = nowAndNext(dayItems(state.schedule, appState.activeSessionId), nowMs);
+  const { now, next } = nowAndNext(timedItems(state.schedule), nowMs);
   const hasLiveInquiry = Boolean(appState.activeLiveInquiryId);
   const context = { gardenHidden: appState.gardenHidden, hasHighlight: hasLiveInquiry };
   const settings = captionsViewSettings(appState);

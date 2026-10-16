@@ -3,11 +3,13 @@
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { AdminBoard } from "./AdminBoard";
 import { AdminStatusBar } from "./AdminStatusBar";
+import { useSyncCalendarSession } from "./useSyncCalendarSession";
 import { errorNotice } from "./ui";
 
 export function AdminDashboard() {
   const festival = useFestivalState();
   const { state, loaded } = festival;
+  useSyncCalendarSession(state, loaded);
 
   return (
     <>
