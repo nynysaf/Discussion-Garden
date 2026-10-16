@@ -90,7 +90,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | Hosted Supabase | Used by production since 2026-10-14. All migrations pushed, sign-ups off, `db:check` 23/23 against hosted |
 | 4 — Audience → room feed | Done — user-verified 2026-10-01 (no pre-approval; Hide/Pin/pause sharing) |
 | 5 — Garden | 5A canvas user-verified 2026-10-01 (15 → 150 live, readable, settles, fills box). 5B admin editor user-verified 2026-10-01. Day-switch check user-verified 2026-10-05. **Done** |
-| 6 — Hybrid AI | 6.1 engine + 6.2 AI drafts panel done 2026-10-05 (agent-verified; 6.2 browser check by user pending). 6.3 timer: next |
+| 6 — Hybrid AI | 6.1 + 6.2 done 2026-10-05; **6.3 timer shipped 2026-10-15** (user browser check pending for 6.2 + 6.3) |
 | 6B — `/captions` views | Done — Garden · Both · Captions · **Highlight** + auto-rotate playlist, user-verified on production 2026-10-14 |
 | `/admin` polish | Done — status bar, two columns, shared panel set, user-verified on production 2026-10-14 |
 | 7 → 8 | Not started |
@@ -114,7 +114,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 **5. Next session (user's plan, 2026-10-14):** **polish the `/captions` screen UI** — ask the user what they want changed first. After that: **Phase 6.3 — automatic timer**: call `requestSuggestions()` (`src/lib/synthesis/drafts-db.ts`) every ~35 s from the tab that owns the mic (`useHostCaptions` / controller lock), only while `audio_status = live` and mode ≠ Manual; skip a tick if the previous call is still running; show the result/error with the same non-blocking notice as "Suggest now"; switching to Manual stops it at once. Captions must never wait on it.
 - Test without a mic: set Hybrid, `npm run transcript:demo -- 1` (then `-- 2` for a stretch that revisits ideas; `-- clear` removes it), press "Suggest now". The AI only reads talk from the **last 10 minutes** since the previous successful run, so re-add sample talk if it says "Not enough new talk".
 
-**6. Session 2026-10-15 plan (user's choices, in this order):** (a) caption splitting fix — `endpointing=500` shipped, **user mic test pending**; if compound sentences still split, next step is letting very short sentences join the next bubble (bends the PRD "one sentence per bubble" rule — update PRD if done). (b) **Download transcript** button on `/admin` (one text file per day; host-only). (c) **Opt-in "Save audio to this laptop"** switch on `/admin` — user chose in-app recording over a separate recorder; this **reverses the 2026-09-30 "no audio stored" decision**, so update PRD (out-of-scope list, privacy, signage wording "Audio is not recorded") when building it. Audio stays on the host laptop only — never uploaded, never committed. (d) `/captions` layout experiments for **Both** and **Highlight** on a preview page with made-up sample captions; the live TV keeps the current look until the user picks.
+**6. Session 2026-10-15 plan:** (a)–(b) caption splitting + TV broadcast fix **user-verified**. (c)–(f) + Phase 6.3 **shipped 2026-10-15** (agent-tested with unit tests; user browser check pending): caption font slider; download transcript; save audio to laptop; `/captions/lab`; Hybrid/Auto auto-suggest ~35s on mic tab. **User:** hard-refresh production after deploy; try slider on TV screen panel; Download transcript; lab at `/captions/lab`; optional local audio; Hybrid + Live for timer.
 
 **Open decisions for the user:** real festival schedule · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
 
@@ -200,7 +200,8 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - 2026-10-14 — **`/admin` polish** (DESIGN_GUIDE §8). `src/components/admin/ui.tsx`: `Panel` (icon title, actions, description, jump-link id), `Toggle` switch (state in words; terracotta when an "off" needs attention), shared primary/outline/small/danger buttons and notices; `garden/styles.ts` re-exports them. Lucide icons (`lucide-react`). Sticky **`AdminStatusBar`**: captions status, question on the TVs, current TV view + next rotation, Up next, **Next question**, jump links. Two columns at ≥ 1280 px (captions/TV/day/schedule | AI drafts/audience), garden full width with canvas + planting beside the idea list. Panels use container queries. Page 5,300 → 3,630 px tall at 1600 px wide. 201 unit tests; typecheck + lint clean.
 
 - 2026-10-15 — **Caption splitting fix:** user reported compound sentences breaking into several bubbles. Cause: Deepgram's default `endpointing` is 10 ms, so it finalises a chunk at every breath and punctuates each chunk as a sentence; our grouping starts a new bubble at every full stop. `buildListenUrl` now sends **`endpointing=500`** (`endpointingMs` option, checked against current Deepgram docs). Agent-verified: Deepgram accepts the URL (socket opened with the real key, no audio sent); 202 unit tests pass. **User mic test: preview looked good.**
-- 2026-10-15 — **`/captions` empty while admin Preview worked:** hosted broadcast itself is fine (`db:check` + bubble-shaped send). Host had saved transcript rows during the test, so mic → Deepgram → local preview worked; TVs never got bubbles. Likely cause: private `captions` channel joined **before** the host cookie session loaded, so Realtime authorized the tab as **anon** (can listen, cannot send); RLS drops host sends while Preview still updates in-tab. Fix: wait for `getSession()` + `realtime.setAuth` before joining; surface send failures on `/admin`; TV re-sends `hello` while Live but empty; `feedRef` updated synchronously for snapshots. **User re-test pending.**
+- 2026-10-15 — **`/captions` empty while admin Preview worked:** hosted broadcast itself is fine (`db:check` + bubble-shaped send). Host had saved transcript rows during the test, so mic → Deepgram → local preview worked; TVs never got bubbles. Likely cause: private `captions` channel joined **before** the host cookie session loaded, so Realtime authorized the tab as **anon** (can listen, cannot send); RLS drops host sends while Preview still updates in-tab. Fix: wait for `getSession()` + `realtime.setAuth` before joining; surface send failures on `/admin`; TV re-sends `hello` while Live but empty; `feedRef` updated synchronously for snapshots. **User-verified.**
+- 2026-10-15 — **Tonight's batch (PRD v0.2.9):** `captions_font_scale` (75–175) on `app_state` + slider on TV screen panel; Download transcript (host-only `.txt` per day); opt-in Save audio to this laptop (WebM on Pause/Stop, never uploaded); `/captions/lab` for Both/Highlight experiments; Phase 6.3 synthesis timer (~35s) on the mic-holding tab. Migration pushed to hosted. 213 unit tests pass. **User browser check pending.**
 
 ### In progress
 - Hosted Supabase is in sync: all migrations through 2026-10-14 pushed.
@@ -325,7 +326,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 ### Phase 6 — Hybrid AI synthesis — SHOULD
 - [x] `/api/synthesis` (host-only): builds window + current garden → OpenAI JSON → validates → inserts **draft** nodes/vines (Hybrid) or **published** (Auto); logs to `synthesis_runs`. *(6.1, 2026-10-05 — agent-verified with real OpenAI)*
 - [x] Mode switch Manual · Hybrid · Auto on `/admin` (confirm before Auto). *(6.2, 2026-10-05)*
-- [ ] Admin timer (~35s) only while Live and mode ≠ Manual; skip if previous call still running. *(6.3 — next)*
+- [x] Admin timer (~35s) only while Live and mode ≠ Manual; skip if previous call still running. *(6.3, 2026-10-15)*
 - [x] Draft queue UI: Approve / Edit / Reject / Approve all; `reinforce` bumps weight on approve. *(6.2, 2026-10-05 — agent-verified; user browser check pending)*
 - **Test:** 5 minutes of sample talk → drafts arrive, no near-duplicates of existing nodes; force an API error → admin notice, captions unaffected; switch to Manual → timer stops.
 
@@ -337,7 +338,7 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - **Test:** each button → TV slides within ~1s, header/strip/QR never move; auto-rotate at 20s cycles the ticked views and survives a TV reload; "Hide garden" → Captions; reduced-motion → fade only; full-screen captions stay readable from the back row.
 
 ### Phase 7 — Hardening + export + rehearsal — SHOULD (rehearsal itself is a must before Sat Oct 17)
-- [ ] Export: festival garden JSON + PNG (with each node's origin day); transcript text per day (host-only).
+- [ ] Export: festival garden JSON + PNG (with each node's origin day). *[x] transcript text per day (Download on /admin, 2026-10-15)*
 - [ ] "Reset test data" admin action for **before** Saturday only (clears rehearsal nodes/submissions/transcripts) — guarded by a typed confirmation, and disabled once `day_1` has started.
 - [ ] Real TV test at venue (or same model TV): caption size, safe area, contrast from back row.
 - [ ] Run the §7 failure drills.

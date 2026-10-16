@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { acquireControllerLock } from "@/lib/audio/controller-lock";
+import { downloadBlob, webmFilename } from "@/lib/audio/local-recording";
 import { requestScreenWakeLock } from "@/lib/audio/wake-lock";
 import { INITIAL_FEED, feedReducer } from "@/lib/captions/caption-feed";
 import type { CaptionMessage, CaptionStatus } from "@/lib/captions/channel";
@@ -22,7 +23,11 @@ async function listMicrophones(): Promise<MediaDeviceInfo[]> {
 }
 
 /** Host laptop: owns the microphone, publishes bubbles, saves the transcript. */
-export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
+export function useHostCaptions(
+  appState: AppState,
+  stateLoaded: boolean,
+  daySlug: string | null = null,
+) {
   const [feed, dispatch] = useReducer(feedReducer, INITIAL_FEED);
   const [detail, setDetail] = useState<string | null>(null);
   const [level, setLevel] = useState(0);
@@ -33,6 +38,10 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
   const [transcriptBacklog, setTranscriptBacklog] = useState(0);
   const [stateSaveError, setStateSaveError] = useState(false);
   const [broadcastError, setBroadcastError] = useState<string | null>(null);
+  const [saveLocalAudio, setSaveLocalAudioState] = useState(false);
+  const [audioSavedNotice, setAudioSavedNotice] = useState<string | null>(null);
+  const [holdingMic, setHoldingMic] = useState(false);
+  const daySlugRef = useRef(daySlug);
 
   const feedRef = useRef(feed);
   const statusRef = useRef<CaptionStatus>(INITIAL_FEED.status);
@@ -50,6 +59,20 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
   useEffect(() => {
     sessionIdRef.current = appState.activeSessionId;
   }, [appState.activeSessionId]);
+
+  useEffect(() => {
+    daySlugRef.current = daySlug;
+  }, [daySlug]);
+
+  const flushLocalAudio = useCallback(() => {
+    const captioner = captionerRef.current;
+    if (!captioner?.isSavingLocalAudio) return;
+    const blob = captioner.takeLocalRecording();
+    if (!blob) return;
+    const filename = webmFilename(daySlugRef.current);
+    downloadBlob(filename, blob);
+    setAudioSavedNotice(`Saved ${filename} to your Downloads folder.`);
+  }, []);
 
   // Adopt the saved speaker-colour setting (another host may have changed it).
   useEffect(() => {
@@ -178,6 +201,7 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
       void transcript.flush();
       releaseLockRef.current?.();
       releaseLockRef.current = null;
+      setHoldingMic(false);
       void wakeLockRef.current?.release();
     };
   }, [keepAwake, publish, publishStatus, refreshDevices]);
@@ -190,33 +214,51 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
         return;
       }
       releaseLockRef.current = release;
+      setHoldingMic(true);
       setBlockedByOtherTab(false);
     }
     setBroadcastError(null);
+    setAudioSavedNotice(null);
+    captionerRef.current?.setSaveLocalAudio(saveLocalAudio);
     await captionerRef.current?.start(deviceId || undefined, voiceCleanup);
     await refreshDevices();
     await keepAwake();
-  }, [deviceId, voiceCleanup, keepAwake, refreshDevices]);
+  }, [deviceId, voiceCleanup, keepAwake, refreshDevices, saveLocalAudio]);
 
-  const pause = useCallback(() => captionerRef.current?.pause(), []);
+  const pause = useCallback(() => {
+    captionerRef.current?.pause();
+    flushLocalAudio();
+  }, [flushLocalAudio]);
 
   const resume = useCallback(async () => {
+    captionerRef.current?.setSaveLocalAudio(saveLocalAudio);
     await captionerRef.current?.resume();
     await keepAwake();
-  }, [keepAwake]);
+  }, [keepAwake, saveLocalAudio]);
 
   const stop = useCallback(() => {
     captionerRef.current?.stop();
+    flushLocalAudio();
     releaseLockRef.current?.();
     releaseLockRef.current = null;
+    setHoldingMic(false);
     void wakeLockRef.current?.release();
     wakeLockRef.current = null;
-  }, []);
+  }, [flushLocalAudio]);
 
   const setSpeakerColours = useCallback(
     (on: boolean) => publishStatus({ speakerColoursOn: on }),
     [publishStatus],
   );
+
+  const setSaveLocalAudio = useCallback((on: boolean) => {
+    setSaveLocalAudioState(on);
+    captionerRef.current?.setSaveLocalAudio(on);
+    if (!on) {
+      captionerRef.current?.takeLocalRecording();
+      setAudioSavedNotice(null);
+    }
+  }, []);
 
   return {
     feed,
@@ -231,6 +273,10 @@ export function useHostCaptions(appState: AppState, stateLoaded: boolean) {
     transcriptBacklog,
     stateSaveError,
     broadcastError,
+    saveLocalAudio,
+    setSaveLocalAudio,
+    audioSavedNotice,
+    holdingMic,
     start,
     pause,
     resume,

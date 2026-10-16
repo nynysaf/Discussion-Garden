@@ -7,6 +7,7 @@ import { useGarden } from "@/components/realtime/useGarden";
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles } from "@/lib/captions/caption-feed";
+import { fontScaleFactor } from "@/lib/captions/font-scale";
 import { bandShare } from "@/lib/captions/layout";
 import { activeScheduleItem } from "@/lib/realtime/festival-state";
 import { AudienceQr } from "./AudienceQr";
@@ -54,9 +55,13 @@ export function CaptionsScreen() {
   const bubbles = visibleBubbles(feed, 8);
   const emptyCaption = EMPTY_MESSAGE[audioStatus] ?? "Listening…";
   const slide = animate ? "band-slide" : "";
+  const fontScale = fontScaleFactor(festival.state.appState.captionsFontScale);
 
   return (
-    <main className="relative grid h-dvh grid-rows-[auto_minmax(0,1fr)_auto] gap-[2vh] overflow-hidden p-[3vh_3vw]">
+    <main
+      className="relative grid h-dvh grid-rows-[auto_minmax(0,1fr)_auto] gap-[2vh] overflow-hidden p-[3vh_3vw]"
+      style={{ ["--captions-font-scale" as string]: String(fontScale) }}
+    >
       <header className="flex items-center justify-between gap-6">
         <h1 className="font-display text-[clamp(2rem,3.4vw,4.5rem)] font-bold uppercase leading-none tracking-[0.05em]">
           Discussion Garden
@@ -93,16 +98,17 @@ export function CaptionsScreen() {
           className={`captions-panel ${slide} absolute inset-y-0 right-0 overflow-hidden`}
         >
           <div data-fit={fit.captions} className="captions-fit absolute inset-y-0 flex flex-col">
-            <CaptionColumn
-              className={`h-full font-medium ${
-                fit.captions === "captions"
-                  ? "text-[clamp(1.7rem,3vw,3.7rem)]"
-                  : "text-[clamp(1.4rem,2.4vw,3rem)]"
-              }`}
-              bubbles={bubbles}
-              speakerColoursOn={speakerColoursOn}
-              emptyMessage={emptyCaption}
-            />
+            <div
+              data-size={fit.captions === "captions" ? "full" : "split"}
+              className="captions-type h-full"
+            >
+              <CaptionColumn
+                className="h-full font-medium"
+                bubbles={bubbles}
+                speakerColoursOn={speakerColoursOn}
+                emptyMessage={emptyCaption}
+              />
+            </div>
           </div>
         </section>
 

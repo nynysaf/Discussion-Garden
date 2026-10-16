@@ -134,7 +134,7 @@ function CaptionTicker({
   }, [text]);
   return (
     <div
-      className={`flex h-full items-center gap-[0.5em] rounded-2xl bg-white/70 px-[0.9em] text-[clamp(1.3rem,2.1vw,2.8rem)] font-medium shadow-poster ${className}`}
+      className={`captions-ticker-type flex h-full items-center gap-[0.5em] rounded-2xl bg-white/70 px-[0.9em] font-medium shadow-poster ${className}`}
     >
       {text && voice && speakerColoursOn && (
         <Image

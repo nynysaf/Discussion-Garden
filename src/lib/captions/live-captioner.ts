@@ -50,11 +50,36 @@ export class LiveCaptioner {
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private attempt = 0;
   private wantLive = false;
+  /** Opt-in: keep a copy of mic chunks on this laptop (never uploaded). */
+  private saveLocalAudio = false;
+  private localChunks: Blob[] = [];
+  private localMimeType = "audio/webm";
 
   constructor(private readonly options: LiveCaptionerOptions) {}
 
   get hasMic(): boolean {
     return this.stream !== null;
+  }
+
+  /** Turn local WebM capture on/off. Off clears any buffered chunks. */
+  setSaveLocalAudio(on: boolean): void {
+    this.saveLocalAudio = on;
+    if (!on) this.localChunks = [];
+  }
+
+  get isSavingLocalAudio(): boolean {
+    return this.saveLocalAudio;
+  }
+
+  /**
+   * Build a WebM from chunks recorded since the last flush (or since Save
+   * was turned on). Returns null if nothing was captured. Does not upload.
+   */
+  takeLocalRecording(): Blob | null {
+    if (this.localChunks.length === 0) return null;
+    const blob = new Blob(this.localChunks, { type: this.localMimeType });
+    this.localChunks = [];
+    return blob.size > 0 ? blob : null;
   }
 
   async start(deviceId?: string, voiceCleanup = false): Promise<void> {
@@ -173,14 +198,17 @@ export class LiveCaptioner {
   private startRecorder(socket: WebSocket): void {
     if (!this.stream) return;
     const mimeType = pickRecorderMimeType((t) => MediaRecorder.isTypeSupported(t));
+    if (mimeType) this.localMimeType = mimeType;
     const recorder = new MediaRecorder(
       this.stream,
       mimeType ? { mimeType } : undefined,
     );
     recorder.ondataavailable = (event: BlobEvent) => {
-      if (event.data.size > 0 && socket.readyState === WebSocket.OPEN) {
+      if (event.data.size === 0) return;
+      if (socket.readyState === WebSocket.OPEN) {
         socket.send(event.data);
       }
+      if (this.saveLocalAudio) this.localChunks.push(event.data);
     };
     recorder.start(this.options.timesliceMs ?? 250);
     this.recorder = recorder;

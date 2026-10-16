@@ -5,6 +5,7 @@ import {
   type CaptionsView,
   type ViewSettings,
 } from "@/lib/captions/layout";
+import { clampFontScale, FONT_SCALE_DEFAULT } from "@/lib/captions/font-scale";
 import type { AudioStatus } from "@/lib/captions/types";
 
 export type SynthesisMode = "manual" | "hybrid" | "auto";
@@ -22,6 +23,8 @@ export type AppState = {
   captionsRotation: CaptionsView[];
   captionsRotateSeconds: number | null;
   captionsRotateSince: string | null;
+  /** Caption size on /captions as percent of default (75–175). */
+  captionsFontScale: number;
 };
 
 export type AppStateRow = {
@@ -37,10 +40,11 @@ export type AppStateRow = {
   captions_rotation: string[];
   captions_rotate_seconds: number | null;
   captions_rotate_since: string | null;
+  captions_font_scale?: number;
 };
 
 export const APP_STATE_COLUMNS =
-  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open, captions_layout, captions_rotation, captions_rotate_seconds, captions_rotate_since";
+  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open, captions_layout, captions_rotation, captions_rotate_seconds, captions_rotate_since, captions_font_scale";
 
 const AUDIO_STATUSES: AudioStatus[] = [
   "idle",
@@ -65,6 +69,7 @@ export const DEFAULT_APP_STATE: AppState = {
   captionsRotation: CAPTIONS_VIEWS,
   captionsRotateSeconds: null,
   captionsRotateSince: null,
+  captionsFontScale: FONT_SCALE_DEFAULT,
 };
 
 /** Database row → app shape, with safe defaults for anything unexpected. */
@@ -90,6 +95,10 @@ export function toAppState(row: Partial<AppStateRow> | null | undefined): AppSta
     captionsRotateSeconds:
       typeof row.captions_rotate_seconds === "number" ? row.captions_rotate_seconds : null,
     captionsRotateSince: row.captions_rotate_since ?? null,
+    captionsFontScale:
+      typeof row.captions_font_scale === "number"
+        ? clampFontScale(row.captions_font_scale)
+        : FONT_SCALE_DEFAULT,
   };
 }
 
@@ -115,6 +124,7 @@ const COLUMN_FOR: Record<keyof AppState, keyof AppStateRow> = {
   captionsRotation: "captions_rotation",
   captionsRotateSeconds: "captions_rotate_seconds",
   captionsRotateSince: "captions_rotate_since",
+  captionsFontScale: "captions_font_scale",
 };
 
 /** App-shaped change → database columns (only the keys provided). */

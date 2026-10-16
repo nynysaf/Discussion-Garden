@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.8  
-**Last updated:** 2026-10-14  
+**Version:** 0.2.9  
+**Last updated:** 2026-10-15  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.9 (2026-10-15):** Host can **download each day's transcript** as a text file. Optional **Save audio to this laptop** on `/admin` writes a WebM only to the host computer (never uploaded); room signage must say audio may be kept locally when that switch is on. Caption size on `/captions` is host-adjustable (75–175%). `/captions/lab` is an offline layout sandbox. Hybrid/Auto auto-suggest runs ~every 35s on the mic tab while Live.
 - **v0.2.8 (2026-10-14):** Live on Vercel. `/captions` gets a fourth view, **Highlight**: a full-screen takeover of the live question (or "Coming up" before anything is live) and the next item with a countdown, keeping a one-line caption ticker and the QR. Auto-rotate becomes a **playlist** — the host ticks which views rotate and sets one hold time (10–120 s); all TVs stay in step. `/admin` gets a sticky status bar (captions status, question on the TVs, current TV view, **Next question**) and a two-column layout.
 - **v0.2.7 (2026-10-01):** **No pre-approval for audience messages.** They appear on `/room-feed` as soon as they pass the server checks (length, profanity, per-phone rate limit). The host can **Hide** any message, **Pin** one as "being discussed", and **pause sharing** with one switch if it's abused. Replaces the Approve/Dismiss moderation queue.
 - **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
@@ -36,7 +37,7 @@
 ### 1.2 Non-goals (this festival)
 - Multi-language captions or translation.
 - Audience accounts, voting, or reactions.
-- Storing or replaying audio.
+- Cloud storage or replay of audio (optional local WebM on the host laptop only — see privacy).
 - Turning audience submissions into garden nodes (feed and garden stay separate).
 - Integration with the CLara platform (standalone app; may borrow code only).
 
@@ -97,7 +98,7 @@ Both days grow **the same garden**. Sunday opens with Saturday's garden already 
 ### 3.1 Why these choices
 - **Captions go browser → Deepgram directly** (not through our server): Vercel serverless functions can't hold long-lived audio WebSockets, and a direct connection keeps latency lowest.
 - **Live caption words are broadcast, not written row-by-row:** interim words change many times per second. Only **final** segments are saved to the database.
-- **No manual recording chunks:** each day runs as one continuous live stream (Start at 11:00, Pause for breaks, Stop at 17:00). Deepgram returns text in short "final" segments (a sentence or so each), and each is saved as its own row. If the connection drops, the app reconnects and carries on — the transcript simply continues. No audio file exists, so there's nothing to split.
+- **No manual recording chunks:** each day runs as one continuous live stream (Start at 11:00, Pause for breaks, Stop at 17:00). Deepgram returns text in short "final" segments (a sentence or so each), and each is saved as its own row. If the connection drops, the app reconnects and carries on — the transcript simply continues. Optional local audio (host laptop only) is a side copy of that same stream — not a second Deepgram path.
 - **The admin browser drives the AI timer:** simplest reliable scheduler for a 2-day event — no background job service needed. Only one admin tab may run the timer (see §7).
 
 ---
@@ -206,7 +207,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 | :--- | :--- | :--- |
 | `sessions` | `id`, `slug` (`day_1`, `day_2`), `title`, `date`, `starts_at`, `ends_at` | Public read |
 | `schedule_items` | `id`, `session_id`, `title`, `question`, `starts_at`, `sort_order` | Public read |
-| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (views in the playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since` (rotation start, shared by all TVs) | Public read, host write |
+| `app_state` (single row) | `active_session_id`, `active_schedule_item_id`, `synthesis_mode`, `audio_status`, `garden_hidden`, `speaker_colours_on`, `highlighted_submission_id` (the pinned message), `submissions_open`, `captions_layout` (`garden`/`both`/`captions`/`highlight`), `captions_rotation` (views in the playlist), `captions_rotate_seconds` (10–120, null = off), `captions_rotate_since` (rotation start, shared by all TVs), `captions_font_scale` (75–175, default 100) | Public read, host write |
 | `hosts` | `email` (lowercase) — 1–3 host accounts allowed into `/admin` | No client access (managed by script) |
 | `transcript_segments` | `id`, `bubble_id` (unique), `session_id`, `connection_id`, `speaker` (Deepgram number within that connection), `text` (one sentence/bubble), `start_ms`, `end_ms`, `created_at` | **Host only** (private archive) |
 | `garden_nodes` | `id`, `tier` (seed/sprout/theme), `label`, `description`, `weight`, `status` (draft/published/rejected), `origin` (manual/ai), `origin_session_id`, `source_segment_ids[]` | Public read of `published` only |
@@ -222,8 +223,8 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 ## 7. Operations, Privacy & Failure Handling
 
 ### Privacy & consent
-- **Signage** in both rooms: "This discussion is live-captioned and summarized. Audio is not recorded."
-- **No audio stored** anywhere. Transcript text is kept privately for organizers after the festival.
+- **Signage** in both rooms: default *"This discussion is live-captioned and summarized. Audio is not recorded."* If the host turns on **Save audio to this laptop**, use wording that audio may be kept as a file on the organizer's computer (still not uploaded to our servers or Deepgram training — `mip_opt_out=true`).
+- **Audio:** off by default. When enabled, WebM files stay on the host laptop Downloads folder only — never uploaded, never committed. Transcript text is kept privately for organizers after the festival.
 - **Deepgram opt-out:** every connection sends `mip_opt_out=true`, so Deepgram keeps audio only as long as needed to transcribe it and never uses it for model training. Without this flag, Deepgram may store samples — which would contradict the signage.
 - **Voices are anonymous** on every screen (animal emoji only).
 - Audience name/tag is optional; no emails or phone numbers collected.

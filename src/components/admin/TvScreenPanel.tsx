@@ -4,6 +4,12 @@ import { Tv } from "lucide-react";
 import { useState } from "react";
 import { useCaptionsView } from "@/components/captions/useCaptionsView";
 import {
+  FONT_SCALE_MAX,
+  FONT_SCALE_MIN,
+  FONT_SCALE_STEP,
+  clampFontScale,
+} from "@/lib/captions/font-scale";
+import {
   availableViews,
   CAPTIONS_VIEWS,
   ROTATE_DEFAULT_SECONDS,
@@ -94,6 +100,31 @@ export function TvScreenPanel({ state, loaded }: Props) {
           );
         })}
       </div>
+
+      <label className="mt-5 flex flex-col gap-2 border-t border-festival-ink/10 pt-4">
+        <span className="flex items-center justify-between gap-3 text-sm font-semibold">
+          <span>Caption size on TV</span>
+          <span className="tabular-nums opacity-70">{appState.captionsFontScale}%</span>
+        </span>
+        <input
+          type="range"
+          min={FONT_SCALE_MIN}
+          max={FONT_SCALE_MAX}
+          step={FONT_SCALE_STEP}
+          value={appState.captionsFontScale}
+          disabled={disabled}
+          aria-label="Caption font size on the downstairs TV"
+          className="w-full accent-festival-forest"
+          onChange={(e) =>
+            void run((c) =>
+              saveScreenPatch(c, { captionsFontScale: clampFontScale(Number(e.target.value)) }),
+            )
+          }
+        />
+        <span className="text-sm opacity-70">
+          100% is the default back-row size. Changes every /captions screen within about a second.
+        </span>
+      </label>
 
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-festival-ink/10 pt-4">
         <Toggle

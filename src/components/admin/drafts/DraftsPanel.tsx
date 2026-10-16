@@ -1,15 +1,23 @@
 "use client";
 
 import { Sparkles, WandSparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDrafts } from "@/components/realtime/useDrafts";
+import { MIC_CONTROLLER_LOCK } from "@/lib/audio/controller-lock";
 import type { AppState, SynthesisMode } from "@/lib/realtime/app-state";
 import { venueTime } from "@/lib/schedule/time";
 import { approveAllSteps, buildQueue, describeResult } from "@/lib/synthesis/drafts";
 import { approveAll, requestSuggestions, setSynthesisMode } from "@/lib/synthesis/drafts-db";
+import { SYNTHESIS_TIMER_MS, shouldRunSynthesisTick } from "@/lib/synthesis/timer";
 import { errorNotice, Panel, primaryButton, secondaryButton } from "../ui";
 import { useHostAction } from "../useHostAction";
 import { DraftCard } from "./DraftCard";
+
+async function thisTabHoldsMic(): Promise<boolean> {
+  if (!navigator.locks?.query) return true;
+  const state = await navigator.locks.query();
+  return (state.held ?? []).some((lock) => lock.name === MIC_CONTROLLER_LOCK);
+}
 
 const MODES: { mode: SynthesisMode; name: string; hint: string }[] = [
   { mode: "manual", name: "Manual", hint: "AI is off. You plant everything by hand." },
@@ -27,6 +35,58 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
   const mode = appState.synthesisMode;
   const queue = buildQueue(drafts);
   const lastRun = drafts.lastRun;
+  const suggestingRef = useRef(false);
+  const liveRef = useRef(appState.audioStatus);
+  const modeRef = useRef(appState.synthesisMode);
+
+  useEffect(() => {
+    suggestingRef.current = suggesting;
+  }, [suggesting]);
+  useEffect(() => {
+    liveRef.current = appState.audioStatus;
+  }, [appState.audioStatus]);
+  useEffect(() => {
+    modeRef.current = appState.synthesisMode;
+  }, [appState.synthesisMode]);
+
+  // Phase 6.3: while this tab holds the mic and captions are Live, ask every ~35s.
+  // Captions never await this â€” failures only update the notice below.
+  useEffect(() => {
+    if (appState.audioStatus !== "live" || appState.synthesisMode === "manual") return;
+    let cancelled = false;
+    const tick = async () => {
+      const holdingMic = await thisTabHoldsMic();
+      if (
+        cancelled ||
+        !shouldRunSynthesisTick({
+          audioStatus: liveRef.current,
+          synthesisMode: modeRef.current,
+          holdingMic,
+          busy: suggestingRef.current,
+        })
+      ) {
+        return;
+      }
+      suggestingRef.current = true;
+      setSuggesting(true);
+      try {
+        setNotice({ text: describeResult(await requestSuggestions()), failed: false });
+      } catch (e) {
+        setNotice({
+          text: e instanceof Error ? e.message : "The garden AI couldn't run.",
+          failed: true,
+        });
+      } finally {
+        suggestingRef.current = false;
+        setSuggesting(false);
+      }
+    };
+    const id = setInterval(() => void tick(), SYNTHESIS_TIMER_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [appState.audioStatus, appState.synthesisMode]);
 
   function pickMode(next: SynthesisMode) {
     if (next === mode) return;
@@ -98,16 +158,16 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
           onClick={() => void suggestNow()}
         >
           <WandSparkles aria-hidden size={16} strokeWidth={1.75} />
-          {suggesting ? "Asking the AI…" : "Suggest now"}
+          {suggesting ? "Asking the AIâ€¦" : "Suggest now"}
         </button>
         <span className="text-sm opacity-70">
           {mode === "manual"
             ? "Switch to Hybrid to get suggestions."
-            : "Reads the talk since the AI last ran."}
+            : "Reads the talk since the AI last ran. While Live, also runs about every 35 seconds on the mic tab."}
           {lastRun && (
             <>
               {" "}Last run {venueTime(lastRun.createdAt)}
-              {lastRun.error ? " — it failed." : "."}
+              {lastRun.error ? " â€” it failed." : "."}
             </>
           )}
         </span>
@@ -148,3 +208,4 @@ export function DraftsPanel({ appState, stateLoaded }: Props) {
     </Panel>
   );
 }
+

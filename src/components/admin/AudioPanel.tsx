@@ -2,22 +2,32 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { CaptionColumn } from "@/components/captions/CaptionColumn";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles, voicesHeard } from "@/lib/captions/caption-feed";
-import { Mic, Pause, Play, Square } from "lucide-react";
+import { downloadDayTranscript } from "@/lib/captions/transcript-db";
+import { Mic, Pause, Play, Square, Download } from "lucide-react";
 import { voiceFor } from "@/lib/captions/voice-slot";
 import type { AppState } from "@/lib/realtime/app-state";
+import { createClient } from "@/lib/supabase/client";
 import { errorNotice, input, outlineButton, Panel, primaryButton, warnNotice } from "./ui";
 import { useHostCaptions } from "./useHostCaptions";
 
-type Props = { appState: AppState; stateLoaded: boolean };
+type Props = {
+  appState: AppState;
+  stateLoaded: boolean;
+  daySlug?: string | null;
+};
 
 const ICON = { "aria-hidden": true, size: 18, strokeWidth: 1.5 } as const;
 
-export function AudioPanel({ appState, stateLoaded }: Props) {
-  const host = useHostCaptions(appState, stateLoaded);
+export function AudioPanel({ appState, stateLoaded, daySlug = null }: Props) {
+  const host = useHostCaptions(appState, stateLoaded, daySlug);
   const { audioStatus, speakerColoursOn } = host.feed.status;
+  const [transcriptBusy, setTranscriptBusy] = useState(false);
+  const [transcriptNotice, setTranscriptNotice] = useState<string | null>(null);
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
 
   const isActive =
     audioStatus === "live" ||
@@ -29,6 +39,27 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
   const confirmStop = () => {
     if (window.confirm("Stop captions and release the microphone?")) host.stop();
   };
+
+  async function downloadTranscript() {
+    setTranscriptBusy(true);
+    setTranscriptError(null);
+    setTranscriptNotice(null);
+    try {
+      const result = await downloadDayTranscript(
+        createClient(),
+        appState.activeSessionId,
+      );
+      setTranscriptNotice(
+        result.lineCount === 0
+          ? `Downloaded ${result.filename} (no lines yet for this day).`
+          : `Downloaded ${result.filename} (${result.lineCount} lines).`,
+      );
+    } catch (e) {
+      setTranscriptError(e instanceof Error ? e.message : "Couldn't download the transcript.");
+    } finally {
+      setTranscriptBusy(false);
+    }
+  }
 
   return (
     <Panel
@@ -66,6 +97,21 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
           Captions aren&apos;t reaching the TVs ({host.broadcastError}). Preview
           on this page still works. Try Stop, refresh this page, then Start
           again.
+        </p>
+      )}
+      {host.audioSavedNotice && (
+        <p className={`mt-3 ${warnNotice}`} role="status">
+          {host.audioSavedNotice}
+        </p>
+      )}
+      {transcriptNotice && (
+        <p className={`mt-3 ${warnNotice}`} role="status">
+          {transcriptNotice}
+        </p>
+      )}
+      {transcriptError && (
+        <p className={`mt-3 ${errorNotice}`} role="alert">
+          {transcriptError}
         </p>
       )}
       {stateLoaded && !appState.activeSessionId && (
@@ -156,6 +202,14 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
                 <Square {...ICON} /> Stop
               </button>
             )}
+            <button
+              type="button"
+              className={`${outlineButton} px-5 py-2`}
+              disabled={!stateLoaded || transcriptBusy || !appState.activeSessionId}
+              onClick={() => void downloadTranscript()}
+            >
+              <Download {...ICON} /> Download transcript
+            </button>
           </div>
 
           <label className="flex items-center gap-3">
@@ -190,6 +244,23 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
             </span>
           </label>
 
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              className="h-5 w-5 accent-festival-forest"
+              checked={host.saveLocalAudio}
+              onChange={(e) => host.setSaveLocalAudio(e.target.checked)}
+            />
+            <span>
+              <span className="font-semibold">Save audio to this laptop</span>
+              <span className="block text-sm opacity-70">
+                Opt-in. Keeps a WebM copy of the mic on this computer only — never
+                uploaded. Downloads on Pause and Stop. Update room signage if you
+                use this at the festival.
+              </span>
+            </span>
+          </label>
+
           <p className="text-sm opacity-70">
             Keep this tab open and in front while live. Pausing closes the
             connection (no Deepgram cost); animals may reshuffle after a pause.
@@ -198,6 +269,7 @@ export function AudioPanel({ appState, stateLoaded }: Props) {
               /captions
             </Link>{" "}
             on any device to see the TV view.
+            {host.holdingMic ? " This tab holds the mic." : null}
           </p>
         </div>
 

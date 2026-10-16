@@ -18,6 +18,7 @@ describe("toAppState", () => {
         captions_rotation: ["captions", "garden", "bogus", "garden"],
         captions_rotate_seconds: 20,
         captions_rotate_since: "2026-10-17T15:00:00Z",
+        captions_font_scale: 125,
       }),
     ).toEqual({
       activeSessionId: "s1",
@@ -32,6 +33,7 @@ describe("toAppState", () => {
       captionsRotation: ["garden", "captions"],
       captionsRotateSeconds: 20,
       captionsRotateSince: "2026-10-17T15:00:00Z",
+      captionsFontScale: 125,
     });
   });
 

@@ -14,6 +14,7 @@ import { errorNotice } from "./ui";
 export function AdminDashboard() {
   const festival = useFestivalState();
   const { state, loaded } = festival;
+  const day = state.sessions.find((s) => s.id === state.appState.activeSessionId);
 
   return (
     <>
@@ -25,7 +26,11 @@ export function AdminDashboard() {
       )}
       <div className="mt-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <div className="flex flex-col gap-6">
-          <AudioPanel appState={state.appState} stateLoaded={loaded} />
+          <AudioPanel
+            appState={state.appState}
+            stateLoaded={loaded}
+            daySlug={day?.slug ?? null}
+          />
           <TvScreenPanel state={state} loaded={loaded} />
           <FestivalPanel state={state} loaded={loaded} />
           <ScheduleManager state={state} loaded={loaded} />
