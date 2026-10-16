@@ -64,32 +64,31 @@ export function Panel({ id, title, icon: Icon, actions, description, children }:
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className="@container scroll-mt-28 rounded-3xl bg-white/60 p-5 shadow-poster sm:p-6"
+      className="@container relative scroll-mt-28 rounded-3xl bg-white/60 p-5 shadow-poster sm:p-6"
     >
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <h2 id={`${id}-title`} className="flex items-center gap-3 font-display text-3xl font-semibold">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-festival-green/35 text-festival-forest">
-              <Icon aria-hidden size={22} strokeWidth={1.5} />
-            </span>
-            {title}
-          </h2>
-          <button
-            type="button"
-            className={secondaryButton}
-            aria-expanded={open}
-            aria-controls={`${id}-body`}
-            onClick={toggle}
-          >
-            <ChevronDown
-              aria-hidden
-              size={16}
-              strokeWidth={1.75}
-              className={`transition-transform ${open ? "" : "-rotate-90"}`}
-            />
-            {open ? "Collapse" : "Expand"}
-          </button>
-        </div>
+      <button
+        type="button"
+        className="absolute top-4 right-4 inline-flex size-9 items-center justify-center rounded-full border border-festival-forest/30 text-festival-forest transition hover:bg-festival-forest/10"
+        aria-expanded={open}
+        aria-controls={`${id}-body`}
+        aria-label={open ? "Collapse panel" : "Expand panel"}
+        onClick={toggle}
+      >
+        <ChevronDown
+          aria-hidden
+          size={18}
+          strokeWidth={1.75}
+          className={`transition-transform ${open ? "" : "-rotate-90"}`}
+        />
+      </button>
+
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pr-12">
+        <h2 id={`${id}-title`} className="flex items-center gap-3 font-display text-3xl font-semibold">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-festival-green/35 text-festival-forest">
+            <Icon aria-hidden size={22} strokeWidth={1.5} />
+          </span>
+          {title}
+        </h2>
         {actions && open && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
       {open && (

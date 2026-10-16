@@ -42,9 +42,37 @@ describe("formatDayTranscript", () => {
     expect(text).not.toMatch(/\bHost\b/);
   });
 
+  it("inserts live inquiry markers by wall-clock time", () => {
+    const text = formatDayTranscript(
+      [
+        {
+          speaker: 0,
+          text: "Before the switch.",
+          startMs: 1000,
+          createdAt: "2026-10-17T15:00:00Z",
+        },
+        {
+          speaker: 0,
+          text: "After the switch.",
+          startMs: 5000,
+          createdAt: "2026-10-17T15:05:00Z",
+        },
+      ],
+      {
+        daySlug: "day_1",
+        inquiries: [
+          { body: "How might we share tools?", activatedAt: "2026-10-17T15:02:00Z" },
+        ],
+      },
+    );
+    const inquiryAt = text.indexOf("--- Live inquiry: How might we share tools? ---");
+    expect(inquiryAt).toBeGreaterThan(text.indexOf("Before the switch."));
+    expect(inquiryAt).toBeLessThan(text.indexOf("After the switch."));
+  });
+
   it("notes when the day has no lines yet", () => {
     expect(formatDayTranscript([], { daySlug: "day_2" })).toContain(
-      "(No captions saved for this day yet.)",
+      "(No captions or live inquiries saved for this day yet.)",
     );
   });
 });

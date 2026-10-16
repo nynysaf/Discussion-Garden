@@ -27,12 +27,14 @@ export function useCaptionsView(state: FestivalState) {
     dayItems(state.schedule, appState.activeSessionId),
     appState.activeScheduleItemId,
   );
-  const context = { gardenHidden: appState.gardenHidden, hasHighlight: Boolean(now) };
+  const hasLiveInquiry = Boolean(appState.activeLiveInquiryId);
+  const context = { gardenHidden: appState.gardenHidden, hasHighlight: hasLiveInquiry };
   const settings = captionsViewSettings(appState);
   return {
     nowMs,
     now,
     next,
+    hasLiveInquiry,
     context,
     view: currentView(nowMs, settings, context),
     upcoming: nextRotation(nowMs, settings, context),

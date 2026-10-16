@@ -7,6 +7,7 @@ import { AudioPanel } from "./AudioPanel";
 import { DraftsPanel } from "./drafts/DraftsPanel";
 import { FestivalPanel } from "./FestivalPanel";
 import { GardenPanel } from "./garden/GardenPanel";
+import { LiveInquiryPanel } from "./LiveInquiryPanel";
 import { ScheduleManager } from "./ScheduleManager";
 import { TvScreenPanel } from "./TvScreenPanel";
 import { errorNotice } from "./ui";
@@ -33,7 +34,10 @@ export function AdminDashboard() {
           />
           <TvScreenPanel state={state} loaded={loaded} />
           <FestivalPanel state={state} loaded={loaded} />
-          <ScheduleManager state={state} loaded={loaded} />
+          <div className="grid items-start gap-6 lg:grid-cols-2">
+            <ScheduleManager state={state} loaded={loaded} />
+            <LiveInquiryPanel state={state} loaded={loaded} />
+          </div>
         </div>
         <div className="flex flex-col gap-6">
           <DraftsPanel appState={state.appState} stateLoaded={loaded} />

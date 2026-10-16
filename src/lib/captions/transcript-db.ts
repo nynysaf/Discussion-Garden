@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { fetchActivationsForSession } from "@/lib/inquiries/inquiries-db";
 import {
   formatDayTranscript,
   transcriptFilename,
@@ -22,11 +23,14 @@ export async function downloadDayTranscript(
   if (sessionError) throw new Error(sessionError.message);
   if (!session) throw new Error("That festival day wasn't found.");
 
-  const { data: rows, error } = await supabase
-    .from("transcript_segments")
-    .select("speaker, text, start_ms, created_at")
-    .eq("session_id", sessionId)
-    .order("start_ms", { ascending: true });
+  const [{ data: rows, error }, activations] = await Promise.all([
+    supabase
+      .from("transcript_segments")
+      .select("speaker, text, start_ms, created_at")
+      .eq("session_id", sessionId)
+      .order("start_ms", { ascending: true }),
+    fetchActivationsForSession(supabase, sessionId),
+  ]);
   if (error) throw new Error(error.message);
 
   const lines: TranscriptLine[] = (rows ?? []).map((row) => ({
@@ -40,6 +44,7 @@ export async function downloadDayTranscript(
   const text = formatDayTranscript(lines, {
     daySlug: day.slug,
     dayTitle: day.title,
+    inquiries: activations.map((a) => ({ body: a.body, activatedAt: a.activatedAt })),
   });
   const filename = transcriptFilename(day.slug);
   triggerBrowserDownload(filename, text, "text/plain;charset=utf-8");

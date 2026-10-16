@@ -3,14 +3,13 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { CaptionBubble } from "@/lib/captions/types";
+import { INQUIRY_HIGHLIGHT_CLASS, inquiryLengthBucket } from "@/lib/captions/inquiry-fit";
 import { voiceFor } from "@/lib/captions/voice-slot";
-import type { ScheduleItem } from "@/lib/realtime/festival-state";
 import { AudienceQr } from "./AudienceQr";
 
 type Props = {
   visible: boolean;
-  /** Must be the live item — Highlight is unavailable until something is live. */
-  now: ScheduleItem | null;
+  inquiryText: string;
   latest: CaptionBubble | null;
   speakerColoursOn: boolean;
   emptyCaption: string;
@@ -18,18 +17,19 @@ type Props = {
 };
 
 /**
- * Full-screen live inquiry (DESIGN_GUIDE §5.1b, simplified 2026-10-15):
- * the live discussion question + caption ticker + Share a question QR.
+ * Full-screen live inquiry: question + caption ticker + Share a question QR.
+ * Only available while an inquiry is live.
  */
 export function HighlightScreen({
   visible,
-  now,
+  inquiryText,
   latest,
   speakerColoursOn,
   emptyCaption,
   statusPill,
 }: Props) {
-  const question = now?.question?.trim() || now?.title?.trim() || null;
+  const question = inquiryText.trim();
+  const size = INQUIRY_HIGHLIGHT_CLASS[inquiryLengthBucket(question)];
 
   return (
     <section
@@ -48,7 +48,9 @@ export function HighlightScreen({
               <span aria-hidden className="inline-block size-[0.6em] rounded-full bg-festival-marigold" />
               Live inquiry
             </p>
-            <h2 className="line-clamp-4 max-w-[88vw] text-balance font-display text-[clamp(2.4rem,5.4vw,7.5rem)] font-semibold italic leading-[1.08]">
+            <h2
+              className={`line-clamp-5 max-w-[88vw] text-balance font-display font-semibold italic leading-[1.08] ${size}`}
+            >
               {question}
             </h2>
           </>
@@ -68,7 +70,6 @@ export function HighlightScreen({
   );
 }
 
-/** Latest caption on one line; long sentences keep their newest words in view. */
 function CaptionTicker({
   bubble,
   speakerColoursOn,

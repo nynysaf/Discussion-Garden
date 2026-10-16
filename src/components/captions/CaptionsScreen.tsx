@@ -6,10 +6,11 @@ import { useGarden } from "@/components/realtime/useGarden";
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { StatusPill } from "@/components/StatusPill";
 import { visibleBubbles } from "@/lib/captions/caption-feed";
-import { effectiveFooter } from "@/lib/captions/footer";
+import { rotatingFooter } from "@/lib/captions/footer";
 import { fontScaleFactor } from "@/lib/captions/font-scale";
+import { INQUIRY_FOOTER_CLASS, inquiryLengthBucket } from "@/lib/captions/inquiry-fit";
 import { bandShare } from "@/lib/captions/layout";
-import { activeScheduleItem } from "@/lib/realtime/festival-state";
+import { activeLiveInquiry } from "@/lib/realtime/festival-state";
 import { AudienceQr } from "./AudienceQr";
 import { CaptionColumn } from "./CaptionColumn";
 import { HighlightScreen } from "./HighlightScreen";
@@ -48,18 +49,18 @@ export function CaptionsScreen() {
     return () => clearTimeout(timer);
   }, [festival.loaded]);
 
-  const { view, context, now } = useCaptionsView(festival.state);
+  const { view, context, nowMs, hasLiveInquiry } = useCaptionsView(festival.state);
   const { band, fit } = useBand(view, context, animate);
   const share = bandShare(band);
   const bubbles = visibleBubbles(feed, 8);
   const emptyCaption = EMPTY_MESSAGE[audioStatus] ?? "Listening…";
   const slide = animate ? "band-slide" : "";
   const fontScale = fontScaleFactor(festival.state.appState.captionsFontScale);
-  const liveItem = activeScheduleItem(festival.state);
-  const hasLiveQuestion = Boolean(liveItem);
+  const inquiry = activeLiveInquiry(festival.state);
   const showFooter = view !== "garden" && view !== "highlight";
-  const footer = effectiveFooter(festival.state.appState.captionsFooter, hasLiveQuestion);
-  const inquiryText = liveItem?.question?.trim() || liveItem?.title?.trim() || "";
+  const footer = rotatingFooter(nowMs, hasLiveInquiry);
+  const inquiryText = inquiry?.body ?? "";
+  const inquirySize = INQUIRY_FOOTER_CLASS[inquiryLengthBucket(inquiryText)];
 
   return (
     <main
@@ -126,11 +127,13 @@ export function CaptionsScreen() {
             <NowNextStrip state={festival.state} className="min-w-0 flex-1" />
           ) : (
             <>
-              <p className="min-w-0 flex-1 truncate font-display text-[clamp(1.2rem,2vw,2.8rem)] font-semibold italic leading-tight">
+              <p
+                className={`min-w-0 flex-1 font-display font-semibold italic leading-tight ${inquirySize}`}
+              >
                 <span className="not-italic font-bold tracking-wide text-festival-forest">
                   Live inquiry:{" "}
                 </span>
-                {inquiryText}
+                <span className="line-clamp-2">{inquiryText}</span>
               </p>
               <AudienceQr className="h-full shrink-0 text-[clamp(0.9rem,1.1vw,1.5rem)]" />
             </>
@@ -140,7 +143,7 @@ export function CaptionsScreen() {
 
       <HighlightScreen
         visible={view === "highlight"}
-        now={now}
+        inquiryText={inquiryText}
         latest={bubbles.at(-1) ?? null}
         speakerColoursOn={speakerColoursOn}
         emptyCaption={emptyCaption}

@@ -8,6 +8,7 @@ describe("toAppState", () => {
       toAppState({
         active_session_id: "s1",
         active_schedule_item_id: "q1",
+        active_live_inquiry_id: "li1",
         synthesis_mode: "hybrid",
         audio_status: "live",
         garden_hidden: true,
@@ -23,6 +24,7 @@ describe("toAppState", () => {
     ).toEqual({
       activeSessionId: "s1",
       activeScheduleItemId: "q1",
+      activeLiveInquiryId: "li1",
       synthesisMode: "hybrid",
       audioStatus: "live",
       gardenHidden: true,

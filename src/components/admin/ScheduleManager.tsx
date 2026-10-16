@@ -1,16 +1,14 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CalendarClock, Pencil, SkipForward, Trash2, Tv } from "lucide-react";
+import { ArrowDown, ArrowUp, CalendarClock, Pencil, Trash2, Tv } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FestivalState, ScheduleItem } from "@/lib/realtime/festival-state";
 import {
-  QUESTION_MAX,
   TITLE_MAX,
   dayItems,
   moveItem,
   nextSortOrder,
-  nowAndNext,
   validateDraft,
   type ScheduleDraft,
   type ValidDraft,
@@ -56,7 +54,7 @@ function ItemForm({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    const result = validateDraft(draft);
+    const result = validateDraft({ ...draft, question: "" });
     if (!result.ok) {
       setError(result.error);
       return;
@@ -77,22 +75,12 @@ function ItemForm({
         />
       </label>
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">Title (shown in the Now · Next strip)</span>
+        <span className="text-sm font-semibold">Title (Now · Next strip)</span>
         <input
           className={input}
           maxLength={TITLE_MAX}
           value={draft.title}
           onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-        />
-      </label>
-      <label className="flex flex-col gap-1 @md:col-span-2">
-        <span className="text-sm font-semibold">Live question (shown on the TVs when this item is live)</span>
-        <textarea
-          className={input}
-          rows={2}
-          maxLength={QUESTION_MAX}
-          value={draft.question}
-          onChange={(e) => setDraft({ ...draft, question: e.target.value })}
         />
       </label>
       <div className="flex items-center gap-3 @md:col-span-2">
@@ -114,6 +102,7 @@ function ItemForm({
   );
 }
 
+/** Timed discussion blocks for the Now · Next strip — not the live inquiry text. */
 export function ScheduleManager({ state, loaded }: { state: FestivalState; loaded: boolean }) {
   const { appState, sessions, schedule } = state;
   const [pickedDay, setPickedDay] = useState<string | null>(null);
@@ -126,7 +115,6 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
   const items = dayItems(schedule, dayId);
   const isActiveDay = dayId !== null && dayId === appState.activeSessionId;
   const liveId = appState.activeScheduleItemId;
-  const { now, next } = nowAndNext(items, liveId);
   const disabled = !loaded || busy;
 
   async function run(action: (supabase: SupabaseClient) => Promise<void>): Promise<boolean> {
@@ -145,18 +133,24 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
 
   const fields = (value: ValidDraft) => ({
     title: value.title,
-    question: value.question,
+    question: null as string | null,
     startsAt: value.time && day ? toVenueIso(day.date, value.time) : null,
   });
 
   function remove(item: ScheduleItem) {
-    const warning = item.id === liveId ? " It's on the TVs now — they'll stop showing a question." : "";
+    const warning =
+      item.id === liveId ? " It's marked as Now on the schedule strip." : "";
     if (!window.confirm(`Delete "${item.title}"?${warning}`)) return;
     void run((sb) => deleteScheduleItem(sb, item.id));
   }
 
   return (
-    <Panel id="schedule" title={<>Schedule &amp; live question</>} icon={CalendarClock}>
+    <Panel
+      id="schedule"
+      title="Schedule"
+      icon={CalendarClock}
+      description="Timed blocks for the Now · Next strip. Live inquiry text is next door."
+    >
       <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Which day to edit">
         {sessions.map((s) => (
           <button
@@ -175,29 +169,10 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
         ))}
       </div>
 
-      {isActiveDay ? (
-        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-festival-marigold/25 px-4 py-3">
-          <p className="min-w-0 flex-1">
-            <span className="font-semibold">On the TVs: </span>
-            {now ? now.question || now.title : <span className="opacity-70">no question yet</span>}
-          </p>
-          {next && (
-            <button type="button" className={primaryButton} disabled={disabled} onClick={() => void run((sb) => setLiveItem(sb, next.id))}>
-              <SkipForward {...ICON} /> {now ? "Next question" : "Start with first item"}
-            </button>
-          )}
-          {liveId && (
-            <button type="button" className={secondaryButton} disabled={disabled} onClick={() => void run((sb) => setLiveItem(sb, null))}>
-              Clear
-            </button>
-          )}
-        </div>
-      ) : (
-        day && (
-          <p className="mt-4 rounded-2xl bg-festival-denim/10 px-4 py-3">
-            Preparing <strong>{day.title}</strong>. Switch the festival day above to put these on the TVs.
-          </p>
-        )
+      {!isActiveDay && day && (
+        <p className="mt-4 rounded-2xl bg-festival-denim/10 px-4 py-3">
+          Preparing <strong>{day.title}</strong>. Switch the festival day to put these on the TVs.
+        </p>
       )}
 
       {error && (
@@ -213,7 +188,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
             return (
               <li key={item.id} className="rounded-2xl border border-festival-forest bg-festival-cream p-4">
                 <ItemForm
-                  initial={{ title: item.title, question: item.question ?? "", time: venueTime(item.startsAt) }}
+                  initial={{ title: item.title, question: "", time: venueTime(item.startsAt) }}
                   submitLabel="Save"
                   disabled={disabled}
                   onCancel={() => setEditingId(null)}
@@ -239,16 +214,20 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
                   <span className="font-semibold">{item.title}</span>
                   {live && (
                     <span className="rounded-full bg-festival-marigold px-2 py-0.5 text-xs font-bold text-festival-ink">
-                      ON TVs
+                      NOW
                     </span>
                   )}
                 </p>
-                {item.question && <p className="mt-1 italic opacity-80">{item.question}</p>}
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {isActiveDay && !live && (
-                  <button type="button" className={secondaryButton} disabled={disabled} onClick={() => void run((sb) => setLiveItem(sb, item.id))}>
-                    <Tv {...ICON} /> Show on TVs
+                  <button
+                    type="button"
+                    className={secondaryButton}
+                    disabled={disabled}
+                    onClick={() => void run((sb) => setLiveItem(sb, item.id))}
+                  >
+                    <Tv {...ICON} /> Mark as Now
                   </button>
                 )}
                 <button
@@ -270,10 +249,10 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
                   <ArrowDown {...ICON} />
                 </button>
                 <button type="button" className={secondaryButton} disabled={disabled} onClick={() => setEditingId(item.id)}>
-                  <Pencil {...ICON} /> Edit
+                  <Pencil {...ICON} />
                 </button>
                 <button type="button" className={dangerButton} disabled={disabled} onClick={() => remove(item)}>
-                  <Trash2 {...ICON} /> Delete
+                  <Trash2 {...ICON} />
                 </button>
               </div>
             </li>
@@ -284,7 +263,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
 
       {day && (
         <div className="mt-6 border-t border-festival-ink/10 pt-4">
-          <h3 className="mb-3 font-semibold">Add an item to {day.title}</h3>
+          <h3 className="mb-3 font-semibold">Add to {day.title}</h3>
           <ItemForm
             key={day.id}
             initial={EMPTY_DRAFT}

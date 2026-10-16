@@ -6,6 +6,12 @@ export type TranscriptLine = {
   createdAt: string;
 };
 
+/** When a live inquiry was put on the TVs (wall-clock). */
+export type TranscriptInquiryMark = {
+  body: string;
+  activatedAt: string;
+};
+
 const VOICE_LABELS = [
   "Frog",
   "Bird",
@@ -26,13 +32,23 @@ export function voiceLabel(speaker: number): string {
   return VOICE_LABELS[index];
 }
 
+type TimelineRow =
+  | { kind: "inquiry"; at: string; body: string }
+  | { kind: "caption"; at: string; startMs: number; speaker: number; text: string };
+
 /**
  * Plain-text transcript for one festival day. Voices stay anonymous (animal
- * labels only — never names). Sorted by start time within the day.
+ * labels only — never names). Live inquiries are inserted as section markers
+ * by wall-clock time so they carve up the conversation.
  */
 export function formatDayTranscript(
   lines: TranscriptLine[],
-  options: { daySlug: string; dayTitle?: string; exportedAt?: Date },
+  options: {
+    daySlug: string;
+    dayTitle?: string;
+    exportedAt?: Date;
+    inquiries?: TranscriptInquiryMark[];
+  },
 ): string {
   const exportedAt = options.exportedAt ?? new Date();
   const header = [
@@ -40,22 +56,42 @@ export function formatDayTranscript(
     `Day: ${options.dayTitle ?? options.daySlug} (${options.daySlug})`,
     `Exported: ${exportedAt.toISOString()}`,
     "Voices are labelled by garden animal only — never by name.",
+    "Lines starting with --- mark when a live inquiry was put on the TVs.",
     "",
   ];
 
-  const ordered = [...lines].sort(
-    (a, b) => a.startMs - b.startMs || a.createdAt.localeCompare(b.createdAt),
-  );
+  const timeline: TimelineRow[] = [
+    ...(options.inquiries ?? []).map((mark) => ({
+      kind: "inquiry" as const,
+      at: mark.activatedAt,
+      body: mark.body.trim().replace(/\s+/g, " "),
+    })),
+    ...lines.map((line) => ({
+      kind: "caption" as const,
+      at: line.createdAt,
+      startMs: line.startMs,
+      speaker: line.speaker,
+      text: line.text.trim().replace(/\s+/g, " "),
+    })),
+  ];
 
-  const body = ordered.map((line) => {
-    const stamp = formatStamp(line.startMs);
-    const text = line.text.trim().replace(/\s+/g, " ");
-    return `[${stamp}] ${voiceLabel(line.speaker)}: ${text}`;
+  timeline.sort((a, b) => {
+    const byTime = a.at.localeCompare(b.at);
+    if (byTime !== 0) return byTime;
+    if (a.kind !== b.kind) return a.kind === "inquiry" ? -1 : 1;
+    if (a.kind === "caption" && b.kind === "caption") return a.startMs - b.startMs;
+    return 0;
   });
 
-  return [...header, ...(body.length > 0 ? body : ["(No captions saved for this day yet.)"]), ""].join(
-    "\n",
-  );
+  const body = timeline.map((row) => {
+    if (row.kind === "inquiry") return `--- Live inquiry: ${row.body} ---`;
+    return `[${formatStamp(row.startMs)}] ${voiceLabel(row.speaker)}: ${row.text}`;
+  });
+
+  const empty =
+    body.length === 0 ? ["(No captions or live inquiries saved for this day yet.)"] : body;
+
+  return [...header, ...empty, ""].join("\n");
 }
 
 export function transcriptFilename(daySlug: string, at: Date = new Date()): string {

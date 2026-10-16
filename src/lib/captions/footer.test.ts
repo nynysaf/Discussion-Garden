@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { effectiveFooter, isCaptionsFooter } from "./footer";
+import { FOOTER_ROTATE_MS, isCaptionsFooter, rotatingFooter } from "./footer";
 
-describe("effectiveFooter", () => {
-  it("keeps inquiry only when something is live", () => {
-    expect(effectiveFooter("inquiry", true)).toBe("inquiry");
-    expect(effectiveFooter("inquiry", false)).toBe("schedule");
-    expect(effectiveFooter("schedule", false)).toBe("schedule");
+describe("rotatingFooter", () => {
+  it("stays on schedule with no live inquiry", () => {
+    expect(rotatingFooter(0, false)).toBe("schedule");
+    expect(rotatingFooter(FOOTER_ROTATE_MS * 3, false)).toBe("schedule");
+  });
+
+  it("alternates every 10 seconds when an inquiry is live", () => {
+    expect(rotatingFooter(0, true)).toBe("schedule");
+    expect(rotatingFooter(FOOTER_ROTATE_MS - 1, true)).toBe("schedule");
+    expect(rotatingFooter(FOOTER_ROTATE_MS, true)).toBe("inquiry");
+    expect(rotatingFooter(FOOTER_ROTATE_MS * 2, true)).toBe("schedule");
   });
 });
 

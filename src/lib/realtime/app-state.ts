@@ -14,6 +14,8 @@ export type SynthesisMode = "manual" | "hybrid" | "auto";
 export type AppState = {
   activeSessionId: string | null;
   activeScheduleItemId: string | null;
+  /** Current live inquiry on the TVs (separate from the timed schedule). */
+  activeLiveInquiryId: string | null;
   synthesisMode: SynthesisMode;
   audioStatus: AudioStatus;
   gardenHidden: boolean;
@@ -33,6 +35,7 @@ export type AppState = {
 export type AppStateRow = {
   active_session_id: string | null;
   active_schedule_item_id: string | null;
+  active_live_inquiry_id?: string | null;
   synthesis_mode: string;
   audio_status: string;
   garden_hidden: boolean;
@@ -48,7 +51,7 @@ export type AppStateRow = {
 };
 
 export const APP_STATE_COLUMNS =
-  "active_session_id, active_schedule_item_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open, captions_layout, captions_rotation, captions_rotate_seconds, captions_rotate_since, captions_font_scale, captions_footer";
+  "active_session_id, active_schedule_item_id, active_live_inquiry_id, synthesis_mode, audio_status, garden_hidden, speaker_colours_on, highlighted_submission_id, submissions_open, captions_layout, captions_rotation, captions_rotate_seconds, captions_rotate_since, captions_font_scale, captions_footer";
 
 const AUDIO_STATUSES: AudioStatus[] = [
   "idle",
@@ -63,6 +66,7 @@ const SYNTHESIS_MODES: SynthesisMode[] = ["manual", "hybrid", "auto"];
 export const DEFAULT_APP_STATE: AppState = {
   activeSessionId: null,
   activeScheduleItemId: null,
+  activeLiveInquiryId: null,
   synthesisMode: "manual",
   audioStatus: "idle",
   gardenHidden: false,
@@ -83,6 +87,7 @@ export function toAppState(row: Partial<AppStateRow> | null | undefined): AppSta
   return {
     activeSessionId: row.active_session_id ?? null,
     activeScheduleItemId: row.active_schedule_item_id ?? null,
+    activeLiveInquiryId: row.active_live_inquiry_id ?? null,
     synthesisMode: SYNTHESIS_MODES.includes(row.synthesis_mode as SynthesisMode)
       ? (row.synthesis_mode as SynthesisMode)
       : "manual",
@@ -120,6 +125,7 @@ export function captionsViewSettings(state: AppState): ViewSettings {
 const COLUMN_FOR: Record<keyof AppState, keyof AppStateRow> = {
   activeSessionId: "active_session_id",
   activeScheduleItemId: "active_schedule_item_id",
+  activeLiveInquiryId: "active_live_inquiry_id",
   synthesisMode: "synthesis_mode",
   audioStatus: "audio_status",
   gardenHidden: "garden_hidden",

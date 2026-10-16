@@ -42,7 +42,11 @@ export function FestivalPanel({ state, loaded }: { state: FestivalState; loaded:
           disabled={!loaded || saving}
           value={appState.activeSessionId ?? ""}
           onChange={(e) =>
-            void save({ activeSessionId: e.target.value || null, activeScheduleItemId: null })
+            void save({
+              activeSessionId: e.target.value || null,
+              activeScheduleItemId: null,
+              activeLiveInquiryId: null,
+            })
           }
         >
           <option value="">— none —</option>
