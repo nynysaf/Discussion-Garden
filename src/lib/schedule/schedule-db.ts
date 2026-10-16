@@ -1,5 +1,4 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { toAppStatePatch } from "@/lib/realtime/app-state";
 import type { SortUpdate } from "./schedule";
 
 // Host-only writes (RLS: "hosts manage schedule"). Each throws on failure so the UI can show it.
@@ -32,7 +31,6 @@ export async function updateScheduleItem(supabase: SupabaseClient, id: string, i
   check(error);
 }
 
-/** Deleting the live item also clears it from the TVs (foreign key is `on delete set null`). */
 export async function deleteScheduleItem(supabase: SupabaseClient, id: string) {
   const { error } = await supabase.from("schedule_items").delete().eq("id", id);
   check(error);
@@ -43,12 +41,4 @@ export async function applySortUpdates(supabase: SupabaseClient, updates: SortUp
     updates.map((u) => supabase.from("schedule_items").update({ sort_order: u.sortOrder }).eq("id", u.id)),
   );
   check(results.find((r) => r.error)?.error ?? null);
-}
-
-export async function setLiveItem(supabase: SupabaseClient, id: string | null) {
-  const { error } = await supabase
-    .from("app_state")
-    .update(toAppStatePatch({ activeScheduleItemId: id }))
-    .eq("id", true);
-  check(error);
 }

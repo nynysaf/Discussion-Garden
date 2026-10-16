@@ -8,7 +8,6 @@ import type { FestivalState } from "@/lib/realtime/festival-state";
 const JUMPS = [
   { id: "captions", label: "Captions" },
   { id: "tv", label: "TV screen" },
-  { id: "day", label: "Day" },
   { id: "schedule", label: "Schedule" },
   { id: "inquiry", label: "Live question" },
   { id: "drafts", label: "AI drafts" },

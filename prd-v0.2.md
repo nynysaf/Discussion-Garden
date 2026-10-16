@@ -1,20 +1,21 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.11  
+**Version:** 0.2.12  
 **Last updated:** 2026-10-16  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.12 (2026-10-16):** **Now · Next** follows the computer/venue clock from each schedule item's start time (host Mark-as-Now removed). Festival day picker lives inside Schedule. `/admin` columns: left Captions · TV · Schedule; right AI drafts · Live question · Audience; Garden spans both. Panels can be dragged between columns (per-browser layout).
 - **v0.2.11 (2026-10-16):** **Live inquiries** are a separate log from the timed **Schedule** (admin side-by-side). Host adds/switches inquiries quickly; activations appear as `--- Live inquiry: … ---` markers in the transcript download. Both/Captions footer **auto-alternates every 10s** (schedule ↔ inquiry+QR) while an inquiry is live. Inquiry type scales with length. Admin collapse controls are icon-only (top right).
 - **v0.2.10 (2026-10-15):** `/captions` header keeps **Discussion Garden** and shows **Join us on the 4th floor** (live question leaves the header). **Garden** has no footer (canvas expands). Highlight only while something is live: large live question, caption ticker, QR. Audience thank-you adds the 4th-floor invite. Admin panels collapse to save space.
 - **v0.2.9 (2026-10-15):** Host can **download each day's transcript** as a text file. Optional **Save audio to this laptop** on `/admin` writes a WebM only to the host computer (never uploaded); room signage must say audio may be kept locally when that switch is on. Caption size on `/captions` is host-adjustable (75–175%). Hybrid/Auto auto-suggest runs ~every 35s on the mic tab while Live.
 - **v0.2.8 (2026-10-14):** Live on Vercel. `/captions` gets a fourth view, **Highlight**: a full-screen takeover of the live question (or "Coming up" before anything is live) and the next item with a countdown, keeping a one-line caption ticker and the QR. Auto-rotate becomes a **playlist** — the host ticks which views rotate and sets one hold time (10–120 s); all TVs stay in step. `/admin` gets a sticky status bar (captions status, question on the TVs, current TV view, **Next question**) and a two-column layout.
 - **v0.2.7 (2026-10-01):** **No pre-approval for audience messages.** They appear on `/room-feed` as soon as they pass the server checks (length, profanity, per-phone rate limit). The host can **Hide** any message, **Pin** one as "being discussed", and **pause sharing** with one switch if it's abused. Replaces the Approve/Dismiss moderation queue.
 - **v0.2.6 (2026-10-01):** `/captions` gets **three layouts** — Garden (full screen), Both (today's split), Captions (full screen) — with a smooth slide between them; header, live question, Now · Next strip, and QR stay in every layout. Host switches from `/admin`, with an optional auto-rotate. **Should-have**, built after Hybrid AI. Resolves open question 7.
-- **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. "Now" = the item the host put live, not the clock (sessions run late).
+- **v0.2.5 (2026-09-30):** `/captions` schedule is a **Now · Next strip** (per DESIGN_GUIDE v0.2.1), not a sidebar. *(Superseded by v0.2.12: Now follows the clock.)*
 - **v0.2.4 (2026-09-30):** Host allowlist is a `hosts` table (checked by RLS), not an env var; public sign-up disabled. `transcript_segments` gains `bubble_id` (unique) so saves can be retried safely. Caption broadcast uses a **private** realtime channel — only hosts can send to the TVs.
 - **v0.2.3 (2026-09-30):** Voices are **never named** — each is labelled with a **garden-animal emoji** (🐸 🐦 🐞 🦋 🐝 🐛 …). Deepgram **Nova-3 (English)** on the **free $200 credit**, with `mip_opt_out=true` so Deepgram doesn't keep audio for model training. Cost section updated with published rates. GitHub repo is **public**.
 - **v0.2.2 (2026-09-30):** Deepgram confirmed for captions. Captions now **separate speakers** (Deepgram diarization) and show as a **sequence of speech bubbles** — one sentence per bubble, colour-coded per voice with a text label. Admin toggle to fall back to single-colour bubbles. No fixed build calendar (build order only).
@@ -125,7 +126,7 @@ Read-only, no login, designed for viewing from 3–6 m (10–20 ft).
 * **Header:** "Discussion Garden" + the active **Live Question**.
 * **Live captions as speech bubbles:** each sentence appears as its own bubble, colour-coded by speaker and marked with that voice's animal emoji (🐸, 🐦, 🐞…); newest at the bottom, older bubbles scroll up. Words still being recognized appear lighter inside the newest bubble. See §4.1.
 * **Garden canvas:** published seeds, sprouts, themes, and vines, with gentle growth animation.
-* **Now · Next strip:** the live item and the one after it, with venue times; "now" highlighted.
+* **Now · Next strip:** the current and next schedule blocks by computer/venue clock (`starts_at`), with venue times; "now" highlighted.
 * **QR code:** persistent corner code linking to `/audience`.
 * **Status:** subtle `[PAUSED]` / "Reconnecting…" indicator; never a blank screen.
 * **Three layouts** *(Should — built after Hybrid AI; until then the screen is always "Both")*:

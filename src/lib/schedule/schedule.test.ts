@@ -50,17 +50,32 @@ describe("dayItems", () => {
 });
 
 describe("nowAndNext", () => {
-  const items = [item("a", 1), item("b", 2), item("c", 3)];
+  const day = "2026-10-17";
+  const timed = [
+    item("a", 1, "d1", `${day}T11:00:00-04:00`),
+    item("b", 2, "d1", `${day}T13:00:00-04:00`),
+    item("c", 3, "d1", `${day}T15:00:00-04:00`),
+  ];
 
-  it("follows the host's live item", () => {
-    expect(nowAndNext(items, "b")).toEqual({ now: items[1], next: items[2] });
-    expect(nowAndNext(items, "c")).toEqual({ now: items[2], next: null });
+  it("picks the latest item that has already started", () => {
+    const before = Date.parse(`${day}T10:59:00-04:00`);
+    expect(nowAndNext(timed, before)).toEqual({ now: null, next: timed[0] });
+
+    const mid = Date.parse(`${day}T13:05:00-04:00`);
+    expect(nowAndNext(timed, mid)).toEqual({ now: timed[1], next: timed[2] });
+
+    const after = Date.parse(`${day}T16:00:00-04:00`);
+    expect(nowAndNext(timed, after)).toEqual({ now: timed[2], next: null });
   });
 
-  it("shows the first item as next when nothing is live", () => {
-    expect(nowAndNext(items, null)).toEqual({ now: null, next: items[0] });
-    expect(nowAndNext(items, "other-day")).toEqual({ now: null, next: items[0] });
-    expect(nowAndNext([], null)).toEqual({ now: null, next: null });
+  it("skips items without a start time when choosing Now", () => {
+    const mixed = [item("untimed", 1), ...timed];
+    const mid = Date.parse(`${day}T11:30:00-04:00`);
+    expect(nowAndNext(mixed, mid)).toEqual({ now: timed[0], next: timed[1] });
+  });
+
+  it("handles an empty day", () => {
+    expect(nowAndNext([], Date.now())).toEqual({ now: null, next: null });
   });
 });
 

@@ -5,7 +5,8 @@ import { LiveQuestion } from "@/components/realtime/LiveQuestion";
 import { useFestivalState } from "@/components/realtime/useFestivalState";
 import { useSubmissions } from "@/components/realtime/useSubmissions";
 import { StatusPill } from "@/components/StatusPill";
-import { activeScheduleItem } from "@/lib/realtime/festival-state";
+import { useNow } from "@/components/useNow";
+import { activeLiveInquiry, activeScheduleItem } from "@/lib/realtime/festival-state";
 import { roomFeed, type Submission } from "@/lib/submissions/feed";
 import { useAutoScroll } from "./useAutoScroll";
 
@@ -13,8 +14,11 @@ import { useAutoScroll } from "./useAutoScroll";
 export function RoomFeedScreen() {
   const festival = useFestivalState();
   const feed = useSubmissions();
+  const nowMs = useNow(15_000);
   const { appState } = festival.state;
   const { pinned, others } = roomFeed(feed.submissions, appState.highlightedSubmissionId);
+  const inquiry = activeLiveInquiry(festival.state);
+  const scheduleNow = activeScheduleItem(festival.state, nowMs);
   const offline =
     festival.connection === "reconnecting" || feed.connection === "reconnecting" || !!feed.error;
 
@@ -30,7 +34,7 @@ export function RoomFeedScreen() {
         </h1>
         <div className="flex min-w-0 items-center gap-4">
           <LiveQuestion
-            item={activeScheduleItem(festival.state)}
+            text={inquiry?.body ?? scheduleNow?.title}
             className="text-[clamp(1.1rem,1.8vw,2.4rem)]"
           />
           {offline && (

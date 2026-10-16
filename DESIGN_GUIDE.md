@@ -262,7 +262,7 @@ Live question banner on top; highlighted submission pinned large with a marigold
 - After submit: warm confirmation with a small sprout illustration and "Send another".
 
 ## 8. Admin view (`/admin`)
-- Functional first: light cream background, clear sections (Live captions · TV screen · Festival day · Schedule · AI drafts · Audience messages · Garden).
+- Functional first: light cream background, clear sections (Live captions · TV screen · Schedule · Live question · AI drafts · Audience messages · Garden). Garden spans both columns; other panels are draggable between columns.
 - **Sticky status bar** at the top: captions status pill, the question on the TVs, the current TV view (and the next one if rotating), "Up next", a **Next question** button, and jump links to every panel. A host mid-talk never has to scroll to act.
 - **Layout:** two columns on wide screens (≥ 1280 px) — left: captions, TV screen, festival day, schedule; right: AI drafts, audience messages; the garden spans the full width below (canvas + planting beside the idea list). One column below that. Panels adapt to their own width (container queries), not the window.
 - **One component set** (`src/components/admin/ui.tsx`): `Panel` (title with icon in a soft green circle, optional actions and description), primary / outline / small / danger buttons, and a `Toggle` switch that always says its state in words; "off" states that need attention (sharing paused, garden hidden) turn terracotta.

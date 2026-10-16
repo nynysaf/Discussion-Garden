@@ -1,14 +1,11 @@
-import type { ScheduleItem } from "@/lib/realtime/festival-state";
-
-/** Marigold pill with the host's active question (DESIGN_GUIDE live-question style). */
+/** Marigold pill with the host's live inquiry (or schedule Now title as a fallback). */
 export function LiveQuestion({
-  item,
+  text,
   className = "",
 }: {
-  item: ScheduleItem | null;
+  text: string | null | undefined;
   className?: string;
 }) {
-  const text = item?.question || item?.title;
   if (!text) return null;
   return (
     <p

@@ -1,7 +1,7 @@
 /**
  * "Starts in 12 min" for the Highlight screen. Null when there's no time or it's too far off
- * to be useful (e.g. tomorrow's first item); "Starting soon" once the time is (nearly) here,
- * because sessions run late and "Now" is whatever the host puts live.
+ * to be useful (e.g. tomorrow's first item); "Starting soon" once the time is (nearly) here.
+ * Now · Next itself follows the computer/venue clock from each item's start time.
  */
 export function countdownLabel(startsAt: string | null, nowMs: number): string | null {
   if (!startsAt) return null;

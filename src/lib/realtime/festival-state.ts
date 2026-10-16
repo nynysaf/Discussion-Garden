@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { LiveInquiry } from "@/lib/inquiries/inquiries";
+import { dayItems, nowAndNext } from "@/lib/schedule/schedule";
 import {
   APP_STATE_COLUMNS,
   DEFAULT_APP_STATE,
@@ -71,9 +72,9 @@ export function toLiveInquiry(row: InquiryRow): LiveInquiry {
   };
 }
 
-export function activeScheduleItem(state: FestivalState): ScheduleItem | null {
-  const id = state.appState.activeScheduleItemId;
-  return state.schedule.find((item) => item.id === id) ?? null;
+/** Clock-based "Now" schedule block for the active day (same rule as the TV strip). */
+export function activeScheduleItem(state: FestivalState, nowMs = Date.now()): ScheduleItem | null {
+  return nowAndNext(dayItems(state.schedule, state.appState.activeSessionId), nowMs).now;
 }
 
 export function activeLiveInquiry(state: FestivalState): LiveInquiry | null {

@@ -1,14 +1,17 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CalendarClock, Pencil, Trash2, Tv } from "lucide-react";
+import { ArrowDown, ArrowUp, CalendarClock, Pencil, Trash2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { useNow } from "@/components/useNow";
+import { toAppStatePatch } from "@/lib/realtime/app-state";
 import type { FestivalState, ScheduleItem } from "@/lib/realtime/festival-state";
 import {
   TITLE_MAX,
   dayItems,
   moveItem,
   nextSortOrder,
+  nowAndNext,
   validateDraft,
   type ScheduleDraft,
   type ValidDraft,
@@ -17,7 +20,6 @@ import {
   addScheduleItem,
   applySortUpdates,
   deleteScheduleItem,
-  setLiveItem,
   updateScheduleItem,
 } from "@/lib/schedule/schedule-db";
 import { toVenueIso, venueTime } from "@/lib/schedule/time";
@@ -102,19 +104,18 @@ function ItemForm({
   );
 }
 
-/** Timed discussion blocks for the Now · Next strip — not the live inquiry text. */
+/** Timed discussion blocks for the Now · Next strip — festival day picker included. */
 export function ScheduleManager({ state, loaded }: { state: FestivalState; loaded: boolean }) {
   const { appState, sessions, schedule } = state;
-  const [pickedDay, setPickedDay] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const nowMs = useNow(15_000);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const dayId = pickedDay ?? appState.activeSessionId ?? sessions[0]?.id ?? null;
+  const dayId = appState.activeSessionId ?? sessions[0]?.id ?? null;
   const day = sessions.find((s) => s.id === dayId) ?? null;
   const items = dayItems(schedule, dayId);
-  const isActiveDay = dayId !== null && dayId === appState.activeSessionId;
-  const liveId = appState.activeScheduleItemId;
+  const { now: clockNow } = nowAndNext(items, nowMs);
   const disabled = !loaded || busy;
 
   async function run(action: (supabase: SupabaseClient) => Promise<void>): Promise<boolean> {
@@ -131,6 +132,32 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
     }
   }
 
+  async function selectDay(sessionId: string) {
+    if (sessionId === appState.activeSessionId) return;
+    const label = sessions.find((s) => s.id === sessionId)?.title ?? "that day";
+    if (
+      !window.confirm(
+        `Put ${label} on the TVs? This also files new transcript rows under that day. The garden stays shared.`,
+      )
+    ) {
+      return;
+    }
+    setEditingId(null);
+    await run(async (sb) => {
+      const { error: dbError } = await sb
+        .from("app_state")
+        .update(
+          toAppStatePatch({
+            activeSessionId: sessionId,
+            activeScheduleItemId: null,
+            activeLiveInquiryId: null,
+          }),
+        )
+        .eq("id", true);
+      if (dbError) throw new Error(dbError.message);
+    });
+  }
+
   const fields = (value: ValidDraft) => ({
     title: value.title,
     question: null as string | null,
@@ -138,9 +165,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
   });
 
   function remove(item: ScheduleItem) {
-    const warning =
-      item.id === liveId ? " It's marked as Now on the schedule strip." : "";
-    if (!window.confirm(`Delete "${item.title}"?${warning}`)) return;
+    if (!window.confirm(`Delete "${item.title}"?`)) return;
     void run((sb) => deleteScheduleItem(sb, item.id));
   }
 
@@ -149,18 +174,16 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
       id="schedule"
       title="Schedule"
       icon={CalendarClock}
-      description="Timed blocks for the Now · Next strip. Live inquiry text is next door."
+      description="Pick the festival day (on TVs + transcripts), then edit timed blocks. Now · Next follows the computer clock from each item's start time."
     >
-      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Which day to edit">
+      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Festival day">
         {sessions.map((s) => (
           <button
             key={s.id}
             type="button"
             aria-pressed={s.id === dayId}
-            onClick={() => {
-              setPickedDay(s.id);
-              setEditingId(null);
-            }}
+            disabled={disabled}
+            onClick={() => void selectDay(s.id)}
             className={s.id === dayId ? primaryButton : outlineButton}
           >
             {s.title} · {s.date}
@@ -168,12 +191,6 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
           </button>
         ))}
       </div>
-
-      {!isActiveDay && day && (
-        <p className="mt-4 rounded-2xl bg-festival-denim/10 px-4 py-3">
-          Preparing <strong>{day.title}</strong>. Switch the festival day to put these on the TVs.
-        </p>
-      )}
 
       {error && (
         <p className={`mt-3 ${errorNotice}`} role="alert">
@@ -183,7 +200,7 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
 
       <ol className="mt-4 flex flex-col gap-3">
         {items.map((item, index) => {
-          const live = isActiveDay && item.id === liveId;
+          const live = clockNow?.id === item.id;
           if (item.id === editingId) {
             return (
               <li key={item.id} className="rounded-2xl border border-festival-forest bg-festival-cream p-4">
@@ -220,16 +237,6 @@ export function ScheduleManager({ state, loaded }: { state: FestivalState; loade
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                {isActiveDay && !live && (
-                  <button
-                    type="button"
-                    className={secondaryButton}
-                    disabled={disabled}
-                    onClick={() => void run((sb) => setLiveItem(sb, item.id))}
-                  >
-                    <Tv {...ICON} /> Mark as Now
-                  </button>
-                )}
                 <button
                   type="button"
                   className={secondaryButton}
