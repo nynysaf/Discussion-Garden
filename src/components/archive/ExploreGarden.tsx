@@ -65,7 +65,7 @@ export function ExploreGarden({
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-      <div className="min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-green bg-festival-cream shadow-poster lg:min-h-[calc(100vh-12rem)]">
+      <div className="min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-forest/30 shadow-poster lg:min-h-[calc(100vh-12rem)]">
         <ForceGarden
           garden={garden}
           className="h-full min-h-[70vh] w-full lg:min-h-[calc(100vh-12rem)]"

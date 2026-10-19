@@ -3,7 +3,7 @@ import { clampZoom, fitView, zoomAroundPoint } from "./view-transform";
 
 describe("view-transform", () => {
   it("clamps zoom", () => {
-    expect(clampZoom(0.01)).toBe(0.25);
+    expect(clampZoom(0.01)).toBe(0.4);
     expect(clampZoom(9)).toBe(2.5);
   });
 

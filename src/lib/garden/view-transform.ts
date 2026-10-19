@@ -2,7 +2,8 @@
 
 export type ViewTransform = { x: number; y: number; k: number };
 
-export const VIEW_MIN_K = 0.25;
+/** Match Camp-CLAI KnowledgeMap zoom clamps. */
+export const VIEW_MIN_K = 0.4;
 export const VIEW_MAX_K = 2.5;
 
 export function clamp(value: number, min: number, max: number): number {

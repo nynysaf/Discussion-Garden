@@ -10,12 +10,13 @@ import {
   type Simulation,
   type SimulationNodeDatum,
 } from "d3-force";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { MapWallpaper } from "@/components/archive/MapWallpaper";
 import { curvedPath } from "@/lib/garden/curves";
 import { labelledNodeIds, wrapLabel } from "@/lib/garden/labels";
 import { labelFontSize, nodeRadius, TIER_BAND } from "@/lib/garden/layout";
-import { paperWashes, paperWorldBounds } from "@/lib/garden/paper-world";
 import { spriteUrl } from "@/lib/garden/sprites";
+import { PLANT_PALETTE } from "@/lib/garden/topo";
 import type { Garden, Tier } from "@/lib/garden/types";
 import {
   fitView,
@@ -29,11 +30,18 @@ const FALLBACK_FILL: Record<Tier, string> = {
   sprout: "fill-festival-green",
   seed: "fill-festival-terracotta",
 };
-const WASH_FILL = {
-  sage: "var(--color-festival-green)",
-  soil: "var(--color-festival-terracotta)",
-  sun: "var(--color-festival-marigold)",
-};
+
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+function reducedMotionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function reducedMotionServer() {
+  return false;
+}
 
 const WORLD = { width: 2400, height: 1800 };
 const SCALE = 1.1;
@@ -59,7 +67,7 @@ type Props = {
 };
 
 /**
- * Clara-inspired explore garden: live force layout, drag-to-pin, endless cream paper.
+ * Clara-inspired explore garden: live force + drag-to-pin + Camp-CLAI topo wallpaper.
  */
 export function ForceGarden({
   garden,
@@ -72,6 +80,11 @@ export function ForceGarden({
   const [view, setView] = useState<ViewTransform>({ x: 0, y: 0, k: 1 });
   const [tick, setTick] = useState(0);
   const [brokenSprites, setBrokenSprites] = useState<Set<string>>(() => new Set());
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    reducedMotionSnapshot,
+    reducedMotionServer,
+  );
 
   const simRef = useRef<Simulation<SimNode, undefined> | null>(null);
   const nodesRef = useRef<SimNode[]>([]);
@@ -108,8 +121,6 @@ export function ForceGarden({
     garden.nodes.map((n) => n.id).join(",") +
     "|" +
     garden.vines.map((v) => `${v.sourceId}-${v.targetId}-${v.kind}`).join(",");
-
-  const washes = useMemo(() => paperWashes(garden.nodes.length * 97 + 13, 10), [garden.nodes.length]);
 
   useEffect(() => {
     const box = boxRef.current;
@@ -218,8 +229,9 @@ export function ForceGarden({
 
   function onWheel(e: React.WheelEvent) {
     e.preventDefault();
+    // Clara KnowledgeMap wheel curve
     const intensity = Math.min(Math.abs(e.deltaY), 100) / 100;
-    const step = 0.08 + intensity * 0.12;
+    const step = 0.008 + intensity * 0.01;
     const factor = e.deltaY > 0 ? 1 - step : 1 + step;
     const pt = clientToLocal(e.clientX, e.clientY);
     setView((current) => zoomAroundPoint(current, pt.x, pt.y, current.k * factor));
@@ -307,13 +319,13 @@ export function ForceGarden({
     simRef.current?.alpha(0.4).restart();
   }
 
-  const paper = paperWorldBounds(WORLD.width, WORLD.height);
   const themes = garden.nodes.filter((n) => n.tier === "theme").map((n) => n.label);
 
   return (
     <div
       ref={boxRef}
-      className={`relative touch-none overflow-hidden bg-festival-cream ${className}`}
+      className={`relative touch-none overflow-hidden ${className}`}
+      style={{ backgroundColor: PLANT_PALETTE.base }}
       onWheel={onWheel}
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
@@ -362,11 +374,17 @@ export function ForceGarden({
           }
           className="absolute inset-0 cursor-grab active:cursor-grabbing"
         >
-          {/* Outer fill — never white letterboxing */}
-          <rect width={size.width} height={size.height} fill="var(--color-festival-cream)" />
+          {/* Outer fill — Clara: theme base so letterboxing never flashes white */}
+          <rect width={size.width} height={size.height} fill={PLANT_PALETTE.base} />
 
           <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
-            <PaperLayer paper={paper} washes={washes} />
+            <MapWallpaper
+              theme="plant"
+              viewportWidth={WORLD.width}
+              viewportHeight={WORLD.height}
+              seed="discussion-garden-explore"
+              reducedMotion={reducedMotion}
+            />
 
             <g fill="none" strokeLinecap="round">
               {garden.vines.map((vine) => {
@@ -378,10 +396,10 @@ export function ForceGarden({
                   <path
                     key={vine.id}
                     d={curvedPath(a.x, a.y!, b.x, b.y!, vine.id)}
-                    className={grows ? "stroke-festival-forest" : "stroke-festival-denim"}
-                    strokeWidth={grows ? 2.2 : 1.8}
-                    strokeDasharray={grows ? undefined : "4 8"}
-                    opacity={0.65}
+                    stroke={PLANT_PALETTE.edgeStroke}
+                    strokeOpacity={PLANT_PALETTE.edgeOpacity}
+                    strokeWidth={grows ? 2 : 1.5}
+                    strokeDasharray={reducedMotion ? undefined : "4 6"}
                   />
                 );
               })}
@@ -453,7 +471,9 @@ export function ForceGarden({
                     <text
                       y={node.r + fontSize * 1.05}
                       textAnchor="middle"
-                      className="fill-festival-ink stroke-festival-cream font-caption"
+                      className="font-caption"
+                      fill={PLANT_PALETTE.labelFill}
+                      stroke={PLANT_PALETTE.base}
                       style={{
                         fontSize,
                         fontWeight: LABEL_WEIGHT[node.tier],
@@ -476,53 +496,5 @@ export function ForceGarden({
         </svg>
       )}
     </div>
-  );
-}
-
-function PaperLayer({
-  paper,
-  washes,
-}: {
-  paper: ReturnType<typeof paperWorldBounds>;
-  washes: ReturnType<typeof paperWashes>;
-}) {
-  return (
-    <g aria-hidden>
-      <rect
-        x={paper.x}
-        y={paper.y}
-        width={paper.width}
-        height={paper.height}
-        fill="var(--color-festival-cream)"
-      />
-      {washes.map((w, i) => (
-        <ellipse
-          key={i}
-          cx={paper.x + w.cx * paper.width}
-          cy={paper.y + w.cy * paper.height}
-          rx={w.rx * paper.width}
-          ry={w.ry * paper.height}
-          fill={WASH_FILL[w.kind]}
-          opacity={w.opacity}
-        />
-      ))}
-      {/* Soft soil / sky bands in world space */}
-      <rect
-        x={0}
-        y={0}
-        width={WORLD.width}
-        height={WORLD.height * 0.38}
-        fill="var(--color-festival-marigold)"
-        opacity={0.07}
-      />
-      <rect
-        x={0}
-        y={WORLD.height * 0.58}
-        width={WORLD.width}
-        height={WORLD.height * 0.42}
-        fill="var(--color-festival-terracotta)"
-        opacity={0.08}
-      />
-    </g>
   );
 }
