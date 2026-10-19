@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PanZoomGarden } from "@/components/archive/PanZoomGarden";
+import { ForceGarden } from "@/components/archive/ForceGarden";
 import type { ArchiveMapLayer, ArchiveSegment, ArchiveThemeMap } from "@/lib/archive/types";
 import { themeMapToGarden } from "@/lib/archive/types";
 import type { Garden } from "@/lib/garden/types";
@@ -33,7 +33,7 @@ export function ExploreGarden({
   hostMap,
   segmentsById,
 }: Props) {
-  const [layer, setLayer] = useState<ArchiveMapLayer>("host");
+  const [layer, setLayer] = useState<ArchiveMapLayer>("ai");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const garden = useMemo(() => {
@@ -65,8 +65,8 @@ export function ExploreGarden({
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-      <div className="min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-green bg-white/50 shadow-poster lg:min-h-[calc(100vh-12rem)]">
-        <PanZoomGarden
+      <div className="min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-green bg-festival-cream shadow-poster lg:min-h-[calc(100vh-12rem)]">
+        <ForceGarden
           garden={garden}
           className="h-full min-h-[70vh] w-full lg:min-h-[calc(100vh-12rem)]"
           selectedId={selectedId}

@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-19T16:03:42.304Z",
+  "exportedAt": "2026-10-19T17:41:57.698Z",
   "enrichedWith": "gpt-4o-mini",
   "words": [
     {
@@ -13,6 +13,21 @@
         "day_1-s0146",
         "day_1-s0625"
       ]
+    },
+    {
+      "term": "need for honesty and vulnerability",
+      "weight": 25,
+      "segmentIds": []
+    },
+    {
+      "term": "creating spaces for authentic dialogue",
+      "weight": 22,
+      "segmentIds": []
+    },
+    {
+      "term": "shared discomforts and implications",
+      "weight": 19,
+      "segmentIds": []
     },
     {
       "term": "conversation",
@@ -87,6 +102,21 @@
       ]
     },
     {
+      "term": "tension between open communication",
+      "weight": 13,
+      "segmentIds": []
+    },
+    {
+      "term": "acknowledging discomfort as pathway",
+      "weight": 13,
+      "segmentIds": []
+    },
+    {
+      "term": "community building through discomfort",
+      "weight": 13,
+      "segmentIds": []
+    },
+    {
       "term": "little",
       "weight": 12.4,
       "segmentIds": [
@@ -133,19 +163,6 @@
       ]
     },
     {
-      "term": "collective action",
-      "weight": 12,
-      "segmentIds": [
-        "day_2-s0186",
-        "day_2-s0866"
-      ]
-    },
-    {
-      "term": "active listening",
-      "weight": 11,
-      "segmentIds": []
-    },
-    {
       "term": "what's",
       "weight": 10.8,
       "segmentIds": [
@@ -190,12 +207,37 @@
       ]
     },
     {
-      "term": "community resilience",
+      "term": "tensions between open communication",
       "weight": 10,
       "segmentIds": []
     },
     {
-      "term": "transformative dialogue",
+      "term": "honesty and vulnerability in discussions",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "fear of negative feedback",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "varying degrees of discomfort",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "power of collective learning",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "systemic barriers to inclusivity",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "diverse learning styles",
       "weight": 10,
       "segmentIds": []
     },
@@ -210,16 +252,6 @@
         "day_1-s0615",
         "day_1-s0635"
       ]
-    },
-    {
-      "term": "participatory governance",
-      "weight": 9,
-      "segmentIds": []
-    },
-    {
-      "term": "hacking through barriers",
-      "weight": 9,
-      "segmentIds": []
     },
     {
       "term": "around",
@@ -264,16 +296,6 @@
       ]
     },
     {
-      "term": "infrastructure for collaboration",
-      "weight": 8,
-      "segmentIds": []
-    },
-    {
-      "term": "childlike creativity",
-      "weight": 8,
-      "segmentIds": []
-    },
-    {
       "term": "violence",
       "weight": 7.2,
       "segmentIds": [
@@ -284,6 +306,51 @@
         "day_2-s0290",
         "day_2-s0291"
       ]
+    },
+    {
+      "term": "design of our environments",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "meta conversations for authentic dialogue",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "creating spaces for dialogue",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "setting up for authentic conversations",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "navigating discomfort collectively",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "dynamics of tone and intention",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "upgrading educational systems",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "continued engagement beyond the festival",
+      "weight": 7,
+      "segmentIds": []
+    },
+    {
+      "term": "need for continued engagement",
+      "weight": 7,
+      "segmentIds": []
     },
     {
       "term": "discussion",
@@ -603,161 +670,6 @@
       "weight": 6,
       "segmentIds": [
         "day_2-s0320"
-      ]
-    },
-    {
-      "term": "actions cause",
-      "weight": 6,
-      "segmentIds": [
-        "day_2-s0328"
-      ]
-    },
-    {
-      "term": "first word comes",
-      "weight": 6,
-      "segmentIds": [
-        "day_2-s0402",
-        "day_2-s0424"
-      ]
-    },
-    {
-      "term": "word comes mind",
-      "weight": 6,
-      "segmentIds": [
-        "day_2-s0402",
-        "day_2-s0424"
-      ]
-    },
-    {
-      "term": "interesting",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0023",
-        "day_1-s0134",
-        "day_1-s0273",
-        "day_1-s0274",
-        "day_1-s0332",
-        "day_1-s0529"
-      ]
-    },
-    {
-      "term": "garden",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0045",
-        "day_1-s0046",
-        "day_1-s0184",
-        "day_1-s0283",
-        "day_1-s0652",
-        "day_1-s0662"
-      ]
-    },
-    {
-      "term": "dialogue",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0047",
-        "day_1-s0224",
-        "day_1-s0495",
-        "day_1-s0953",
-        "day_2-s0125",
-        "day_2-s0157"
-      ]
-    },
-    {
-      "term": "yesterday",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0198",
-        "day_1-s0199",
-        "day_1-s0201",
-        "day_1-s0733",
-        "day_2-s0009",
-        "day_2-s0018"
-      ]
-    },
-    {
-      "term": "moment",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0319",
-        "day_1-s0428",
-        "day_1-s0531",
-        "day_1-s0538",
-        "day_1-s0754",
-        "day_2-s0028"
-      ]
-    },
-    {
-      "term": "experience",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0339",
-        "day_1-s0502",
-        "day_1-s0746",
-        "day_1-s0842",
-        "day_1-s0943",
-        "day_2-s0339"
-      ]
-    },
-    {
-      "term": "collapse",
-      "weight": 5.6,
-      "segmentIds": [
-        "day_1-s0427",
-        "day_1-s0428",
-        "day_1-s0432",
-        "day_1-s0500",
-        "day_1-s0506",
-        "day_1-s0533"
-      ]
-    },
-    {
-      "term": "saying",
-      "weight": 5.2,
-      "segmentIds": [
-        "day_1-s0072",
-        "day_1-s0078",
-        "day_1-s0094",
-        "day_1-s0115",
-        "day_1-s0705",
-        "day_1-s0743"
-      ]
-    },
-    {
-      "term": "connection",
-      "weight": 4.8,
-      "segmentIds": [
-        "day_1-s0008",
-        "day_1-s0048",
-        "day_1-s0111",
-        "day_1-s0119",
-        "day_1-s0262",
-        "day_2-s0120"
-      ]
-    },
-    {
-      "term": "change",
-      "weight": 4.8,
-      "segmentIds": [
-        "day_1-s0051",
-        "day_1-s0269",
-        "day_1-s0342",
-        "day_1-s0377",
-        "day_1-s0386",
-        "day_1-s0468"
-      ]
-    },
-    {
-      "term": "information",
-      "weight": 4.8,
-      "segmentIds": [
-        "day_1-s0086",
-        "day_1-s0867",
-        "day_2-s0340",
-        "day_2-s0341",
-        "day_2-s0344",
-        "day_2-s0345"
       ]
     }
   ]

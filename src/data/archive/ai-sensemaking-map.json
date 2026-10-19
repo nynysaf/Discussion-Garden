@@ -1,158 +1,3625 @@
 {
   "layer": "ai",
   "title": "AI sensemaking",
-  "caption": "Offline semantic reading of the redacted corpus — themes and phrases about ideas people explored, not stopwords.",
+  "caption": "Clara-style reading: up to six ideas per dialogue movement, merged when labels match. Drag plants to pin; double-click to release.",
   "nodes": [
     {
-      "id": "theme_1",
-      "tier": "theme",
-      "label": "Dialogue Toward Action",
-      "weight": 8,
-      "originSessionId": null,
-      "essay": "The festival dialogue emphasized the importance of transforming conversations into actionable steps. Participants expressed a desire for discussions that not only highlight issues but also lead to tangible solutions and community engagement.",
-      "quoteIds": [
-        "day_1-s0851",
-        "day_2-s0187"
-      ],
-      "liveNodeIds": []
-    },
-    {
-      "id": "theme_2",
-      "tier": "theme",
-      "label": "Presence and Listening",
-      "weight": 8,
-      "originSessionId": null,
-      "essay": "A recurring theme was the need for genuine presence and active listening in conversations. This focus on being fully engaged allows for deeper connections and more meaningful exchanges among participants.",
-      "quoteIds": [
-        "day_2-s0115",
-        "day_2-s0645"
-      ],
-      "liveNodeIds": []
-    },
-    {
-      "id": "theme_3",
-      "tier": "theme",
-      "label": "Community and Healing",
-      "weight": 8,
-      "originSessionId": null,
-      "essay": "The discussions highlighted the role of community in fostering healing and resilience. Participants shared insights on how collective experiences can lead to personal and communal growth, addressing shared challenges.",
-      "quoteIds": [
-        "day_1-s0563",
-        "day_2-s0645"
-      ],
-      "liveNodeIds": []
-    },
-    {
-      "id": "sprout_1",
+      "id": "ai-meta-conversations",
       "tier": "sprout",
-      "label": "Framework for Collaboration",
+      "label": "meta conversations",
+      "weight": 10,
+      "originSessionId": "day_1",
+      "essay": "Meta conversations highlight the importance of discussing the nature and structure of dialogue itself to foster authenticity.",
+      "quoteIds": [
+        "day_1-s0138",
+        "day_1-s0243",
+        "day_1-s0245",
+        "day_1-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-authentic-dialogue",
+      "tier": "theme",
+      "label": "authentic dialogue",
+      "weight": 8,
+      "originSessionId": "day_1",
+      "essay": "Authentic dialogue is a central theme, focusing on honesty and vulnerability as essential components for deeper connections.",
+      "quoteIds": [
+        "day_1-s0495"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-building-through-discomfort",
+      "tier": "theme",
+      "label": "Community building through discomfort",
+      "weight": 8,
+      "originSessionId": "day_1",
+      "essay": "A recurring theme was the role of discomfort in building stronger community ties and fostering collaboration.",
+      "quoteIds": [
+        "day_1-s0808",
+        "day_1-s0935",
+        "day_1-s0950",
+        "day_1-s0969"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-learning",
+      "tier": "sprout",
+      "label": "Collective learning",
       "weight": 7,
-      "originSessionId": null,
-      "essay": "The idea of establishing frameworks for collaboration emerged as essential for effective dialogue. Participants recognized that structured approaches can enhance the quality of discussions and lead to better outcomes.",
+      "originSessionId": "day_2",
+      "essay": "Collective learning emerged as a key concept, emphasizing the shared experiences and insights gained from group discussions.",
+      "quoteIds": [
+        "day_2-s0186"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-fear-of-negative-feedback",
+      "tier": "sprout",
+      "label": "fear of negative feedback",
+      "weight": 7,
+      "originSessionId": "day_1",
+      "essay": "The tension between open communication and fear of negative feedback was a significant point of discussion.",
+      "quoteIds": [
+        "day_1-s0367"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-impact-of-festival-conversations",
+      "tier": "theme",
+      "label": "impact of festival conversations",
+      "weight": 7,
+      "originSessionId": "day_2",
+      "essay": "Participants reflected on the significant influence that the festival's discussions had on their perspectives and future actions.",
+      "quoteIds": [
+        "day_2-s0833"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-authentic-communication",
+      "tier": "theme",
+      "label": "Authentic communication",
+      "weight": 6,
+      "originSessionId": "day_1",
+      "essay": "Authentic communication was a recurring topic, focusing on how to create spaces for genuine dialogue.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-acknowledging-discomfort",
+      "tier": "sprout",
+      "label": "acknowledging discomfort",
+      "weight": 5,
+      "originSessionId": "day_1",
+      "essay": "Acknowledging discomfort is presented as a crucial step in fostering connection and understanding within the community.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-authenticity-in-communication",
+      "tier": "theme",
+      "label": "Authenticity in communication",
+      "weight": 5,
+      "originSessionId": "day_1",
+      "essay": "Authenticity emerges as a central theme, focusing on the need for honesty and vulnerability in conversations.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-insights",
+      "tier": "theme",
+      "label": "Collective insights",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "The festival served as a platform for gathering and synthesizing collective insights from participants.",
+      "quoteIds": [
+        "day_2-s0607"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-connection",
+      "tier": "theme",
+      "label": "community connection",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "The conversations emphasized the importance of community and connection, particularly in overcoming feelings of isolation.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-conflict-and-compassion",
+      "tier": "theme",
+      "label": "Conflict and compassion",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "This theme explores the tension between maintaining a loving approach and navigating conflicts that arise in conversations.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-diverse-learning-styles",
+      "tier": "theme",
+      "label": "Diverse learning styles",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "The need for educational systems to respond to various learning styles was a significant point of discussion.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-engagement-and-energy-levels",
+      "tier": "theme",
+      "label": "Engagement and energy levels",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "The recurring theme of varying engagement levels among participants reflects the dynamics of group interaction and participation.",
+      "quoteIds": [
+        "day_2-s0062",
+        "day_2-s0100",
+        "day_2-s0122"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-inclusive-educational-practices",
+      "tier": "sprout",
+      "label": "inclusive educational practices",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "The conversation emphasized the need for educational approaches that accommodate diverse learning styles.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-shared-discomforts",
+      "tier": "sprout",
+      "label": "shared discomforts",
+      "weight": 5,
+      "originSessionId": "day_1",
+      "essay": "The dialogue focused on the common discomforts experienced by individuals and their potential to unite people.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tension-in-dialogue",
+      "tier": "theme",
+      "label": "Tension in dialogue",
+      "weight": 5,
+      "originSessionId": "day_2",
+      "essay": "Tensions arose during discussions, reflecting the complexities of communication and differing perspectives.",
+      "quoteIds": [
+        "day_2-s0031"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tensions-in-communication",
+      "tier": "theme",
+      "label": "tensions in communication",
+      "weight": 5,
+      "originSessionId": "day_1",
+      "essay": "The tension between open communication and fear of feedback is a significant challenge in fostering authentic dialogue.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-authenticity-in-dialogue",
+      "tier": "theme",
+      "label": "Authenticity in dialogue",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "A recurring theme was the need for authenticity and vulnerability in conversations.",
+      "quoteIds": [
+        "day_1-s0629"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-barriers-to-inclusivity",
+      "tier": "theme",
+      "label": "barriers to inclusivity",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Systemic challenges must be addressed to create truly inclusive educational environments.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-climate-change-discussions",
+      "tier": "theme",
+      "label": "climate change discussions",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This big topic encompasses various perspectives on environmental issues and their implications.",
+      "quoteIds": [
+        "day_1-s0342",
+        "day_1-s0335"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-coherence-in-community",
+      "tier": "theme",
+      "label": "coherence in community",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The recurring theme of coherence in community emphasizes the importance of connectivity among participants.",
+      "quoteIds": [
+        "day_2-s0919",
+        "day_2-s0929"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-action-strategies",
+      "tier": "theme",
+      "label": "Collective action strategies",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Participants explored the necessity of developing strategies for collective action to address shared discomforts.",
+      "quoteIds": [
+        "day_1-s0925",
+        "day_1-s0927"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-navigation-of-discomfort",
+      "tier": "sprout",
+      "label": "collective navigation of discomfort",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The idea of navigating discomfort together emphasizes the importance of community in addressing shared challenges.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-and-collaboration",
+      "tier": "theme",
+      "label": "Community and collaboration",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The theme of community underscores the importance of collective efforts in shaping future dialogues.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-building",
+      "tier": "theme",
+      "label": "community building",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Building a community involves navigating and embracing discomfort.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connecting-with-the-community",
+      "tier": "theme",
+      "label": "Connecting with the community",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme underscores the importance of making sustainability accessible to a wider audience.",
+      "quoteIds": [
+        "day_2-s0949",
+        "day_2-s0989"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connection-and-belonging",
+      "tier": "theme",
+      "label": "Connection and belonging",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring theme throughout the dialogue, emphasizing the need for community and shared experiences.",
+      "quoteIds": [
+        "day_2-s0654",
+        "day_2-s0658"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connection-and-community",
+      "tier": "theme",
+      "label": "Connection and community",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring theme was the desire for deeper connections and the importance of being seen and heard in a communal setting.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connections-and-networks",
+      "tier": "theme",
+      "label": "connections and networks",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The dialogue highlighted the significance of personal connections and networks in fostering relationships.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-continued-engagement",
+      "tier": "theme",
+      "label": "continued engagement",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A significant tension was noted regarding the necessity for ongoing involvement beyond the festival.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-continued-engagement-necessity",
+      "tier": "theme",
+      "label": "continued engagement necessity",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "There was a recurring tension around the need for ongoing engagement beyond the festival.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-conversation-spaces",
+      "tier": "theme",
+      "label": "creating conversation spaces",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Creating spaces for conversation is a recurring theme that highlights the importance of environment in dialogue.",
+      "quoteIds": [
+        "day_1-s0286",
+        "day_1-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-space",
+      "tier": "theme",
+      "label": "creating space",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme revolves around the importance of fostering environments where diverse voices and experiences can be shared.",
+      "quoteIds": [
+        "day_2-s0248",
+        "day_2-s0254"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-spaces-for-authentic-dialogue",
+      "tier": "theme",
+      "label": "creating spaces for authentic dialogue",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This recurring topic focuses on the need to establish environments where open and honest conversations can take place.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-spaces-for-dialogue",
+      "tier": "seed",
+      "label": "Creating spaces for dialogue",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This practice emphasizes the importance of establishing environments conducive to open and authentic conversations.",
+      "quoteIds": [
+        "day_1-s0224"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creative-expression",
+      "tier": "theme",
+      "label": "creative expression",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The dialogue touched on the theme of creative expression, particularly in relation to film and storytelling.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-decision-making-in-democracy",
+      "tier": "theme",
+      "label": "decision-making in democracy",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The discussions reflect on the complexities of decision-making processes within democratic frameworks.",
+      "quoteIds": [
+        "day_1-s0874",
+        "day_1-s0875"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-democracy-and-community-engagement",
+      "tier": "theme",
+      "label": "democracy and community engagement",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The discussions frequently revolved around the relationship between democratic processes and active community involvement.",
+      "quoteIds": [
+        "day_1-s0801",
+        "day_1-s0806"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-democracy-and-participation",
+      "tier": "theme",
+      "label": "Democracy and participation",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The dialogue highlights the importance of inclusive participation in democratic processes.",
+      "quoteIds": [
+        "day_1-s0833"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-design-effectiveness-and-inclusivity",
+      "tier": "theme",
+      "label": "design effectiveness and inclusivity",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Tensions arose regarding the effectiveness of current designs and the necessity for inclusivity.",
+      "quoteIds": [
+        "day_1-s0007"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-desire-for-belonging",
+      "tier": "theme",
+      "label": "desire for belonging",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring sentiment was the longing for connection and community among participants.",
+      "quoteIds": [
+        "day_2-s0763"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-educational-reform",
+      "tier": "theme",
+      "label": "Educational reform",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The overarching topic focused on how to transform educational systems to better serve future generations.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-energy-and-presence",
+      "tier": "theme",
+      "label": "energy and presence",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Participants reflect on their physical and emotional states, influencing the collective experience.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-engagement-beyond-the-festival",
+      "tier": "theme",
+      "label": "Engagement beyond the festival",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme reflects the ongoing need for dialogue and action after the festival concludes.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-engaging-dialogue",
+      "tier": "theme",
+      "label": "engaging dialogue",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Facilitating meaningful conversations can enhance participation and connection among learners.",
+      "quoteIds": [
+        "day_2-s0393",
+        "day_2-s0394"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-exploitative-systems",
+      "tier": "theme",
+      "label": "exploitative systems",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The conversation highlights the tension between exploitative systems and the desire for a more equitable approach to sharing resources.",
+      "quoteIds": [
+        "day_1-s0754"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-exploration-of-possibilities",
+      "tier": "theme",
+      "label": "Exploration of possibilities",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The exploration of possibilities beyond current imaginations signifies a desire for innovative thinking and solutions.",
+      "quoteIds": [
+        "day_2-s0123"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-future-engagement",
+      "tier": "theme",
+      "label": "future engagement",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Future engagement reflects the ongoing need for connection and collaboration beyond the festival.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-future-possibilities",
+      "tier": "theme",
+      "label": "future possibilities",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The dialogue centered around what can emerge from the festival's discussions and experiences.",
+      "quoteIds": [
+        "day_2-s0827",
+        "day_2-s0835"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-gender-dynamics-in-communication",
+      "tier": "theme",
+      "label": "Gender dynamics in communication",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The dialogue explored the differing communication styles and challenges faced by men and women.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-health-and-well-being-in-design",
+      "tier": "theme",
+      "label": "health and well-being in design",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "A recurring focus on how design choices affect health and well-being highlights the importance of thoughtful planning.",
+      "quoteIds": [
+        "day_1-s0089"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-identity-transformation",
+      "tier": "theme",
+      "label": "identity transformation",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The theme of identity transformation surfaced as participants reflected on personal changes and growth.",
+      "quoteIds": [
+        "day_1-s0517"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-impact-of-ai-on-communication",
+      "tier": "theme",
+      "label": "impact of AI on communication",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This theme reflects concerns about how AI influences discussions and community engagement.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-impact-of-environment-on-health",
+      "tier": "theme",
+      "label": "impact of environment on health",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The conversation emphasized how environmental design affects individual and community health.",
+      "quoteIds": [
+        "day_1-s0007",
+        "day_1-s0008"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-impact-of-technology-on-society",
+      "tier": "theme",
+      "label": "impact of technology on society",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Conversations touched on the influence of technology, particularly AI, on human interaction and societal structures.",
+      "quoteIds": [
+        "day_2-s0747"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-inclusive-community-planning",
+      "tier": "sprout",
+      "label": "inclusive community planning",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "There is a need for planning that considers diverse community needs for better health outcomes.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-language-and-meaning",
+      "tier": "theme",
+      "label": "Language and Meaning",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Language and its evolution play a significant role in shaping personal practices and identities.",
+      "quoteIds": [
+        "day_1-s0486",
+        "day_1-s0487"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-leading-with-love",
+      "tier": "theme",
+      "label": "leading with love",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This overarching theme encapsulates the focus on compassion and understanding as foundational elements in effective communication.",
+      "quoteIds": [
+        "day_2-s0237",
+        "day_2-s0246",
+        "day_2-s0292",
+        "day_2-s0290"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-metaphors-in-discussion",
+      "tier": "theme",
+      "label": "metaphors in discussion",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme explores how different metaphors shape understanding and engagement in dialogue.",
+      "quoteIds": [
+        "day_2-s0210",
+        "day_2-s0220"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-multiplicity-of-violence",
+      "tier": "theme",
+      "label": "Multiplicity of violence",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme acknowledges the various forms of violence that can exist in society, beyond the physical.",
+      "quoteIds": [
+        "day_2-s0290",
+        "day_2-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-discomforts",
+      "tier": "theme",
+      "label": "navigating discomforts",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The recurring theme centers on how individuals navigate their discomforts and the implications for collective community building.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-personal-dilemmas",
+      "tier": "theme",
+      "label": "Navigating personal dilemmas",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Participants explore personal dilemmas that affect their ability to engage authentically.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-tensions",
+      "tier": "theme",
+      "label": "Navigating tensions",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The conversation reflects the challenges of addressing varying degrees of discomfort within a community.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-violence",
+      "tier": "theme",
+      "label": "navigating violence",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This recurring topic addresses the pervasive nature of violence and its impact on individuals and communities.",
+      "quoteIds": [
+        "day_2-s0239",
+        "day_2-s0240"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-personal-experiences-of-marginalization",
+      "tier": "seed",
+      "label": "Personal experiences of marginalization",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Participants shared their individual stories of feeling excluded in traditional educational settings, highlighting the need for change.",
+      "quoteIds": [
+        "day_2-s0495"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-personal-transformation",
+      "tier": "theme",
+      "label": "personal transformation",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Personal transformation is a recurring theme, reflecting on the ongoing journey of self-discovery and reinvention.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-power-of-dialogue",
+      "tier": "theme",
+      "label": "power of dialogue",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This recurring theme underscores the importance of conversation in fostering community and action.",
+      "quoteIds": [
+        "day_2-s0182",
+        "day_2-s0184"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-responsiveness-to-diversity",
+      "tier": "theme",
+      "label": "Responsiveness to diversity",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring idea was the necessity for educational frameworks to be adaptable to various student needs.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-shared-context",
+      "tier": "theme",
+      "label": "shared context",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "The importance of establishing a common understanding before engaging in discussions.",
+      "quoteIds": [
+        "day_1-s0142",
+        "day_1-s0111"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-stress-and-uncertainty",
+      "tier": "theme",
+      "label": "stress and uncertainty",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Participants shared feelings of stress related to AI and the unknown, reflecting a broader concern.",
+      "quoteIds": [
+        "day_2-s0864",
+        "day_2-s0882"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-systemic-barriers-in-education",
+      "tier": "theme",
+      "label": "Systemic barriers in education",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Tensions arose around the systemic barriers that hinder inclusivity in educational frameworks.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-systemic-barriers-to-education",
+      "tier": "theme",
+      "label": "Systemic barriers to education",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring topic was the systemic issues that hinder the inclusivity of educational systems.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-systemic-barriers-to-inclusivity",
+      "tier": "theme",
+      "label": "systemic barriers to inclusivity",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "A recurring topic was the systemic challenges that prevent inclusive education.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tension-in-engagement",
+      "tier": "sprout",
+      "label": "tension in engagement",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Discussions reveal varying levels of participant energy and engagement, creating a dynamic atmosphere.",
+      "quoteIds": [
+        "day_2-s0177",
+        "day_2-s0746"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tensions-in-dialogue",
+      "tier": "theme",
+      "label": "Tensions in dialogue",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This theme explores the conflict between the desire for openness and the fear of negative feedback.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tensions-in-discomfort",
+      "tier": "theme",
+      "label": "tensions in discomfort",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Different levels of discomfort create tensions that need addressing.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tensions-in-engagement",
+      "tier": "theme",
+      "label": "tensions in engagement",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "Participants expressed a need for ongoing engagement beyond the festival experience.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-transformation-through-collapse",
+      "tier": "theme",
+      "label": "Transformation through collapse",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "This theme questions whether societal collapse can lead to new beginnings and transformative opportunities.",
+      "quoteIds": [
+        "day_2-s0646",
+        "day_2-s0645"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-upgrading-educational-systems",
+      "tier": "theme",
+      "label": "upgrading educational systems",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "The overarching goal of the dialogue was to explore how to enhance education for inclusivity.",
+      "quoteIds": [
+        "day_2-s0583"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-visibility-of-shared-experiences",
+      "tier": "theme",
+      "label": "visibility of shared experiences",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "This theme addresses the challenge of making shared discomforts visible to a broader audience.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-accessibility-of-engagement",
+      "tier": "sprout",
+      "label": "accessibility of engagement",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "There was a call for making participation more accessible to those who feel disconnected.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-anxiety-around-productivity",
+      "tier": "sprout",
+      "label": "anxiety around productivity",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "This concept highlights the tension between societal expectations of productivity and the need for reflective, authentic communication.",
+      "quoteIds": [
+        "day_1-s0397",
+        "day_1-s0384"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-balancing-energies",
+      "tier": "sprout",
+      "label": "Balancing energies",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The dialogue explored the balance between feminine and masculine energies in discussions, reflecting different approaches to engagement.",
+      "quoteIds": [
+        "day_2-s0112"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-barriers-to-connection",
+      "tier": "sprout",
+      "label": "barriers to connection",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Identifying obstacles that prevent open communication and vulnerability.",
+      "quoteIds": [
+        "day_1-s0111",
+        "day_1-s0119"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-barriers-to-participation",
+      "tier": "sprout",
+      "label": "barriers to participation",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Identifying barriers to participation is crucial for creating more inclusive and supportive environments.",
+      "quoteIds": [
+        "day_1-s0082",
+        "day_1-s0090"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-cognitive-vs-emotional-intelligence",
+      "tier": "sprout",
+      "label": "cognitive vs. emotional intelligence",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Discussions revealed a distinction between cognitive intelligence and the lack of emotional intelligence in AI.",
+      "quoteIds": [
+        "day_2-s0847",
+        "day_2-s0844"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collapse-and-rebuilding",
+      "tier": "sprout",
+      "label": "collapse and rebuilding",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The concept of collapse and rebuilding emphasizes the necessity of deconstructing inherited values to create a more authentic self.",
+      "quoteIds": [
+        "day_1-s0427",
+        "day_1-s0428"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-discomfort",
+      "tier": "sprout",
+      "label": "Collective discomfort",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Acknowledging shared discomforts can serve as a foundation for deeper community connections.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-navigation",
+      "tier": "sprout",
+      "label": "collective navigation",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Finding ways to navigate discomfort collectively is essential.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-of-abundance",
+      "tier": "sprout",
+      "label": "community of abundance",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The dialogue explores the concept of a community characterized by abundance, where sharing and contribution enhance collective experiences.",
+      "quoteIds": [
+        "day_1-s0750",
+        "day_1-s0736"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connection-challenges",
+      "tier": "sprout",
+      "label": "connection challenges",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The dialogue highlighted the difficulties of establishing genuine connections during conversations.",
+      "quoteIds": [
+        "day_2-s0702",
+        "day_2-s0721"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-courage-in-dialogue",
+      "tier": "sprout",
+      "label": "Courage in dialogue",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Courage in dialogue was highlighted as essential for navigating complex problems and fostering deeper connections.",
+      "quoteIds": [
+        "day_2-s0125"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-safe-spaces",
+      "tier": "theme",
+      "label": "creating safe spaces",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Creating safe spaces for dialogue is a recurring theme that highlights the need for comfort in sharing.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creative-collisions",
+      "tier": "sprout",
+      "label": "creative collisions",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Creative collisions refer to the spontaneous interactions that foster new ideas and collaborations.",
+      "quoteIds": [
+        "day_2-s0922"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-cultural-pressure-on-men",
+      "tier": "sprout",
+      "label": "Cultural pressure on men",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The conversation revealed societal pressures that inhibit men's emotional expression.",
+      "quoteIds": [
+        "day_1-s0613"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-desire-for-connection",
+      "tier": "sprout",
+      "label": "desire for connection",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Participants expressed a strong need for in-person engagement and connection.",
+      "quoteIds": [
+        "day_2-s0860",
+        "day_2-s0863"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-direct-democracy",
+      "tier": "sprout",
+      "label": "direct democracy",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The conversation emphasized the importance of direct democracy as a means to engage communities in meaningful actions.",
+      "quoteIds": [
+        "day_1-s0806",
+        "day_1-s0801"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-dynamics-of-tone-and-intention",
+      "tier": "sprout",
+      "label": "Dynamics of tone and intention",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This sprout reflects the nuanced ways in which communication can either foster connection or create conflict.",
+      "quoteIds": [
+        "day_2-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-ecosystem-of-dialogue",
+      "tier": "sprout",
+      "label": "ecosystem of dialogue",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The dialogue was seen as an interconnected system where different voices and feelings coexist.",
+      "quoteIds": [
+        "day_2-s0724",
+        "day_2-s0738"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-emotional-awareness-in-education",
+      "tier": "sprout",
+      "label": "emotional awareness in education",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Recognizing students' emotional states is crucial for effective teaching and learning.",
+      "quoteIds": [
+        "day_2-s0388"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-engagement-energy",
+      "tier": "sprout",
+      "label": "Engagement energy",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This concept reflects the varying levels of participant involvement and enthusiasm.",
+      "quoteIds": [
+        "day_2-s0031"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-engagement-levels",
+      "tier": "sprout",
+      "label": "engagement levels",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This idea addresses the varying degrees of participation and energy among festival attendees.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-environmental-impact-on-well-being",
+      "tier": "sprout",
+      "label": "environmental impact on well-being",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The design of environments significantly influences individual and community health outcomes.",
+      "quoteIds": [
+        "day_1-s0089"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-flowing-conversation",
+      "tier": "sprout",
+      "label": "Flowing conversation",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This emerging idea captures the dynamic and organic nature of discussions.",
+      "quoteIds": [
+        "day_2-s0031",
+        "day_2-s0008"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-framework-for-dialogue",
+      "tier": "sprout",
+      "label": "Framework for dialogue",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "This emerging idea refers to the structures that support effective communication.",
       "quoteIds": [
         "day_1-s0251",
-        "day_2-s0187"
+        "day_1-s0252"
       ],
       "liveNodeIds": []
     },
     {
-      "id": "sprout_2",
+      "id": "ai-grief-and-recovery",
       "tier": "sprout",
-      "label": "Hacking Through Barriers",
-      "weight": 6,
-      "originSessionId": null,
-      "essay": "Participants discussed the metaphor of 'hacking through barriers' as a necessary process to achieve meaningful dialogue and collaboration. This concept reflects the challenges faced in breaking down existing structures that hinder progress.",
+      "label": "grief and recovery",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Participants reflected on the process of dealing with grief and finding ways to recover from tensions.",
       "quoteIds": [
-        "day_2-s0259",
-        "day_2-s0356"
+        "day_2-s0715"
       ],
       "liveNodeIds": []
     },
     {
-      "id": "sprout_3",
+      "id": "ai-humanization",
       "tier": "sprout",
-      "label": "Resilient Infrastructure",
-      "weight": 5,
-      "originSessionId": null,
-      "essay": "The conversation around libraries as infrastructure for resilient cities highlighted the importance of community resources in fostering collaboration and support. This concept underscores the role of physical spaces in nurturing dialogue and action.",
+      "label": "humanization",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This idea focuses on the journey towards understanding and embracing our shared humanity.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-impact-of-covid-19-on-learning",
+      "tier": "sprout",
+      "label": "Impact of COVID-19 on learning",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Discussion included the unique challenges faced by children during the pandemic and how these affect their educational needs.",
       "quoteIds": [
-        "day_1-s0635"
+        "day_2-s0458",
+        "day_2-s0466"
       ],
       "liveNodeIds": []
     },
     {
-      "id": "seed_1",
+      "id": "ai-impactful-stories",
+      "tier": "sprout",
+      "label": "impactful stories",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The dialogue highlighted the importance of sharing stories that resonate and connect with others.",
+      "quoteIds": [
+        "day_2-s0599",
+        "day_2-s0606"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-improvisational-dialogue",
+      "tier": "sprout",
+      "label": "improvisational dialogue",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The concept of improvisation emerges as participants navigate their interactions and contributions.",
+      "quoteIds": [
+        "day_2-s0180",
+        "day_2-s0157"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-inclusive-education",
+      "tier": "sprout",
+      "label": "Inclusive education",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The conversation emphasized the importance of educational systems that accommodate diverse learning styles and backgrounds.",
+      "quoteIds": [
+        "day_2-s0421"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-inclusivity-in-education",
+      "tier": "sprout",
+      "label": "Inclusivity in education",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The conversation centered around the concept of making educational systems more inclusive for all students.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-inspiring-outside-engagement",
+      "tier": "sprout",
+      "label": "Inspiring outside engagement",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This concept emphasizes the need to reach individuals who are not already involved in sustainability conversations.",
+      "quoteIds": [
+        "day_2-s0962",
+        "day_2-s0988"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-integrated-learning-environments",
+      "tier": "sprout",
+      "label": "integrated learning environments",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Discussion highlighted the importance of creating environments where different learning systems are interconnected.",
+      "quoteIds": [
+        "day_2-s0583"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-intentionality-in-dialogue",
+      "tier": "sprout",
+      "label": "intentionality in dialogue",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This concept emerges from the discussion about the importance of being mindful of our intentions when engaging in conversations.",
+      "quoteIds": [
+        "day_2-s0329"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-lived-experiences-in-learning",
+      "tier": "sprout",
+      "label": "Lived experiences in learning",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The discussion pointed to the significance of incorporating lived experiences into educational reform.",
+      "quoteIds": [
+        "day_2-s0527",
+        "day_2-s0528"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-meta-conversation",
+      "tier": "sprout",
+      "label": "Meta conversation",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This concept refers to discussions about how to communicate effectively and connect meaningfully in shared spaces.",
+      "quoteIds": [
+        "day_2-s0636",
+        "day_2-s0637"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-meta-literature-in-dialogue",
+      "tier": "sprout",
+      "label": "meta literature in dialogue",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The concept of meta literature emerged as a challenge in relating to each other during discussions.",
+      "quoteIds": [
+        "day_2-s0720"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-mindfulness-in-sharing",
+      "tier": "sprout",
+      "label": "mindfulness in sharing",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Mindfulness in sharing resources is emphasized as essential for sustaining communal practices and preventing depletion.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-misinformation-impact",
+      "tier": "sprout",
+      "label": "Misinformation impact",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The spread of misinformation can significantly hinder community engagement and decision-making.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-mixed-messaging-in-conversations",
+      "tier": "sprout",
+      "label": "mixed messaging in conversations",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The concept of mixed messaging illustrates the challenges faced in communication, particularly in group settings.",
+      "quoteIds": [
+        "day_1-s0868",
+        "day_1-s0894"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-collective-discomfort",
+      "tier": "sprout",
+      "label": "Navigating collective discomfort",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The conversation highlighted the challenges of addressing varying levels of discomfort among individuals.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-discomfort",
+      "tier": "sprout",
+      "label": "Navigating discomfort",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The conversation highlighted the need to collectively navigate discomfort as a means to foster deeper connections.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-navigating-uncertainty",
+      "tier": "sprout",
+      "label": "Navigating uncertainty",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Participants expressed the importance of allowing space for exploration without rigid expectations.",
+      "quoteIds": [
+        "day_2-s0063"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-need-for-continued-engagement",
+      "tier": "sprout",
+      "label": "need for continued engagement",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "A recurring concern emerged about the necessity of sustaining the momentum generated by the festival beyond its conclusion.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-neurodivergent-learning-styles",
+      "tier": "sprout",
+      "label": "neurodivergent learning styles",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This concept reflects the recognition of diverse ways individuals process and absorb information, particularly in educational settings.",
+      "quoteIds": [
+        "day_2-s0326",
+        "day_2-s0344"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-preaching-to-the-choir",
+      "tier": "sprout",
+      "label": "Preaching to the choir",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This phrase captures the challenge of addressing a homogenous audience at events like festivals.",
+      "quoteIds": [
+        "day_2-s0959"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-recording-and-reflection",
+      "tier": "sprout",
+      "label": "Recording and reflection",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The practice of recording dialogues was seen as a tool for reflection and growth within the community.",
+      "quoteIds": [
+        "day_1-s0933",
+        "day_1-s0946"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-role-of-discomfort-in-growth",
+      "tier": "sprout",
+      "label": "Role of discomfort in growth",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "This idea explores how challenges and discomfort can lead to personal and communal transformation.",
+      "quoteIds": [
+        "day_2-s0644",
+        "day_2-s0645"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-serendipity-in-connections",
+      "tier": "sprout",
+      "label": "serendipity in connections",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "The theme of serendipity highlights the unexpected yet meaningful connections made during the festival.",
+      "quoteIds": [
+        "day_2-s0912"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-shame-as-a-barrier",
+      "tier": "sprout",
+      "label": "Shame as a barrier",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Shame often prevents open communication and authentic connections.",
+      "quoteIds": [
+        "day_1-s0577",
+        "day_1-s0580"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-shared-community-experiences",
+      "tier": "sprout",
+      "label": "Shared community experiences",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The dialogue revealed the significance of shared experiences in building community and understanding individual discomforts.",
+      "quoteIds": [
+        "day_1-s0935",
+        "day_1-s0950"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-social-determinants-of-health",
+      "tier": "sprout",
+      "label": "social determinants of health",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "The design of environments directly influences health outcomes and well-being.",
+      "quoteIds": [
+        "day_1-s0007",
+        "day_1-s0008"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-social-spaces-for-interaction",
+      "tier": "sprout",
+      "label": "social spaces for interaction",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Creating social spaces fosters community engagement and enhances overall well-being.",
+      "quoteIds": [
+        "day_1-s0078"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-systemic-barriers",
+      "tier": "sprout",
+      "label": "Systemic barriers",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Discussion revealed the challenges posed by existing structures that prevent inclusivity in education.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-themes-from-conversations",
+      "tier": "sprout",
+      "label": "themes from conversations",
+      "weight": 3,
+      "originSessionId": "day_2",
+      "essay": "Participants were encouraged to identify recurring themes that emerged from multiple discussions.",
+      "quoteIds": [
+        "day_2-s0604",
+        "day_2-s0598"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-walking-paths-in-community-design",
       "tier": "seed",
-      "label": "Solarpump Vibe Coded App",
-      "weight": 4,
-      "originSessionId": null,
-      "essay": "The mention of a 'Solarpump Vibe Coded app' symbolizes innovative approaches to community engagement and environmental sustainability. It represents a fusion of technology and grassroots initiatives aimed at fostering collaboration.",
+      "label": "walking paths in community design",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Integrating walking paths into community design promotes physical activity and social interaction.",
+      "quoteIds": [
+        "day_1-s0007",
+        "day_1-s0008"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-acknowledging-discomfort-as-connection-p",
+      "tier": "seed",
+      "label": "acknowledging discomfort as connection pathway",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants highlighted the significance of recognizing discomfort as a means to foster deeper connections within the community.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-action-plans-from-workshops",
+      "tier": "seed",
+      "label": "Action plans from workshops",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants discussed how workshops lead to actionable outcomes, emphasizing the importance of translating dialogue into concrete steps.",
+      "quoteIds": [
+        "day_1-s0925",
+        "day_1-s0927"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-actions-that-create-harm",
+      "tier": "seed",
+      "label": "actions that create harm",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This refers to the tangible practices or behaviors that can unintentionally cause distress or damage in conversations.",
+      "quoteIds": [
+        "day_2-s0320",
+        "day_2-s0328"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-adjusting-educational-frameworks",
+      "tier": "seed",
+      "label": "Adjusting educational frameworks",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This practice emphasizes the need to modify existing educational structures to better accommodate diverse learning styles.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-ai-film-creation-examples",
+      "tier": "seed",
+      "label": "AI film creation examples",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The discussion highlighted specific instances of how AI is being used in film creation, contrasting it with traditional methods.",
+      "quoteIds": [
+        "day_2-s0800",
+        "day_2-s0803"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-archaeology-of-self",
+      "tier": "seed",
+      "label": "Archaeology of Self",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The concept of 'Archaeology of Self' represents a concrete practice of introspection and self-discovery.",
+      "quoteIds": [
+        "day_1-s0477",
+        "day_1-s0471"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-biomimicry-insights",
+      "tier": "seed",
+      "label": "Biomimicry insights",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants discussed how nature's solutions can inform problem-solving.",
+      "quoteIds": [
+        "day_1-s0706",
+        "day_1-s0705"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-building-and-prototyping-for-identity",
+      "tier": "seed",
+      "label": "Building and prototyping for identity",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants discussed the importance of hands-on practices in reconstructing personal identity.",
+      "quoteIds": [
+        "day_1-s0597",
+        "day_1-s0598"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-butterfly-metaphor",
+      "tier": "seed",
+      "label": "butterfly metaphor",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The butterfly metaphor represents transformation and the potential for change within the festival's context.",
+      "quoteIds": [
+        "day_2-s0193",
+        "day_2-s0196"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-clearing-family-home-practice",
+      "tier": "seed",
+      "label": "clearing family home practice",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The practice of clearing out a family home serves as a metaphor for personal and collective transformation, emphasizing the importance of examining inherited beliefs.",
+      "quoteIds": [
+        "day_1-s0433",
+        "day_1-s0436"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-clothing-swap-as-commons",
+      "tier": "seed",
+      "label": "clothing swap as commons",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The clothing swap serves as a concrete example of communal sharing, emphasizing abundance and mindfulness in resource use.",
+      "quoteIds": [
+        "day_1-s0745",
+        "day_1-s0740"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-coexistence-of-genres",
+      "tier": "seed",
+      "label": "coexistence of genres",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The conversation acknowledged the coexistence of traditional film festivals and new digital formats.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-action-forum",
+      "tier": "seed",
+      "label": "collective action forum",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The festival served as a platform for fostering collective action among participants.",
+      "quoteIds": [
+        "day_2-s0866",
+        "day_2-s0867"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-collective-learning-experience",
+      "tier": "seed",
+      "label": "Collective learning experience",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This highlights the power of shared knowledge and collaboration among participants.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-support-during-grief",
+      "tier": "seed",
+      "label": "community support during grief",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The idea of having community support during times of grief suggests a proactive approach to processing loss and transformation.",
+      "quoteIds": [
+        "day_1-s0441"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-community-based-discussions",
+      "tier": "seed",
+      "label": "Community-based discussions",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Engaging communities in discussions about local governance fosters collective understanding and participation.",
+      "quoteIds": [
+        "day_1-s0827",
+        "day_1-s0825"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-composting-experiences",
+      "tier": "seed",
+      "label": "composting experiences",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This metaphor illustrates transforming negative experiences into something nurturing and positive.",
+      "quoteIds": [
+        "day_2-s0242"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-concrete-examples-in-education",
+      "tier": "seed",
+      "label": "Concrete examples in education",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Participants emphasized the importance of using concrete examples to analyze educational practices.",
+      "quoteIds": [
+        "day_2-s0507",
+        "day_2-s0508"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-connecting-research-and-sustainability-p",
+      "tier": "seed",
+      "label": "Connecting research and sustainability practices",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This practice highlights the importance of integrating academic research with real-world sustainability efforts.",
+      "quoteIds": [
+        "day_2-s0949"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-space-for-grief-in-learning",
+      "tier": "seed",
+      "label": "creating space for grief in learning",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Acknowledging and integrating the emotional burdens students carry can enhance their learning experience.",
+      "quoteIds": [
+        "day_2-s0362",
+        "day_2-s0372"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-creating-spaces-for-neurodivergent-folks",
+      "tier": "seed",
+      "label": "Creating spaces for neurodivergent folks",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This practice emphasizes the importance of inclusive environments that cater to diverse ways of knowing.",
+      "quoteIds": [
+        "day_2-s0638",
+        "day_2-s0643"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-cultural-conditioning-around-food",
+      "tier": "seed",
+      "label": "Cultural conditioning around food",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Cultural norms influence personal choices, complicating authentic conversations.",
+      "quoteIds": [
+        "day_1-s0566",
+        "day_1-s0561"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-cutting-cubes-out-of-fog",
+      "tier": "seed",
+      "label": "Cutting cubes out of fog",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This image represents the challenge of making sense of ambiguous experiences and the tension between clarity and comfort in uncertainty.",
+      "quoteIds": [
+        "day_2-s0057",
+        "day_2-s0060"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-defining-violence-as-diminishment",
+      "tier": "seed",
+      "label": "Defining violence as diminishment",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This seed emphasizes a broad understanding of violence, encompassing not just physical harm but also emotional and systemic violations.",
+      "quoteIds": [
+        "day_2-s0290",
+        "day_2-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-delaying-decisions-for-research",
+      "tier": "seed",
+      "label": "delaying decisions for research",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The practice of postponing decisions to gather more information highlights a concrete approach to addressing discomfort in decision-making.",
+      "quoteIds": [
+        "day_1-s0870"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-dialogue-as-art",
+      "tier": "seed",
+      "label": "dialogue as art",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Participants reflect on viewing their conversations as a creative performance, emphasizing the collaborative nature of dialogue.",
+      "quoteIds": [
+        "day_2-s0157",
+        "day_2-s0173"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-dialogue-as-art-form",
+      "tier": "seed",
+      "label": "dialogue as art form",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The conversation framed dialogue as a creative practice, emphasizing its artistic qualities.",
+      "quoteIds": [
+        "day_2-s0724"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-dialogue-to-collective-action",
+      "tier": "seed",
+      "label": "dialogue to collective action",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This practice highlights the transition from discussions to meaningful collaboration in community settings.",
+      "quoteIds": [
+        "day_2-s0186",
+        "day_2-s0182"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-digital-garden-of-conversations",
+      "tier": "seed",
+      "label": "digital garden of conversations",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The concept of a digital garden was introduced, where individual stories and insights grow into broader themes.",
+      "quoteIds": [
+        "day_2-s0608",
+        "day_2-s0598"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-discomfort-as-growth",
+      "tier": "seed",
+      "label": "discomfort as growth",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This highlights the practice of embracing discomfort as a pathway to personal and communal development.",
+      "quoteIds": [
+        "day_2-s0326",
+        "day_2-s0328"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-documentary-on-men-s-silence",
+      "tier": "seed",
+      "label": "Documentary on men's silence",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "A documentary project highlights the cultural silence surrounding men's emotional struggles.",
+      "quoteIds": [
+        "day_1-s0609",
+        "day_1-s0613"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-emotional-archaeology-in-decluttering",
+      "tier": "seed",
+      "label": "Emotional archaeology in decluttering",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The practice of emotional archaeology highlights the deep connections we have with our personal belongings and the stories they tell.",
+      "quoteIds": [
+        "day_2-s0107"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-facilitation-technique-check-in",
+      "tier": "seed",
+      "label": "facilitation technique check-in",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "A practical method to establish a shared emotional context before discussions.",
+      "quoteIds": [
+        "day_1-s0144"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-grief-doula-role",
+      "tier": "seed",
+      "label": "grief doula role",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "An example of holding space for others' emotions, fostering deeper connections.",
+      "quoteIds": [
+        "day_1-s0125"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-harvesting-ideas-creatively",
+      "tier": "seed",
+      "label": "Harvesting ideas creatively",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "This practice involves intentionally gathering and amplifying ideas from discussions to enhance their impact.",
+      "quoteIds": [
+        "day_1-s0224"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-honesty-and-vulnerability",
+      "tier": "seed",
+      "label": "Honesty and vulnerability",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "These qualities are essential for fostering deeper connections in discussions.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-honesty-and-vulnerability-in-dialogue",
+      "tier": "seed",
+      "label": "honesty and vulnerability in dialogue",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "This practice emphasizes the importance of being open and authentic in conversations to foster deeper connections.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-honesty-in-dialogue",
+      "tier": "seed",
+      "label": "honesty in dialogue",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants emphasized the importance of honesty as a foundational practice for authentic conversations.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-importance-of-vulnerability",
+      "tier": "seed",
+      "label": "importance of vulnerability",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "This practice stresses that vulnerability is crucial for meaningful dialogue.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-live-question-display",
+      "tier": "seed",
+      "label": "live question display",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Displaying the live question helps participants stay focused and engaged in the ongoing dialogue.",
+      "quoteIds": [
+        "day_1-s0290",
+        "day_1-s0291"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-machete-through-the-jungle-metaphor",
+      "tier": "seed",
+      "label": "Machete through the jungle metaphor",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The metaphor illustrates the struggle of navigating uncertainty and the desire to find clarity in complex situations.",
+      "quoteIds": [
+        "day_2-s0056"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-mapping-toronto-s-scenes",
+      "tier": "seed",
+      "label": "mapping Toronto's scenes",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Mapping Toronto's scenes illustrates a concrete practice of visualizing community connections.",
+      "quoteIds": [
+        "day_2-s0935",
+        "day_2-s0938"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-meditation-and-breath-work",
+      "tier": "seed",
+      "label": "Meditation and breath work",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "These practices are highlighted as essential community activities that foster connection and personal growth.",
+      "quoteIds": [
+        "day_2-s0655"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-moments-of-harmony",
+      "tier": "seed",
+      "label": "moments of harmony",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Participants highlighted instances of connection and joy during discussions.",
+      "quoteIds": [
+        "day_2-s0724",
+        "day_2-s0731"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-movement-in-learning-spaces",
+      "tier": "seed",
+      "label": "movement in learning spaces",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The idea of creating more dynamic and flexible learning environments was proposed.",
+      "quoteIds": [
+        "day_2-s0565"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-narrowing-the-scope-of-questions",
+      "tier": "seed",
+      "label": "Narrowing the scope of questions",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Participants suggested refining complex questions to facilitate more focused discussions.",
+      "quoteIds": [
+        "day_2-s0446"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-nature-as-teacher",
+      "tier": "seed",
+      "label": "nature as teacher",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Nature serves as a foundational guide in understanding discomfort.",
+      "quoteIds": [
+        "day_1-s0658"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-network-mapping-interaction",
+      "tier": "seed",
+      "label": "network mapping interaction",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "A chance encounter led to a valuable connection that enriched the participant's experience.",
+      "quoteIds": [
+        "day_2-s0893",
+        "day_2-s0902"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-noise-in-our-hearts",
+      "tier": "seed",
+      "label": "Noise in our hearts",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants expressed the idea that emotional noise can obscure clarity and connection.",
+      "quoteIds": [
+        "day_1-s0726",
+        "day_1-s0722"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-personal-message-sharing",
+      "tier": "seed",
+      "label": "personal message sharing",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Participants discussed the importance of sharing personal messages in a way that fosters connection.",
+      "quoteIds": [
+        "day_2-s0692",
+        "day_2-s0693"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-planting-ideas-as-seeds",
+      "tier": "seed",
+      "label": "planting ideas as seeds",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "The metaphor of planting ideas as seeds illustrates how contributions can grow and connect within a conversation.",
+      "quoteIds": [
+        "day_1-s0285",
+        "day_1-s0313"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-practice-of-shared-questions",
+      "tier": "seed",
+      "label": "practice of shared questions",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The practice of posing questions in the middle of discussions allows new participants to engage meaningfully.",
+      "quoteIds": [
+        "day_2-s0831"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-regular-sunday-market-events",
+      "tier": "seed",
+      "label": "Regular Sunday market events",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This example suggests a potential strategy for engaging a broader audience in sustainability discussions.",
+      "quoteIds": [
+        "day_2-s0982",
+        "day_2-s0983"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-removing-invasive-plants-for-biodiversit",
+      "tier": "seed",
+      "label": "removing invasive plants for biodiversity",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants discussed practical actions like removing invasive species to enhance biodiversity and strengthen community bonds.",
+      "quoteIds": [
+        "day_1-s0807"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sharing-personal-connections",
+      "tier": "seed",
+      "label": "sharing personal connections",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Participants shared their personal connections to create a more comfortable atmosphere.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sharing-personal-experiences",
+      "tier": "seed",
+      "label": "sharing personal experiences",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "Personal storytelling can foster deeper connections and understanding in educational discussions.",
+      "quoteIds": [
+        "day_2-s0383",
+        "day_2-s0385"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-social-spaces-in-neighborhoods",
+      "tier": "seed",
+      "label": "social spaces in neighborhoods",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Creating social spaces encourages community connection and enhances well-being.",
+      "quoteIds": [
+        "day_1-s0007",
+        "day_1-s0008"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-solar-panel-tarot-deck",
+      "tier": "seed",
+      "label": "solar panel tarot deck",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The creation of a solar panel tarot deck exemplifies innovative intersections of art and sustainability.",
+      "quoteIds": [
+        "day_2-s0906",
+        "day_2-s0907"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-solarpump-vibe-coded-app",
+      "tier": "seed",
+      "label": "Solarpump Vibe Coded app",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The app represents a concrete practice of integrating learned insights into personal projects.",
       "quoteIds": [
         "day_2-s0019"
       ],
       "liveNodeIds": []
     },
     {
-      "id": "seed_2",
+      "id": "ai-subconversations-for-deeper-dialogue",
       "tier": "seed",
-      "label": "Democracy in Action",
-      "weight": 4,
-      "originSessionId": null,
-      "essay": "The call for a community-based discussion around democracy reflects a desire for participatory governance. This seed emphasizes the importance of involving diverse voices in decision-making processes.",
+      "label": "Subconversations for deeper dialogue",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "The idea of splitting into subconversations was proposed to facilitate more focused discussions.",
       "quoteIds": [
-        "day_1-s0827"
+        "day_2-s0529"
       ],
       "liveNodeIds": []
     },
     {
-      "id": "seed_3",
+      "id": "ai-tangible-problems-vs-bullshit-problems",
       "tier": "seed",
-      "label": "Childlike Rebuilding",
-      "weight": 3,
-      "originSessionId": null,
-      "essay": "The concept of 'rebuilding like a child' evokes a sense of creativity and openness to new possibilities. It encourages participants to approach challenges with a fresh perspective and a willingness to learn.",
+      "label": "Tangible problems vs. bullshit problems",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "There was a call to focus on real-world issues rather than abstract or manufactured ones.",
       "quoteIds": [
-        "day_1-s0563"
+        "day_1-s0717",
+        "day_1-s0720"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-toronto-regenerative-village-starter",
+      "tier": "seed",
+      "label": "Toronto regenerative village starter",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "This concrete practice illustrates a proactive approach to community building by creating a regenerative village.",
+      "quoteIds": [
+        "day_1-s0965",
+        "day_1-s1000"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-transforming-confrontation-into-opportun",
+      "tier": "seed",
+      "label": "transforming confrontation into opportunity",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "This practice suggests reframing confrontation as a chance for growth and self-examination rather than a negative experience.",
+      "quoteIds": [
+        "day_1-s0387",
+        "day_1-s0391"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-tree-policy-engagement",
+      "tier": "seed",
+      "label": "Tree policy engagement",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Involving community members in discussions about specific policies, like tree management, can enhance democratic processes.",
+      "quoteIds": [
+        "day_1-s0830",
+        "day_1-s0831"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-using-a-scythe-for-clearing-crops",
+      "tier": "seed",
+      "label": "Using a scythe for clearing crops",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "This metaphor illustrates the dual nature of tools and actions, highlighting how they can serve both practical and emotional purposes.",
+      "quoteIds": [
+        "day_2-s0279",
+        "day_2-s0275"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-vulnerability-in-dialogue",
+      "tier": "seed",
+      "label": "Vulnerability in dialogue",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Emphasizing vulnerability can create a safe space for deeper connections.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-vulnerability-in-discussions",
+      "tier": "seed",
+      "label": "vulnerability in discussions",
+      "weight": 2,
+      "originSessionId": "day_1",
+      "essay": "Vulnerability was highlighted as a key element necessary for deeper connections in dialogue.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-word-cloud-visualization",
+      "tier": "seed",
+      "label": "word cloud visualization",
+      "weight": 2,
+      "originSessionId": "day_2",
+      "essay": "A concrete suggestion was made to create a word cloud from the festival's transcript, illustrating the frequency of key terms.",
+      "quoteIds": [
+        "day_2-s0592",
+        "day_2-s0593"
       ],
       "liveNodeIds": []
     }
   ],
   "vines": [
     {
-      "id": "vine_1",
-      "sourceId": "theme_1",
-      "targetId": "sprout_1",
+      "id": "ai-vine-1",
+      "sourceId": "ai-walking-paths-in-community-design",
+      "targetId": "ai-social-determinants-of-health",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-2",
+      "sourceId": "ai-social-spaces-in-neighborhoods",
+      "targetId": "ai-social-determinants-of-health",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-3",
+      "sourceId": "ai-social-determinants-of-health",
+      "targetId": "ai-impact-of-environment-on-health",
       "kind": "grows_into"
     },
     {
-      "id": "vine_2",
-      "sourceId": "theme_1",
-      "targetId": "sprout_2",
+      "id": "ai-vine-4",
+      "sourceId": "ai-inclusive-community-planning",
+      "targetId": "ai-impact-of-environment-on-health",
       "kind": "grows_into"
     },
     {
-      "id": "vine_3",
-      "sourceId": "theme_2",
-      "targetId": "sprout_3",
+      "id": "ai-vine-5",
+      "sourceId": "ai-design-effectiveness-and-inclusivity",
+      "targetId": "ai-inclusive-community-planning",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-6",
+      "sourceId": "ai-walking-paths-in-community-design",
+      "targetId": "ai-health-and-well-being-in-design",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-7",
+      "sourceId": "ai-inclusive-community-planning",
+      "targetId": "ai-health-and-well-being-in-design",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-8",
+      "sourceId": "ai-environmental-impact-on-well-being",
+      "targetId": "ai-health-and-well-being-in-design",
       "kind": "grows_into"
     },
     {
-      "id": "vine_4",
-      "sourceId": "theme_3",
-      "targetId": "seed_1",
+      "id": "ai-vine-9",
+      "sourceId": "ai-social-spaces-for-interaction",
+      "targetId": "ai-health-and-well-being-in-design",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-10",
+      "sourceId": "ai-barriers-to-participation",
+      "targetId": "ai-inclusive-community-planning",
       "kind": "grows_into"
     },
     {
-      "id": "vine_5",
-      "sourceId": "theme_3",
-      "targetId": "seed_2",
+      "id": "ai-vine-11",
+      "sourceId": "ai-facilitation-technique-check-in",
+      "targetId": "ai-meta-conversations",
       "kind": "grows_into"
     },
     {
-      "id": "vine_6",
-      "sourceId": "theme_3",
-      "targetId": "seed_3",
+      "id": "ai-vine-12",
+      "sourceId": "ai-grief-doula-role",
+      "targetId": "ai-barriers-to-connection",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-13",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-authentic-dialogue",
       "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-14",
+      "sourceId": "ai-barriers-to-connection",
+      "targetId": "ai-shared-context",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-15",
+      "sourceId": "ai-shared-context",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-16",
+      "sourceId": "ai-sharing-personal-connections",
+      "targetId": "ai-creating-safe-spaces",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-17",
+      "sourceId": "ai-fear-of-negative-feedback",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-18",
+      "sourceId": "ai-connections-and-networks",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-19",
+      "sourceId": "ai-creating-safe-spaces",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-20",
+      "sourceId": "ai-creating-spaces-for-dialogue",
+      "targetId": "ai-meta-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-21",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-authenticity-in-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-22",
+      "sourceId": "ai-authenticity-in-communication",
+      "targetId": "ai-fear-of-negative-feedback",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-23",
+      "sourceId": "ai-community-and-collaboration",
+      "targetId": "ai-harvesting-ideas-creatively",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-24",
+      "sourceId": "ai-creating-spaces-for-dialogue",
+      "targetId": "ai-authentic-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-25",
+      "sourceId": "ai-honesty-and-vulnerability",
+      "targetId": "ai-authentic-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-26",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-framework-for-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-27",
+      "sourceId": "ai-tensions-in-dialogue",
+      "targetId": "ai-authentic-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-28",
+      "sourceId": "ai-planting-ideas-as-seeds",
+      "targetId": "ai-meta-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-29",
+      "sourceId": "ai-live-question-display",
+      "targetId": "ai-creating-conversation-spaces",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-30",
+      "sourceId": "ai-authentic-dialogue",
+      "targetId": "ai-creating-conversation-spaces",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-31",
+      "sourceId": "ai-tensions-in-communication",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-32",
+      "sourceId": "ai-importance-of-vulnerability",
+      "targetId": "ai-authenticity-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-33",
+      "sourceId": "ai-climate-change-discussions",
+      "targetId": "ai-fear-of-negative-feedback",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-34",
+      "sourceId": "ai-honesty-and-vulnerability-in-dialogue",
+      "targetId": "ai-creating-spaces-for-authentic-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-35",
+      "sourceId": "ai-transforming-confrontation-into-opportun",
+      "targetId": "ai-tensions-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-36",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-creating-spaces-for-authentic-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-37",
+      "sourceId": "ai-anxiety-around-productivity",
+      "targetId": "ai-tensions-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-38",
+      "sourceId": "ai-creating-spaces-for-authentic-dialogue",
+      "targetId": "ai-tensions-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-39",
+      "sourceId": "ai-clearing-family-home-practice",
+      "targetId": "ai-collapse-and-rebuilding",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-40",
+      "sourceId": "ai-community-support-during-grief",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-41",
+      "sourceId": "ai-collapse-and-rebuilding",
+      "targetId": "ai-personal-transformation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-42",
+      "sourceId": "ai-authentic-dialogue",
+      "targetId": "ai-personal-transformation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-43",
+      "sourceId": "ai-archaeology-of-self",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-44",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-creating-safe-spaces",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-45",
+      "sourceId": "ai-language-and-meaning",
+      "targetId": "ai-authentic-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-46",
+      "sourceId": "ai-honesty-in-dialogue",
+      "targetId": "ai-authentic-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-47",
+      "sourceId": "ai-vulnerability-in-discussions",
+      "targetId": "ai-authentic-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-48",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-authentic-communication",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-49",
+      "sourceId": "ai-fear-of-negative-feedback",
+      "targetId": "ai-authentic-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-50",
+      "sourceId": "ai-identity-transformation",
+      "targetId": "ai-meta-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-51",
+      "sourceId": "ai-vulnerability-in-dialogue",
+      "targetId": "ai-authentic-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-52",
+      "sourceId": "ai-cultural-conditioning-around-food",
+      "targetId": "ai-navigating-personal-dilemmas",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-53",
+      "sourceId": "ai-shame-as-a-barrier",
+      "targetId": "ai-authentic-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-54",
+      "sourceId": "ai-navigating-personal-dilemmas",
+      "targetId": "ai-authentic-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-55",
+      "sourceId": "ai-building-and-prototyping-for-identity",
+      "targetId": "ai-meta-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-56",
+      "sourceId": "ai-documentary-on-men-s-silence",
+      "targetId": "ai-cultural-pressure-on-men",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-57",
+      "sourceId": "ai-cultural-pressure-on-men",
+      "targetId": "ai-gender-dynamics-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-58",
+      "sourceId": "ai-meta-conversations",
+      "targetId": "ai-authenticity-in-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-59",
+      "sourceId": "ai-authenticity-in-dialogue",
+      "targetId": "ai-gender-dynamics-in-communication",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-60",
+      "sourceId": "ai-acknowledging-discomfort",
+      "targetId": "ai-shared-discomforts",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-61",
+      "sourceId": "ai-shared-discomforts",
+      "targetId": "ai-community-building",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-62",
+      "sourceId": "ai-collective-navigation",
+      "targetId": "ai-community-building",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-63",
+      "sourceId": "ai-nature-as-teacher",
+      "targetId": "ai-acknowledging-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-64",
+      "sourceId": "ai-tensions-in-discomfort",
+      "targetId": "ai-collective-navigation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-65",
+      "sourceId": "ai-biomimicry-insights",
+      "targetId": "ai-shared-discomforts",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-66",
+      "sourceId": "ai-shared-discomforts",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-67",
+      "sourceId": "ai-navigating-collective-discomfort",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-68",
+      "sourceId": "ai-noise-in-our-hearts",
+      "targetId": "ai-navigating-collective-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-69",
+      "sourceId": "ai-tangible-problems-vs-bullshit-problems",
+      "targetId": "ai-biomimicry-insights",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-70",
+      "sourceId": "ai-clothing-swap-as-commons",
+      "targetId": "ai-community-of-abundance",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-71",
+      "sourceId": "ai-community-of-abundance",
+      "targetId": "ai-acknowledging-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-72",
+      "sourceId": "ai-acknowledging-discomfort",
+      "targetId": "ai-navigating-discomforts",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-73",
+      "sourceId": "ai-navigating-discomforts",
+      "targetId": "ai-exploitative-systems",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-74",
+      "sourceId": "ai-community-of-abundance",
+      "targetId": "ai-mindfulness-in-sharing",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-75",
+      "sourceId": "ai-acknowledging-discomfort-as-connection-p",
+      "targetId": "ai-shared-discomforts",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-76",
+      "sourceId": "ai-direct-democracy",
+      "targetId": "ai-democracy-and-community-engagement",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-77",
+      "sourceId": "ai-removing-invasive-plants-for-biodiversit",
+      "targetId": "ai-direct-democracy",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-78",
+      "sourceId": "ai-removing-invasive-plants-for-biodiversit",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-79",
+      "sourceId": "ai-community-based-discussions",
+      "targetId": "ai-democracy-and-participation",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-80",
+      "sourceId": "ai-tree-policy-engagement",
+      "targetId": "ai-democracy-and-participation",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-81",
+      "sourceId": "ai-collective-discomfort",
+      "targetId": "ai-navigating-tensions",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-82",
+      "sourceId": "ai-misinformation-impact",
+      "targetId": "ai-navigating-tensions",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-83",
+      "sourceId": "ai-misinformation-impact",
+      "targetId": "ai-democracy-and-participation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-84",
+      "sourceId": "ai-delaying-decisions-for-research",
+      "targetId": "ai-acknowledging-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-85",
+      "sourceId": "ai-acknowledging-discomfort",
+      "targetId": "ai-collective-navigation-of-discomfort",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-86",
+      "sourceId": "ai-collective-navigation-of-discomfort",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-87",
+      "sourceId": "ai-decision-making-in-democracy",
+      "targetId": "ai-mixed-messaging-in-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-88",
+      "sourceId": "ai-action-plans-from-workshops",
+      "targetId": "ai-collective-action-strategies",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-89",
+      "sourceId": "ai-navigating-discomfort",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-90",
+      "sourceId": "ai-shared-community-experiences",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-91",
+      "sourceId": "ai-collective-action-strategies",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-92",
+      "sourceId": "ai-recording-and-reflection",
+      "targetId": "ai-navigating-discomfort",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-93",
+      "sourceId": "ai-toronto-regenerative-village-starter",
+      "targetId": "ai-community-building-through-discomfort",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-94",
+      "sourceId": "ai-community-building-through-discomfort",
+      "targetId": "ai-visibility-of-shared-experiences",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-95",
+      "sourceId": "ai-impact-of-ai-on-communication",
+      "targetId": "ai-visibility-of-shared-experiences",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-96",
+      "sourceId": "ai-solarpump-vibe-coded-app",
+      "targetId": "ai-collective-learning-experience",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-97",
+      "sourceId": "ai-engagement-energy",
+      "targetId": "ai-flowing-conversation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-98",
+      "sourceId": "ai-collective-insights",
+      "targetId": "ai-tension-in-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-99",
+      "sourceId": "ai-machete-through-the-jungle-metaphor",
+      "targetId": "ai-cutting-cubes-out-of-fog",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-100",
+      "sourceId": "ai-collective-learning",
+      "targetId": "ai-connection-and-community",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-101",
+      "sourceId": "ai-navigating-uncertainty",
+      "targetId": "ai-engagement-and-energy-levels",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-102",
+      "sourceId": "ai-navigating-uncertainty",
+      "targetId": "ai-connection-and-community",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-103",
+      "sourceId": "ai-emotional-archaeology-in-decluttering",
+      "targetId": "ai-collective-learning",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-104",
+      "sourceId": "ai-collective-learning",
+      "targetId": "ai-engagement-and-energy-levels",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-105",
+      "sourceId": "ai-balancing-energies",
+      "targetId": "ai-engagement-and-energy-levels",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-106",
+      "sourceId": "ai-exploration-of-possibilities",
+      "targetId": "ai-courage-in-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-107",
+      "sourceId": "ai-courage-in-dialogue",
+      "targetId": "ai-engagement-and-energy-levels",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-108",
+      "sourceId": "ai-dialogue-as-art",
+      "targetId": "ai-improvisational-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-109",
+      "sourceId": "ai-collective-learning",
+      "targetId": "ai-community-connection",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-110",
+      "sourceId": "ai-tension-in-engagement",
+      "targetId": "ai-energy-and-presence",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-111",
+      "sourceId": "ai-improvisational-dialogue",
+      "targetId": "ai-energy-and-presence",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-112",
+      "sourceId": "ai-dialogue-to-collective-action",
+      "targetId": "ai-collective-learning",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-113",
+      "sourceId": "ai-butterfly-metaphor",
+      "targetId": "ai-collective-learning",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-114",
+      "sourceId": "ai-engagement-levels",
+      "targetId": "ai-power-of-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-115",
+      "sourceId": "ai-power-of-dialogue",
+      "targetId": "ai-metaphors-in-discussion",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-116",
+      "sourceId": "ai-leading-with-love",
+      "targetId": "ai-humanization",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-117",
+      "sourceId": "ai-composting-experiences",
+      "targetId": "ai-collective-learning",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-118",
+      "sourceId": "ai-navigating-violence",
+      "targetId": "ai-creating-space",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-119",
+      "sourceId": "ai-collective-learning",
+      "targetId": "ai-creating-space",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-120",
+      "sourceId": "ai-using-a-scythe-for-clearing-crops",
+      "targetId": "ai-leading-with-love",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-121",
+      "sourceId": "ai-defining-violence-as-diminishment",
+      "targetId": "ai-multiplicity-of-violence",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-122",
+      "sourceId": "ai-leading-with-love",
+      "targetId": "ai-dynamics-of-tone-and-intention",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-123",
+      "sourceId": "ai-conflict-and-compassion",
+      "targetId": "ai-leading-with-love",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-124",
+      "sourceId": "ai-multiplicity-of-violence",
+      "targetId": "ai-conflict-and-compassion",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-125",
+      "sourceId": "ai-actions-that-create-harm",
+      "targetId": "ai-intentionality-in-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-126",
+      "sourceId": "ai-discomfort-as-growth",
+      "targetId": "ai-intentionality-in-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-127",
+      "sourceId": "ai-intentionality-in-dialogue",
+      "targetId": "ai-neurodivergent-learning-styles",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-128",
+      "sourceId": "ai-creating-space-for-grief-in-learning",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-129",
+      "sourceId": "ai-sharing-personal-experiences",
+      "targetId": "ai-engaging-dialogue",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-130",
+      "sourceId": "ai-emotional-awareness-in-education",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-131",
+      "sourceId": "ai-barriers-to-inclusivity",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-132",
+      "sourceId": "ai-engaging-dialogue",
+      "targetId": "ai-barriers-to-inclusivity",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-133",
+      "sourceId": "ai-personal-experiences-of-marginalization",
+      "targetId": "ai-inclusive-education",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-134",
+      "sourceId": "ai-inclusive-education",
+      "targetId": "ai-systemic-barriers",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-135",
+      "sourceId": "ai-systemic-barriers",
+      "targetId": "ai-educational-reform",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-136",
+      "sourceId": "ai-educational-reform",
+      "targetId": "ai-responsiveness-to-diversity",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-137",
+      "sourceId": "ai-narrowing-the-scope-of-questions",
+      "targetId": "ai-educational-reform",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-138",
+      "sourceId": "ai-adjusting-educational-frameworks",
+      "targetId": "ai-inclusivity-in-education",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-139",
+      "sourceId": "ai-personal-experiences-of-marginalization",
+      "targetId": "ai-systemic-barriers-to-education",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-140",
+      "sourceId": "ai-impact-of-covid-19-on-learning",
+      "targetId": "ai-diverse-learning-styles",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-141",
+      "sourceId": "ai-inclusivity-in-education",
+      "targetId": "ai-diverse-learning-styles",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-142",
+      "sourceId": "ai-systemic-barriers-to-education",
+      "targetId": "ai-inclusivity-in-education",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-143",
+      "sourceId": "ai-concrete-examples-in-education",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-144",
+      "sourceId": "ai-inclusive-educational-practices",
+      "targetId": "ai-diverse-learning-styles",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-145",
+      "sourceId": "ai-systemic-barriers-in-education",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-146",
+      "sourceId": "ai-lived-experiences-in-learning",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-147",
+      "sourceId": "ai-subconversations-for-deeper-dialogue",
+      "targetId": "ai-diverse-learning-styles",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-148",
+      "sourceId": "ai-personal-experiences-of-marginalization",
+      "targetId": "ai-inclusive-educational-practices",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-149",
+      "sourceId": "ai-inclusive-educational-practices",
+      "targetId": "ai-systemic-barriers-to-inclusivity",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-150",
+      "sourceId": "ai-integrated-learning-environments",
+      "targetId": "ai-systemic-barriers-to-inclusivity",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-151",
+      "sourceId": "ai-movement-in-learning-spaces",
+      "targetId": "ai-upgrading-educational-systems",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-152",
+      "sourceId": "ai-integrated-learning-environments",
+      "targetId": "ai-upgrading-educational-systems",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-153",
+      "sourceId": "ai-word-cloud-visualization",
+      "targetId": "ai-digital-garden-of-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-154",
+      "sourceId": "ai-digital-garden-of-conversations",
+      "targetId": "ai-themes-from-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-155",
+      "sourceId": "ai-themes-from-conversations",
+      "targetId": "ai-impactful-stories",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-156",
+      "sourceId": "ai-impactful-stories",
+      "targetId": "ai-collective-insights",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-157",
+      "sourceId": "ai-continued-engagement",
+      "targetId": "ai-collective-insights",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-158",
+      "sourceId": "ai-creating-spaces-for-neurodivergent-folks",
+      "targetId": "ai-meta-conversation",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-159",
+      "sourceId": "ai-meditation-and-breath-work",
+      "targetId": "ai-connection-and-belonging",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-160",
+      "sourceId": "ai-role-of-discomfort-in-growth",
+      "targetId": "ai-transformation-through-collapse",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-161",
+      "sourceId": "ai-connection-and-belonging",
+      "targetId": "ai-transformation-through-collapse",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-162",
+      "sourceId": "ai-meta-conversation",
+      "targetId": "ai-connection-and-belonging",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-163",
+      "sourceId": "ai-role-of-discomfort-in-growth",
+      "targetId": "ai-meta-conversation",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-164",
+      "sourceId": "ai-personal-message-sharing",
+      "targetId": "ai-connection-challenges",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-165",
+      "sourceId": "ai-grief-and-recovery",
+      "targetId": "ai-connection-challenges",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-166",
+      "sourceId": "ai-impact-of-festival-conversations",
+      "targetId": "ai-continued-engagement-necessity",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-167",
+      "sourceId": "ai-meta-literature-in-dialogue",
+      "targetId": "ai-connection-challenges",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-168",
+      "sourceId": "ai-dialogue-as-art-form",
+      "targetId": "ai-moments-of-harmony",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-169",
+      "sourceId": "ai-ecosystem-of-dialogue",
+      "targetId": "ai-tension-in-engagement",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-170",
+      "sourceId": "ai-impact-of-technology-on-society",
+      "targetId": "ai-tension-in-engagement",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-171",
+      "sourceId": "ai-desire-for-belonging",
+      "targetId": "ai-moments-of-harmony",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-172",
+      "sourceId": "ai-ai-film-creation-examples",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-173",
+      "sourceId": "ai-impact-of-festival-conversations",
+      "targetId": "ai-need-for-continued-engagement",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-174",
+      "sourceId": "ai-need-for-continued-engagement",
+      "targetId": "ai-tension-in-dialogue",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-175",
+      "sourceId": "ai-creative-expression",
+      "targetId": "ai-community-connection",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-176",
+      "sourceId": "ai-tension-in-dialogue",
+      "targetId": "ai-community-connection",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-177",
+      "sourceId": "ai-practice-of-shared-questions",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-178",
+      "sourceId": "ai-impact-of-festival-conversations",
+      "targetId": "ai-future-possibilities",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-179",
+      "sourceId": "ai-tensions-in-engagement",
+      "targetId": "ai-future-possibilities",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-180",
+      "sourceId": "ai-cognitive-vs-emotional-intelligence",
+      "targetId": "ai-tensions-in-engagement",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-181",
+      "sourceId": "ai-coexistence-of-genres",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-182",
+      "sourceId": "ai-collective-action-forum",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-183",
+      "sourceId": "ai-network-mapping-interaction",
+      "targetId": "ai-desire-for-connection",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-184",
+      "sourceId": "ai-accessibility-of-engagement",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-185",
+      "sourceId": "ai-desire-for-connection",
+      "targetId": "ai-stress-and-uncertainty",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-186",
+      "sourceId": "ai-stress-and-uncertainty",
+      "targetId": "ai-impact-of-festival-conversations",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-187",
+      "sourceId": "ai-solar-panel-tarot-deck",
+      "targetId": "ai-serendipity-in-connections",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-188",
+      "sourceId": "ai-mapping-toronto-s-scenes",
+      "targetId": "ai-creative-collisions",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-189",
+      "sourceId": "ai-serendipity-in-connections",
+      "targetId": "ai-coherence-in-community",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-190",
+      "sourceId": "ai-creative-collisions",
+      "targetId": "ai-future-engagement",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-191",
+      "sourceId": "ai-coherence-in-community",
+      "targetId": "ai-future-engagement",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-192",
+      "sourceId": "ai-connecting-research-and-sustainability-p",
+      "targetId": "ai-inspiring-outside-engagement",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-193",
+      "sourceId": "ai-regular-sunday-market-events",
+      "targetId": "ai-connecting-with-the-community",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-194",
+      "sourceId": "ai-inspiring-outside-engagement",
+      "targetId": "ai-preaching-to-the-choir",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-195",
+      "sourceId": "ai-engagement-beyond-the-festival",
+      "targetId": "ai-connecting-with-the-community",
+      "kind": "relates_to"
     }
   ]
 }

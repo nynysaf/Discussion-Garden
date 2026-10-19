@@ -25,9 +25,8 @@ export default function ExplorePage() {
         Explore the gardens
       </h1>
       <p className="mt-3 max-w-2xl text-lg opacity-85">
-        Three lenses on one weekend. Pan and scroll-zoom the large canvas. The festival garden grew
-        live under host approval; the AI reading is a semantic pass over the corpus; the host
-        reading names what felt most alive.
+        Three lenses on one weekend. Pan and zoom the paper; drag plants to pin them (double-click to
+        release). The AI reading grows Clara-style — many ideas per movement, merged into one web.
       </p>
       <div className="mt-8">
         <ExploreGarden
