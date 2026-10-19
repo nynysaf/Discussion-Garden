@@ -97,7 +97,9 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | **9 — Post-festival archive** | **Shipped 2026-10-19** — portfolio home, dual-map `/explore`, redacted transcript, harvest pages, `FESTIVAL_LIVE` freeze |
 
 ### ▶ Resume here (next session)
-**Phase 9 is live in the codebase.** Start with `npm run dev` → open `/`, `/explore`, `/explore/transcript`. Confirm Vercel has **no** `FESTIVAL_LIVE=true` (unset or `false`).
+**Phase 9 is live in the codebase.** Start with `npm run dev` → open `/explore`. Confirm Vercel has **no** `FESTIVAL_LIVE=true` (unset or `false`).
+
+**Explore map UX:** spread + hit-circle select, +/−/Fit chrome, hover 2nd-degree fade, fullscreen (garden + notes) — shipped to `main` 2026-10-19.
 
 **Host polish (optional):**
 - Edit `src/data/archive/host-seeded-map.json` to refine themes/essays/quotes after your own pass through the transcripts.
@@ -116,6 +118,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Production URL: **https://discussion-garden.vercel.app** (Vercel project `discussion-garden`, deploys every push to `main`)
 
 ### Shipped
+- 2026-10-19 — **Explore map UX polish.** Larger force world (less overlap); clicks only on plant hit-circles (labels ignore pointer); +/−/Fit chrome no longer stolen by pan; hover/select fades nodes beyond 2nd-degree neighbourhood; fullscreen mode expands garden + notes (`Esc` to exit).
 - 2026-10-19 — **Phase 9 — post-festival archive / portfolio.** `FESTIVAL_LIVE` freeze; portfolio `/`; pan/zoom `/explore` dual maps; redacted transcript (grouped turns) + enriched movements + idea-phrase cloud; glossary / tensions; `archive:build` + `archive:enrich`. Facilitation / method / workshop pages removed from public nav.
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
 - 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + key created (key lives only in `.env.local`).
