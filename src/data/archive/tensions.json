@@ -1,0 +1,54 @@
+{
+  "pairs": [
+    {
+      "id": "t1",
+      "a": "Deep agreement",
+      "b": "Exploring a new edge",
+      "note": "Familiar shared critique can build trust — and can also keep the room from aporia.",
+      "quoteIds": [
+        "day_1-s0341",
+        "day_1-s0447"
+      ]
+    },
+    {
+      "id": "t2",
+      "a": "Individual report",
+      "b": "Collective contact",
+      "note": "Solutions-mode and monologue vs speaking into what is present between us.",
+      "quoteIds": [
+        "day_1-s0006",
+        "day_1-s0063"
+      ]
+    },
+    {
+      "id": "t3",
+      "a": "Imagining futures",
+      "b": "Grounding in the present",
+      "note": "Festival name pulls forward; presence may be the skill that makes future-talk actionable.",
+      "quoteIds": [
+        "day_1-s0007",
+        "day_1-s0045"
+      ]
+    },
+    {
+      "id": "t4",
+      "a": "Clear intention in every sentence",
+      "b": "Room for tentative voices",
+      "note": "Dialogue-as-art without policing the shy plantings a garden needs.",
+      "quoteIds": [
+        "day_1-s0090",
+        "day_1-s0485"
+      ]
+    },
+    {
+      "id": "t5",
+      "a": "Resonance in the room",
+      "b": "Structure for action",
+      "note": "Feeling aligned is not the same as deciding, assigning roles, and following up.",
+      "quoteIds": [
+        "day_1-s0925",
+        "day_1-s0927"
+      ]
+    }
+  ]
+}

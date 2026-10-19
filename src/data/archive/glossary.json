@@ -1,0 +1,70 @@
+{
+  "entries": [
+    {
+      "id": "g-signal",
+      "term": "Signal",
+      "definition": "What deserves attention — news, speech, or sensation that carries meaning for the group.",
+      "quoteIds": [
+        "day_1-s0317",
+        "day_1-s0376"
+      ]
+    },
+    {
+      "id": "g-noise",
+      "term": "Noise",
+      "definition": "Words or interruptions that fill the air without moving meaning between people (host judgment, held lightly).",
+      "quoteIds": [
+        "day_1-s0722",
+        "day_1-s0726"
+      ]
+    },
+    {
+      "id": "g-aporia",
+      "term": "Aporia",
+      "definition": "A shared state of not-knowing — slowing down so new edges can appear.",
+      "quoteIds": [
+        "day_1-s0287",
+        "day_1-s0289"
+      ]
+    },
+    {
+      "id": "g-threshold",
+      "term": "Threshold",
+      "definition": "The designed entrance: seed-pebble, silence, listening before speaking.",
+      "quoteIds": [
+        "day_1-s0278",
+        "day_1-s0933"
+      ]
+    },
+    {
+      "id": "g-contact",
+      "term": "Contact",
+      "definition": "Speaking into the shared middle while staying in relationship — like contact improv.",
+      "quoteIds": [
+        "day_1-s0146",
+        "day_1-s0302"
+      ]
+    },
+    {
+      "id": "g-garden",
+      "term": "Garden",
+      "definition": "Both the room upstairs and the digital map of ideas growing across the weekend.",
+      "quoteIds": [
+        "day_1-s0045",
+        "day_1-s0046"
+      ]
+    },
+    {
+      "id": "g-inquiry",
+      "term": "Live inquiry",
+      "definition": "A question put on the TVs that carved a section of dialogue.",
+      "quoteIds": []
+    },
+    {
+      "id": "g-hybrid",
+      "term": "Hybrid mode",
+      "definition": "AI proposes garden nodes; hosts approve before anything is public — captions never wait on AI.",
+      "quoteIds": []
+    }
+  ]
+}

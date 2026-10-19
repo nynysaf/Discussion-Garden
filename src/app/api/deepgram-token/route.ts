@@ -3,8 +3,13 @@ import {
   DeepgramConfigError,
   grantDeepgramToken,
 } from "@/lib/deepgram/grant-token";
+import { FESTIVAL_ENDED_MESSAGE, isFestivalLive } from "@/lib/festival-live";
 
 export async function POST() {
+  if (!isFestivalLive()) {
+    return Response.json({ error: FESTIVAL_ENDED_MESSAGE }, { status: 410 });
+  }
+
   // Hosts only — otherwise anyone on the public site could spend the credit.
   const host = await checkHost();
   if (host.status !== "host") {

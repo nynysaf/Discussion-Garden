@@ -1,0 +1,357 @@
+{
+  "exportedAt": "2026-10-19T15:18:03.717Z",
+  "nodes": [
+    {
+      "id": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "tier": "sprout",
+      "label": "Environment shapes well-being",
+      "weight": 10,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-15T00:45:34.922486+00:00",
+      "updatedAt": "2026-10-17T15:19:30.066837+00:00",
+      "description": "This connects the idea of design with its impact on well-being."
+    },
+    {
+      "id": "a1ed0588-52e8-4fc5-bc3c-222323eeb4fb",
+      "tier": "sprout",
+      "label": "Individual change influences community health",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T15:27:07.344551+00:00",
+      "updatedAt": "2026-10-17T16:19:30.552963+00:00",
+      "description": "This connects the seeds about individual and family dynamics to community well-being."
+    },
+    {
+      "id": "aeb9e431-8b67-4640-aa51-714911b8875c",
+      "tier": "seed",
+      "label": "Meditation and breath work groups",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T15:48:07.777495+00:00",
+      "updatedAt": "2026-10-17T16:22:44.248175+00:00",
+      "description": "This is a specific example of practices that support well-being."
+    },
+    {
+      "id": "d496a0cf-f3b4-4c6b-8858-6d323f3bd14f",
+      "tier": "seed",
+      "label": "Language shapes our healing journey",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T15:55:42.528133+00:00",
+      "updatedAt": "2026-10-17T16:23:09.459447+00:00",
+      "description": "This reflects the idea that the way we talk about experiences influences our understanding of them."
+    },
+    {
+      "id": "cab1594b-48a3-4641-a90b-e203998320cb",
+      "tier": "seed",
+      "label": "Encountering paradox can transform us",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T16:02:07.672575+00:00",
+      "updatedAt": "2026-10-17T16:23:01.653778+00:00",
+      "description": "This reflects the idea that facing contradictions can lead to personal growth."
+    },
+    {
+      "id": "b86e2091-d566-498e-a5f2-66f44a9e243b",
+      "tier": "seed",
+      "label": "Shame affects social interactions",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T16:03:52.213707+00:00",
+      "updatedAt": "2026-10-17T16:23:13.790394+00:00",
+      "description": "This seed connects to the theme of environment shaping well-being."
+    },
+    {
+      "id": "600ee11a-dc73-469f-ab6e-b6807aeb1c91",
+      "tier": "seed",
+      "label": "Lack of belonging causes discomfort",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T16:54:37.286333+00:00",
+      "updatedAt": "2026-10-17T19:29:54.114009+00:00",
+      "description": "This reflects a specific experience shared in the conversation."
+    },
+    {
+      "id": "5c5e48a3-46a3-48c2-9c79-6bcc0a17b583",
+      "tier": "seed",
+      "label": "Space for discomfort and self-reflection",
+      "weight": 1,
+      "originSessionId": "09a763d6-bde0-4870-9534-3922ee1eef2f",
+      "createdAt": "2026-10-17T17:00:27.464485+00:00",
+      "updatedAt": "2026-10-17T19:30:06.58453+00:00",
+      "description": "This reflects the importance of creating environments where discomfort can be acknowledged and processed."
+    },
+    {
+      "id": "9b58f258-f30c-4865-b651-111e807a461b",
+      "tier": "theme",
+      "label": "Intentional collapse precedes transformation",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:16:06.059838+00:00",
+      "updatedAt": "2026-10-18T14:16:06.059838+00:00",
+      "description": ""
+    },
+    {
+      "id": "8e376fd3-4b38-4cd2-98dd-4ca192b6320c",
+      "tier": "sprout",
+      "label": "Global risks cause fear",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:16:36.551938+00:00",
+      "updatedAt": "2026-10-18T14:16:36.551938+00:00",
+      "description": ""
+    },
+    {
+      "id": "c7da061c-73fe-4106-9b8e-cb12cc169d0d",
+      "tier": "seed",
+      "label": "AI risks",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:16:48.73041+00:00",
+      "updatedAt": "2026-10-18T14:16:48.73041+00:00",
+      "description": ""
+    },
+    {
+      "id": "348f8824-dfcd-4a8e-8e78-986ebace6e3b",
+      "tier": "sprout",
+      "label": "Dialogue to collective action",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:25:55.394443+00:00",
+      "updatedAt": "2026-10-18T14:25:55.394443+00:00",
+      "description": ""
+    },
+    {
+      "id": "5bdb6db0-6f2e-4a64-bf0c-8bac49d58437",
+      "tier": "seed",
+      "label": "Impact festivals",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:26:15.539982+00:00",
+      "updatedAt": "2026-10-18T14:26:15.539982+00:00",
+      "description": ""
+    },
+    {
+      "id": "f3ad2170-2abd-4240-9cff-26ce7b539778",
+      "tier": "theme",
+      "label": "Individual change ripples",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:26:43.236798+00:00",
+      "updatedAt": "2026-10-18T14:26:43.236798+00:00",
+      "description": ""
+    },
+    {
+      "id": "93458e44-6122-4a15-a140-99f4c97cefb3",
+      "tier": "sprout",
+      "label": "Great dialogue matters",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:27:28.95312+00:00",
+      "updatedAt": "2026-10-18T14:27:28.95312+00:00",
+      "description": ""
+    },
+    {
+      "id": "80dc88c3-4804-4135-93da-69227b00b305",
+      "tier": "seed",
+      "label": "Meta conversation for coherence",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:27:56.141137+00:00",
+      "updatedAt": "2026-10-18T14:27:56.141137+00:00",
+      "description": ""
+    },
+    {
+      "id": "bea24c2b-2c93-4293-8f01-f9165a8914ea",
+      "tier": "seed",
+      "label": "Energetic literacy",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:29:36.530273+00:00",
+      "updatedAt": "2026-10-18T14:29:36.530273+00:00",
+      "description": ""
+    },
+    {
+      "id": "63372848-f36b-4137-96ff-cc330ccf2e63",
+      "tier": "theme",
+      "label": "Recognizing connection is key",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:30:21.637727+00:00",
+      "updatedAt": "2026-10-18T14:30:21.637727+00:00",
+      "description": ""
+    },
+    {
+      "id": "6ad1d936-4b49-4685-86c0-591928f06223",
+      "tier": "sprout",
+      "label": "See myself in the other",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:30:36.368813+00:00",
+      "updatedAt": "2026-10-18T14:30:36.368813+00:00",
+      "description": ""
+    },
+    {
+      "id": "9c7ab558-b055-421d-838f-5b983afa60b9",
+      "tier": "sprout",
+      "label": "We are nature",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:30:53.153567+00:00",
+      "updatedAt": "2026-10-18T14:30:53.153567+00:00",
+      "description": ""
+    },
+    {
+      "id": "8f892e29-5106-4816-9188-0f0dc70ba9a9",
+      "tier": "seed",
+      "label": "9 in 10 ecovillages fail",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:32:05.868021+00:00",
+      "updatedAt": "2026-10-18T14:32:05.868021+00:00",
+      "description": ""
+    },
+    {
+      "id": "614f93cd-b41e-41c0-849b-fe364eeb5ac0",
+      "tier": "seed",
+      "label": "Cycles of disintegration & integration",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:33:10.425428+00:00",
+      "updatedAt": "2026-10-18T14:33:10.425428+00:00",
+      "description": ""
+    },
+    {
+      "id": "c5a27509-28dd-417f-a349-5795031d03ed",
+      "tier": "sprout",
+      "label": "Dense local networks of trust",
+      "weight": 1,
+      "originSessionId": "2e87cf08-b801-4ecc-982c-b2054874be1e",
+      "createdAt": "2026-10-18T14:36:24.992456+00:00",
+      "updatedAt": "2026-10-18T14:36:24.992456+00:00",
+      "description": ""
+    }
+  ],
+  "vines": [
+    {
+      "id": "89693cab-9823-48bb-9f9e-3748bb6e8e27",
+      "sourceId": "8e376fd3-4b38-4cd2-98dd-4ca192b6320c",
+      "targetId": "9b58f258-f30c-4865-b651-111e807a461b",
+      "kind": "grows_into"
+    },
+    {
+      "id": "c4f38917-5796-41de-a1ea-96007629dee2",
+      "sourceId": "5c5e48a3-46a3-48c2-9c79-6bcc0a17b583",
+      "targetId": "600ee11a-dc73-469f-ab6e-b6807aeb1c91",
+      "kind": "relates_to"
+    },
+    {
+      "id": "d775246c-2e81-4417-9084-0c37affd8bd9",
+      "sourceId": "8f892e29-5106-4816-9188-0f0dc70ba9a9",
+      "targetId": "348f8824-dfcd-4a8e-8e78-986ebace6e3b",
+      "kind": "grows_into"
+    },
+    {
+      "id": "b8a7d493-4148-4387-bb7f-232447a0d271",
+      "sourceId": "aeb9e431-8b67-4640-aa51-714911b8875c",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "445cbd6f-eda0-492e-a5dd-89ca0c56f646",
+      "sourceId": "cab1594b-48a3-4641-a90b-e203998320cb",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "052dd172-e720-40c4-aa11-316ad6788147",
+      "sourceId": "d496a0cf-f3b4-4c6b-8858-6d323f3bd14f",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "bc8ae88b-4515-4acc-8128-e5257c43ca17",
+      "sourceId": "b86e2091-d566-498e-a5f2-66f44a9e243b",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "a7b40dea-72e8-4aef-a694-983f0590b7c0",
+      "sourceId": "c7da061c-73fe-4106-9b8e-cb12cc169d0d",
+      "targetId": "8e376fd3-4b38-4cd2-98dd-4ca192b6320c",
+      "kind": "grows_into"
+    },
+    {
+      "id": "d7de6454-56f5-407c-91c8-8504cfd8396b",
+      "sourceId": "bea24c2b-2c93-4293-8f01-f9165a8914ea",
+      "targetId": "93458e44-6122-4a15-a140-99f4c97cefb3",
+      "kind": "grows_into"
+    },
+    {
+      "id": "2fb83e84-c3a6-4318-8498-85597e5cb5cd",
+      "sourceId": "614f93cd-b41e-41c0-849b-fe364eeb5ac0",
+      "targetId": "8e376fd3-4b38-4cd2-98dd-4ca192b6320c",
+      "kind": "grows_into"
+    },
+    {
+      "id": "84cea478-9d88-4614-9b23-048d1340739e",
+      "sourceId": "5bdb6db0-6f2e-4a64-bf0c-8bac49d58437",
+      "targetId": "348f8824-dfcd-4a8e-8e78-986ebace6e3b",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ed15792a-141e-4566-a288-58d550503237",
+      "sourceId": "6ad1d936-4b49-4685-86c0-591928f06223",
+      "targetId": "63372848-f36b-4137-96ff-cc330ccf2e63",
+      "kind": "grows_into"
+    },
+    {
+      "id": "7c64db05-60b0-4362-84ff-bce2b4b39615",
+      "sourceId": "93458e44-6122-4a15-a140-99f4c97cefb3",
+      "targetId": "348f8824-dfcd-4a8e-8e78-986ebace6e3b",
+      "kind": "relates_to"
+    },
+    {
+      "id": "061a3ae8-3b22-472b-adcb-f34b586c921e",
+      "sourceId": "600ee11a-dc73-469f-ab6e-b6807aeb1c91",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "fd0861eb-e680-4850-bfec-6f74470e9c87",
+      "sourceId": "5c5e48a3-46a3-48c2-9c79-6bcc0a17b583",
+      "targetId": "1cec4743-9093-4e0a-a093-d0ccc1744500",
+      "kind": "grows_into"
+    },
+    {
+      "id": "7c86faae-9a08-4b93-8692-68596093154f",
+      "sourceId": "93458e44-6122-4a15-a140-99f4c97cefb3",
+      "targetId": "f3ad2170-2abd-4240-9cff-26ce7b539778",
+      "kind": "grows_into"
+    },
+    {
+      "id": "204cc999-b132-431f-8d86-618c60b2b0c6",
+      "sourceId": "9c7ab558-b055-421d-838f-5b983afa60b9",
+      "targetId": "63372848-f36b-4137-96ff-cc330ccf2e63",
+      "kind": "grows_into"
+    },
+    {
+      "id": "fc4cd210-2936-4d69-8ce3-2e150ff265be",
+      "sourceId": "c5a27509-28dd-417f-a349-5795031d03ed",
+      "targetId": "63372848-f36b-4137-96ff-cc330ccf2e63",
+      "kind": "grows_into"
+    },
+    {
+      "id": "87b04798-f3aa-46b3-96bd-92aba6638269",
+      "sourceId": "80dc88c3-4804-4135-93da-69227b00b305",
+      "targetId": "93458e44-6122-4a15-a140-99f4c97cefb3",
+      "kind": "grows_into"
+    },
+    {
+      "id": "25df87b3-a550-4813-9f78-80d99f435332",
+      "sourceId": "5c5e48a3-46a3-48c2-9c79-6bcc0a17b583",
+      "targetId": "8e376fd3-4b38-4cd2-98dd-4ca192b6320c",
+      "kind": "grows_into"
+    }
+  ]
+}

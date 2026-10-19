@@ -1,16 +1,24 @@
 # Discussion Garden
 
-Live captions, schedule prompts, a live audience feed, and a growing "garden" of ideas for the *We Create Our Futures* festival (garden live Oct 17 & 18, 2026).
+Live captions, schedule prompts, a live audience feed, and a growing "garden" of ideas for the *We Create Our Futures* festival (garden live Oct 17 & 18, 2026). **After the festival**, the same site is a public archive / portfolio: explore dual garden readings, a redacted transcript, and harvest pages — with live API spend frozen.
 
 ## Docs
 - Product: `prd-v0.2.md`
 - Build plan + progress log: `dev-plan-v0.1.md`
 - UI: `DESIGN_GUIDE.md`
 
+## Public archive (Phase 9)
+- `/` — portfolio story · `/explore` — Festival / AI / Host garden lenses
+- `/explore/transcript` · `/explore/movements` · `/explore/words`
+- `/glossary` · `/tensions` · `/facilitation` · `/method` · `/workshop`
+- Rebuild archive JSON (local raw transcripts required): `npm run archive:build`
+- Snapshot hosted garden: `npm run hosted -- scripts/archive/export-garden.mjs`
+- Leave `FESTIVAL_LIVE` unset or `false` in production. Set `true` only to re-enable Deepgram / OpenAI / audience writes.
+
 ## Secrets policy (public repo)
 This repository is **public**. Treat every push as world-readable.
 
-**Never commit:** `.env.local` or any filled env file, API keys (Deepgram, OpenAI), Supabase secret keys, tokens, real festival transcripts or audience submissions. Only `.env.example` (placeholder names) is committed.
+**Never commit:** `.env.local` or any filled env file, API keys (Deepgram, OpenAI), Supabase secret keys, tokens, raw festival recordings/transcripts (`Recordings & Transcripts/` is gitignored), or unredacted private analysis under `scripts/archive/private/`. Only `.env.example` (placeholder names) and **redacted** `src/data/archive/*` outputs are committed.
 
 If a secret is ever committed: rotate it immediately in the provider's dashboard.
 

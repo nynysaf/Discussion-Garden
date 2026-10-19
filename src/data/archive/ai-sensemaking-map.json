@@ -1,0 +1,477 @@
+{
+  "layer": "ai",
+  "title": "AI sensemaking",
+  "caption": "A fresh offline reading of the full redacted corpus — clusters around live inquiries and recurring language. Provocations, not verdicts.",
+  "nodes": [
+    {
+      "id": "ai-theme-1",
+      "tier": "theme",
+      "label": "How do we build businesses that",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How do we build businesses that lead to thriving?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-2",
+      "tier": "theme",
+      "label": "The meta conversation: how do we",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “The meta conversation: how do we set up for a creat conversation?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-3",
+      "tier": "theme",
+      "label": "How does individual resilience support/h…",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How does individual resilience support/hinder collective reslience?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-4",
+      "tier": "theme",
+      "label": "How will we know what we",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How will we know what we need to give up? To let go of?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-5",
+      "tier": "theme",
+      "label": "Where do our discomforts overlap, what",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “Where do our discomforts overlap, what are the inviting in us?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-6",
+      "tier": "theme",
+      "label": "How to scale regenerative eco villages",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How to scale regenerative eco villages?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-7",
+      "tier": "theme",
+      "label": "How can we play with both",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How can we play with both masculine and feminine energy?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-8",
+      "tier": "theme",
+      "label": "How do we intentionally disturb our",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How do we intentionally disturb our environments?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-9",
+      "tier": "theme",
+      "label": "What entanglement is happening in this",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “What entanglement is happening in this garden right?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-10",
+      "tier": "theme",
+      "label": "How do we wake up to",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “How do we wake up to our feelings?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-11",
+      "tier": "theme",
+      "label": "Where does 'give-a-shit-ness' come from",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "AI reading of the inquiry “Where does 'give-a-shit-ness' come from?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-theme-12",
+      "tier": "theme",
+      "label": "What is present for us this",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "AI reading of the inquiry “What is present for us this morning?” across the weekend corpus — patterns near this prompt.",
+      "quoteIds": [
+        "day_2-s0011"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-2",
+      "tier": "sprout",
+      "label": "Think",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (102 mentions).",
+      "quoteIds": [
+        "day_1-s0006",
+        "day_1-s0063",
+        "day_1-s0144"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-5",
+      "tier": "sprout",
+      "label": "People",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (71 mentions).",
+      "quoteIds": [
+        "day_1-s0115",
+        "day_1-s0224",
+        "day_1-s0262"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-6",
+      "tier": "sprout",
+      "label": "There's",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (67 mentions).",
+      "quoteIds": [
+        "day_1-s0094",
+        "day_1-s0115",
+        "day_1-s0212"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-7",
+      "tier": "sprout",
+      "label": "That's",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (63 mentions).",
+      "quoteIds": [
+        "day_1-s0027",
+        "day_1-s0059",
+        "day_1-s0098"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-9",
+      "tier": "seed",
+      "label": "We're",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (54 mentions).",
+      "quoteIds": [
+        "day_1-s0017",
+        "day_1-s0144",
+        "day_1-s0146"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-10",
+      "tier": "seed",
+      "label": "Don't",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (48 mentions).",
+      "quoteIds": [
+        "day_1-s0032",
+        "day_1-s0042",
+        "day_1-s0051"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-12",
+      "tier": "seed",
+      "label": "Conversation",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (46 mentions).",
+      "quoteIds": [
+        "day_1-s0025",
+        "day_1-s0072",
+        "day_1-s0073"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-13",
+      "tier": "seed",
+      "label": "Something",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (45 mentions).",
+      "quoteIds": [
+        "day_1-s0095",
+        "day_1-s0124",
+        "day_1-s0409"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-15",
+      "tier": "seed",
+      "label": "Different",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (44 mentions).",
+      "quoteIds": [
+        "day_1-s0081",
+        "day_1-s0276",
+        "day_1-s0278"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-16",
+      "tier": "seed",
+      "label": "Actually",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (43 mentions).",
+      "quoteIds": [
+        "day_1-s0062",
+        "day_1-s0090",
+        "day_1-s0091"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-17",
+      "tier": "seed",
+      "label": "Would",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (42 mentions).",
+      "quoteIds": [
+        "day_1-s0040",
+        "day_1-s0076",
+        "day_1-s0081"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-18",
+      "tier": "seed",
+      "label": "Right",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (42 mentions).",
+      "quoteIds": [
+        "day_1-s0085",
+        "day_1-s0099",
+        "day_1-s0267"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-19",
+      "tier": "seed",
+      "label": "Things",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (40 mentions).",
+      "quoteIds": [
+        "day_1-s0008",
+        "day_1-s0031",
+        "day_1-s0121"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "ai-sprout-24",
+      "tier": "seed",
+      "label": "You're",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Recurring term in the redacted transcript (36 mentions).",
+      "quoteIds": [
+        "day_1-s0078",
+        "day_1-s0097",
+        "day_1-s0100"
+      ],
+      "liveNodeIds": []
+    }
+  ],
+  "vines": [
+    {
+      "id": "ai-vine-1",
+      "sourceId": "ai-sprout-2",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-2",
+      "sourceId": "ai-sprout-5",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-3",
+      "sourceId": "ai-sprout-6",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-4",
+      "sourceId": "ai-sprout-7",
+      "targetId": "ai-theme-1",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-5",
+      "sourceId": "ai-sprout-9",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-6",
+      "sourceId": "ai-sprout-10",
+      "targetId": "ai-theme-1",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-7",
+      "sourceId": "ai-sprout-12",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-8",
+      "sourceId": "ai-sprout-13",
+      "targetId": "ai-theme-1",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-9",
+      "sourceId": "ai-sprout-15",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-10",
+      "sourceId": "ai-sprout-16",
+      "targetId": "ai-theme-1",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-11",
+      "sourceId": "ai-sprout-17",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-12",
+      "sourceId": "ai-sprout-18",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-vine-13",
+      "sourceId": "ai-sprout-19",
+      "targetId": "ai-theme-1",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-vine-14",
+      "sourceId": "ai-sprout-24",
+      "targetId": "ai-theme-1",
+      "kind": "grows_into"
+    },
+    {
+      "id": "ai-theme-vine-1",
+      "sourceId": "ai-theme-1",
+      "targetId": "ai-theme-2",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-2",
+      "sourceId": "ai-theme-2",
+      "targetId": "ai-theme-3",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-3",
+      "sourceId": "ai-theme-3",
+      "targetId": "ai-theme-4",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-4",
+      "sourceId": "ai-theme-4",
+      "targetId": "ai-theme-5",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-5",
+      "sourceId": "ai-theme-5",
+      "targetId": "ai-theme-6",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-6",
+      "sourceId": "ai-theme-6",
+      "targetId": "ai-theme-7",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-7",
+      "sourceId": "ai-theme-7",
+      "targetId": "ai-theme-8",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-8",
+      "sourceId": "ai-theme-8",
+      "targetId": "ai-theme-9",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-9",
+      "sourceId": "ai-theme-9",
+      "targetId": "ai-theme-10",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-10",
+      "sourceId": "ai-theme-10",
+      "targetId": "ai-theme-11",
+      "kind": "relates_to"
+    },
+    {
+      "id": "ai-theme-vine-11",
+      "sourceId": "ai-theme-11",
+      "targetId": "ai-theme-12",
+      "kind": "relates_to"
+    }
+  ]
+}

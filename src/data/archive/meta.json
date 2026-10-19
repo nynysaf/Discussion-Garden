@@ -1,0 +1,37 @@
+{
+  "hoursTalkApprox": 12,
+  "segmentCount": 1988,
+  "voiceCounts": {
+    "Frog": 467,
+    "Bird": 454,
+    "Ladybug": 312,
+    "Butterfly": 258,
+    "Bee": 117,
+    "Caterpillar": 92,
+    "Hedgehog": 87,
+    "Snail": 98,
+    "Owl": 42,
+    "Rabbit": 34,
+    "Turtle": 18,
+    "Squirrel": 9
+  },
+  "dayCounts": {
+    "day_1": 990,
+    "day_2": 998
+  },
+  "inquiryCount": 19,
+  "liveGardenNodes": 23,
+  "liveGardenVines": 20,
+  "attention": {
+    "present": 121,
+    "unclear": 1652,
+    "future": 66,
+    "past": 113,
+    "mixed": 36
+  },
+  "contact": {
+    "unclear": 1921,
+    "contact": 57,
+    "noise": 10
+  }
+}

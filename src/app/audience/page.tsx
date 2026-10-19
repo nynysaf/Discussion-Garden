@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { FestivalConcluded } from "@/components/archive/FestivalConcluded";
+import { isFestivalLive } from "@/lib/festival-live";
 import { AudienceForm } from "@/components/audience/AudienceForm";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,12 +12,14 @@ async function submissionsOpen(): Promise<boolean> {
     const { data } = await supabase.from("app_state").select("submissions_open").maybeSingle();
     return data?.submissions_open !== false;
   } catch {
-    // If the check fails, show the form; the server route still enforces the switch.
     return true;
   }
 }
 
 export default async function AudiencePage() {
+  if (!isFestivalLive()) {
+    return <FestivalConcluded formerRole="phone audience form" />;
+  }
   const open = await submissionsOpen();
   return (
     <main className="mx-auto w-full max-w-md px-5 py-10">

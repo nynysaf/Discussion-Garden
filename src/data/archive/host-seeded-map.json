@@ -1,0 +1,174 @@
+{
+  "layer": "host",
+  "title": "Host reading",
+  "caption": "Themes the host found most meaningful after holding the room — presence, signal vs noise, threshold, and the path from dialogue toward action.",
+  "nodes": [
+    {
+      "id": "host-theme-signal",
+      "tier": "theme",
+      "label": "Signal vs noise",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "The anchoring question of the weekend: how do we separate distraction from what deserves attention — in news, in rooms, and in our own speech?",
+      "quoteIds": [
+        "day_1-s0336",
+        "day_1-s0478",
+        "day_1-s0722",
+        "day_1-s0726"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-theme-aporia",
+      "tier": "theme",
+      "label": "Entering not-knowing",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Aporia — slowing into the unknown together — versus monologues and solutions-mode that keep everyone inside ideas they already carried in.",
+      "quoteIds": [
+        "day_1-s0042",
+        "day_1-s0043",
+        "day_1-s0051"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-theme-threshold",
+      "tier": "theme",
+      "label": "The threshold",
+      "weight": 4,
+      "originSessionId": "day_1",
+      "essay": "Pebble as seed, silence before speech, humid air upstairs — designing an entrance that asks for intention and listening.",
+      "quoteIds": [
+        "day_1-s0278",
+        "day_1-s0933",
+        "day_2-s0032"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-theme-contact",
+      "tier": "theme",
+      "label": "Contact",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "Dialogue as contact improv: speaking into the shared middle with intention, feeling one another, not only reporting individual experience.",
+      "quoteIds": [
+        "day_1-s0146",
+        "day_1-s0302",
+        "day_1-s0436"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-theme-presence",
+      "tier": "theme",
+      "label": "Presence in time",
+      "weight": 4,
+      "originSessionId": "day_2",
+      "essay": "How often did we speak into past, present, or future? Creating futures may need competence in the present — and imagination grounded in how the world works.",
+      "quoteIds": [
+        "day_1-s0286",
+        "day_1-s0802",
+        "day_1-s0007",
+        "day_1-s0045"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-theme-action",
+      "tier": "theme",
+      "label": "Dialogue to action",
+      "weight": 4,
+      "originSessionId": null,
+      "essay": "Resonance in a room does not carry itself into action. Presence is one link; deciding, committing, and following up need structure the garden only began to offer.",
+      "quoteIds": [
+        "day_1-s0925",
+        "day_1-s0927",
+        "day_1-s0051",
+        "day_1-s0269"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-sprout-agreement",
+      "tier": "sprout",
+      "label": "Agreement as small talk",
+      "weight": 3,
+      "originSessionId": "day_1",
+      "essay": "Shared critique of capitalism and scarcity can feel deep and still stay inside familiar steps — trust-building warm-up, or stuck confirmation?",
+      "quoteIds": [],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-sprout-art",
+      "tier": "sprout",
+      "label": "Dialogue as art",
+      "weight": 3,
+      "originSessionId": null,
+      "essay": "Intention woven into speech — like a fashion collection that carries purpose — without demanding that every tentative voice arrive polished.",
+      "quoteIds": [
+        "day_1-s0094",
+        "day_1-s0096"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "host-seed-body",
+      "tier": "seed",
+      "label": "Body as instrument",
+      "weight": 2,
+      "originSessionId": null,
+      "essay": "Listening for bodily signals among the noise — one input alongside words, status, fatigue, and habit.",
+      "quoteIds": [
+        "day_1-s0074",
+        "day_1-s0094"
+      ],
+      "liveNodeIds": []
+    }
+  ],
+  "vines": [
+    {
+      "id": "hv1",
+      "sourceId": "host-seed-body",
+      "targetId": "host-theme-contact",
+      "kind": "grows_into"
+    },
+    {
+      "id": "hv2",
+      "sourceId": "host-sprout-agreement",
+      "targetId": "host-theme-aporia",
+      "kind": "relates_to"
+    },
+    {
+      "id": "hv3",
+      "sourceId": "host-sprout-art",
+      "targetId": "host-theme-signal",
+      "kind": "grows_into"
+    },
+    {
+      "id": "hv4",
+      "sourceId": "host-theme-threshold",
+      "targetId": "host-theme-contact",
+      "kind": "grows_into"
+    },
+    {
+      "id": "hv5",
+      "sourceId": "host-theme-presence",
+      "targetId": "host-theme-action",
+      "kind": "grows_into"
+    },
+    {
+      "id": "hv6",
+      "sourceId": "host-theme-signal",
+      "targetId": "host-theme-aporia",
+      "kind": "relates_to"
+    },
+    {
+      "id": "hv7",
+      "sourceId": "host-theme-contact",
+      "targetId": "host-theme-action",
+      "kind": "grows_into"
+    }
+  ]
+}

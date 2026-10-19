@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s · Discussion Garden",
   },
   description:
-    "Live captions and a growing garden of ideas for the We Create Our Futures festival.",
+    "Discussion Garden — festival archive from We Create Our Futures: explore the garden of ideas, dual AI/host readings, and a redacted transcript.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

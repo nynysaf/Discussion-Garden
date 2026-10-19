@@ -34,3 +34,7 @@ next-env.d.ts
 *.webm
 *.m4a
 exports/
+
+# Raw festival recordings + unredacted transcripts (local only)
+Recordings & Transcripts/
+scripts/archive/private/

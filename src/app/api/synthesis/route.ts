@@ -1,10 +1,15 @@
 import { checkHost } from "@/lib/auth/host";
+import { FESTIVAL_ENDED_MESSAGE, isFestivalLive } from "@/lib/festival-live";
 import { createClient } from "@/lib/supabase/server";
 import { runSynthesis, SynthesisError } from "@/lib/synthesis/run";
 
 export const maxDuration = 30;
 
 export async function POST() {
+  if (!isFestivalLive()) {
+    return Response.json({ error: FESTIVAL_ENDED_MESSAGE }, { status: 410 });
+  }
+
   // Hosts only — otherwise anyone on the public site could spend the OpenAI credit.
   const host = await checkHost();
   if (host.status !== "host") {

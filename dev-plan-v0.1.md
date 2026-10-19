@@ -1,7 +1,7 @@
 # Discussion Garden — Development & Implementation Plan
 
 **Version:** 0.1  
-**Last updated:** 2026-10-01 (repo moved to `C:\dev\Discussion-Garden`; full C: drive found + partly cleared; user testing of Phases 1/3 still pending)  
+**Last updated:** 2026-10-19 (Phase 9 post-festival archive / portfolio shipped on `main`)  
 **Target tool:** Cursor (AI coding assistant)  
 **Tech stack:** Next.js (App Router) · Tailwind CSS v4 · Supabase (Postgres, Auth, Realtime) · Vercel · Deepgram (streaming STT) · OpenAI (synthesis) · `d3-force`  
 **Companion docs:** `prd-v0.2.md` (product) · `DESIGN_GUIDE.md` (visual)  
@@ -93,30 +93,18 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 | 6 — Hybrid AI | 6.1 + 6.2 done 2026-10-05; **6.3 timer shipped 2026-10-15** (user browser check pending for 6.2 + 6.3) |
 | 6B — `/captions` views | Done — Garden · Both · Captions · **Highlight** + auto-rotate playlist, user-verified on production 2026-10-14 |
 | `/admin` polish | Done — status bar, two columns, shared panel set, user-verified on production 2026-10-14 |
-| 7 → 8 | Not started |
+| 7 → 8 | Festival complete; export/hardening partly superseded by Phase 9 archive |
+| **9 — Post-festival archive** | **Shipped 2026-10-19** — portfolio home, dual-map `/explore`, redacted transcript, harvest pages, `FESTIVAL_LIVE` freeze |
 
 ### ▶ Resume here (next session)
-**1. Start the machine back up** (agent runs these, from **`C:\dev\Discussion-Garden`** — the old OneDrive copy is retired):
-- Check free space on C: first (`Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"`). Under ~5 GB free → Docker breaks; tell the user before doing anything else.
-- Start **Docker Desktop**, then `npm run db:start` (local Supabase; data persists in Docker volumes).
-- `npm run dev`. If pages hang or 404: stop it, delete `.next`, run again. Gotcha: if another project's dev server already holds port 3000, Next quietly moves this app to 3001 — check the port it prints (`netstat -ano | findstr :3000` shows the owner).
-- Sanity: `npm test` (201 pass) and `npm run db:check` (23/23). Against hosted: `npm run hosted -- scripts/check-access.mjs`.
+**Phase 9 is live in the codebase.** Start with `npm run dev` → open `/`, `/explore`, `/explore/transcript`. Confirm Vercel has **no** `FESTIVAL_LIVE=true` (unset or `false`).
 
-**2. Testing notes:**
-- Open `/admin` at **`http://localhost:3000`** (mic needs a secure page). Phones/TVs use the LAN IP (`http://10.0.0.141:3000`; re-check with `Get-NetIPAddress` if Wi-Fi changed). Phone can't connect → turn off the VPN (ProTUN), allow Node through Windows Firewall.
-- Local `/admin` login: `host@example.com` (password reset 2026-10-05; the user has it — never write it here), or reset one with `npm run host:add -- email "password"`. (A throwaway `agent-test@example.com` also exists on **local** only.)
-- Demo garden (made-up labels, **local DB only** — the script refuses any non-127.0.0.1 URL): `npm run garden:demo -- 15`, `-- 150`, or `-- clear`. Demo nodes are tagged `description = '[demo]'`; clear only removes those. The local DB currently holds 14 demo ideas (left over from the 5B merge/delete test). The hosted garden is empty.
-- Headless screenshot check: `msedge --headless=new --hide-scrollbars --force-prefers-reduced-motion --window-size=1920,1080 --virtual-time-budget=15000 --screenshot=...` (reduced motion, or the 600 ms grow-in gets caught half-faded). Headless Edge leaves an empty strip at the right/bottom of the garden box (it measures before its final resize) — check in a real browser before "fixing" it.
+**Host polish (optional):**
+- Edit `src/data/archive/host-seeded-map.json` to refine themes/essays/quotes after your own pass through the transcripts.
+- Re-run `npm run hosted -- scripts/archive/export-garden.mjs` then `npm run archive:build` if the hosted garden changes (review redaction output before commit).
+- Spot-check redacted transcript for any name the NAME_PATTERNS list missed; extend `scripts/archive/lib.mjs` and rebuild.
 
-**3. Phase 5 is done** (day-switch check user-verified 2026-10-05).
-
-**4. First:** if the user hasn't reported it yet, ask how the **6.2 AI drafts panel browser check** went (checklist in the 2026-10-05 6.2 entry). **Hosted Supabase pauses after ~7 days without traffic** — open production before Fri Oct 16.
-**5. Next session (user's plan, 2026-10-14):** **polish the `/captions` screen UI** — ask the user what they want changed first. After that: **Phase 6.3 — automatic timer**: call `requestSuggestions()` (`src/lib/synthesis/drafts-db.ts`) every ~35 s from the tab that owns the mic (`useHostCaptions` / controller lock), only while `audio_status = live` and mode ≠ Manual; skip a tick if the previous call is still running; show the result/error with the same non-blocking notice as "Suggest now"; switching to Manual stops it at once. Captions must never wait on it.
-- Test without a mic: set Hybrid, `npm run transcript:demo -- 1` (then `-- 2` for a stretch that revisits ideas; `-- clear` removes it), press "Suggest now". The AI only reads talk from the **last 10 minutes** since the previous successful run, so re-add sample talk if it says "Not enough new talk".
-
-**6. Session 2026-10-15 plan:** (a)–(b) caption splitting + TV broadcast fix **user-verified**. (c)–(f) + Phase 6.3 **shipped 2026-10-15** (agent-tested with unit tests; user browser check pending): caption font slider; download transcript; save audio to laptop; `/captions/lab`; Hybrid/Auto auto-suggest ~35s on mic tab. **User:** hard-refresh production after deploy; try slider on TV screen panel; Download transcript; lab at `/captions/lab`; optional local audio; Hybrid + Live for timer.
-
-**Open decisions for the user:** real festival schedule · deleting the old OneDrive repo copy and other large folders (see Blocked / open).
+**Re-enable live tools only for rehearsal:** set `FESTIVAL_LIVE=true` in `.env.local` / Vercel, restart.
 
 ### Festival facts (fill in)
 - Festival: **Fri Oct 16 – Sun Oct 18, 2026**
@@ -128,6 +116,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Production URL: **https://discussion-garden.vercel.app** (Vercel project `discussion-garden`, deploys every push to `main`)
 
 ### Shipped
+- 2026-10-19 — **Phase 9 — post-festival archive / portfolio.** `FESTIVAL_LIVE` freeze (API 410s); portfolio `/`; dual-map `/explore` (live snapshot · AI · host); redacted transcript + movements + word cloud; glossary / tensions / facilitation / method / workshop; `scripts/archive/*` + `src/data/archive/*`; raw `Recordings & Transcripts/` gitignored. 234 unit tests; production build clean.
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
 - 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + key created (key lives only in `.env.local`).
 - 2026-09-30 — **Caption pipeline (Phase 2A + 2B code):**
@@ -351,6 +340,15 @@ No fixed calendar — we build in this order as time allows and see how far we g
 
 ### Phase 8 — Nice to have (only if ahead)
 - [ ] Auto mode polish · day tint/filter on the garden · growth timelapse (both days) for the Sunday close.
+
+### Phase 9 — Post-festival analysis & portfolio (2026-10-19)
+- [x] Gitignore `Recordings & Transcripts/` + `scripts/archive/private/`; `FESTIVAL_LIVE` flag (default off)
+- [x] Garden snapshot export (`npm run hosted -- scripts/archive/export-garden.mjs`) → `src/data/archive/garden-snapshot.json`
+- [x] Offline archive pipeline (`npm run archive:build`) — redact, movements, meta, wordcloud, AI map, host map, harvest JSON
+- [x] Freeze `/api/deepgram-token`, `/api/synthesis`, `/api/submissions` → 410 when not live; TV/audience “festival concluded” pages
+- [x] Portfolio home + `/explore` dual maps (live · AI · host) + transcript / movements / words
+- [x] Glossary, tensions, facilitation scorecard, method essay, workshop kit
+- [x] PRD v0.2.15 + this §4/§5 update
 
 ### 5.9 Cut lines if behind
 1. Drop Phase 8 entirely.

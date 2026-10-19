@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
+import { FESTIVAL_ENDED_MESSAGE, isFestivalLive } from "@/lib/festival-live";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   checkRateLimit,
@@ -25,6 +26,10 @@ function tooFast(retryAfterSec: number, message: string) {
 }
 
 export async function POST(request: Request) {
+  if (!isFestivalLive()) {
+    return reply(410, { error: FESTIVAL_ENDED_MESSAGE });
+  }
+
   let input: unknown;
   try {
     const raw = await request.text();

@@ -22,7 +22,14 @@ const FALLBACK_FILL: Record<Tier, string> = {
 
 const NO_NODES: Garden["nodes"] = [];
 
-type Props = { garden: Garden; hidden?: boolean; className?: string };
+type Props = {
+  garden: Garden;
+  hidden?: boolean;
+  className?: string;
+  /** When set, nodes are clickable (explore / portfolio). */
+  selectedId?: string | null;
+  onSelectNode?: (id: string) => void;
+};
 
 type LayoutState = {
   nodes: Garden["nodes"] | null;
@@ -34,7 +41,13 @@ type LayoutState = {
 };
 
 /** Read-only garden drawing (DESIGN_GUIDE §6). Lays out once per change, then holds still. */
-export function GardenCanvas({ garden, hidden = false, className = "" }: Props) {
+export function GardenCanvas({
+  garden,
+  hidden = false,
+  className = "",
+  selectedId = null,
+  onSelectNode,
+}: Props) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   // `memory` is the last layout as canvas fractions, so existing nodes stay put when the garden grows.
@@ -143,13 +156,38 @@ export function GardenCanvas({ garden, hidden = false, className = "" }: Props) 
             const spriteSize = p.r * 2.3;
             const fontSize = labelFontSize(node.tier, scale);
             const lines = labels.get(node.id);
+            const selected = selectedId === node.id;
+            const interactive = Boolean(onSelectNode);
             return (
               <g
                 key={node.id}
-                className="garden-node"
+                className={`garden-node ${interactive ? "cursor-pointer" : ""}`}
                 style={{ transform: `translate(${p.x}px, ${p.y}px)` }}
+                role={interactive ? "button" : undefined}
+                tabIndex={interactive ? 0 : undefined}
+                aria-pressed={interactive ? selected : undefined}
+                aria-label={interactive ? node.label : undefined}
+                onClick={interactive ? () => onSelectNode?.(node.id) : undefined}
+                onKeyDown={
+                  interactive
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onSelectNode?.(node.id);
+                        }
+                      }
+                    : undefined
+                }
               >
                 <g className="garden-grow">
+                  {selected && (
+                    <circle
+                      r={p.r + 6}
+                      className="fill-none stroke-festival-forest"
+                      strokeWidth={2}
+                      opacity={0.85}
+                    />
+                  )}
                   {brokenSprites.has(sprite) ? (
                     <circle
                       r={p.r}
