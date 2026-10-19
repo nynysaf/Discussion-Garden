@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-10-19T15:56:52.693Z",
+  "exportedAt": "2026-10-19T16:03:42.304Z",
   "enrichedWith": "gpt-4o-mini",
   "words": [
     {
@@ -133,6 +133,19 @@
       ]
     },
     {
+      "term": "collective action",
+      "weight": 12,
+      "segmentIds": [
+        "day_2-s0186",
+        "day_2-s0866"
+      ]
+    },
+    {
+      "term": "active listening",
+      "weight": 11,
+      "segmentIds": []
+    },
+    {
       "term": "what's",
       "weight": 10.8,
       "segmentIds": [
@@ -177,6 +190,16 @@
       ]
     },
     {
+      "term": "community resilience",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
+      "term": "transformative dialogue",
+      "weight": 10,
+      "segmentIds": []
+    },
+    {
       "term": "they're",
       "weight": 9.6,
       "segmentIds": [
@@ -187,6 +210,16 @@
         "day_1-s0615",
         "day_1-s0635"
       ]
+    },
+    {
+      "term": "participatory governance",
+      "weight": 9,
+      "segmentIds": []
+    },
+    {
+      "term": "hacking through barriers",
+      "weight": 9,
+      "segmentIds": []
     },
     {
       "term": "around",
@@ -229,6 +262,16 @@
         "day_1-s0845",
         "day_1-s0866"
       ]
+    },
+    {
+      "term": "infrastructure for collaboration",
+      "weight": 8,
+      "segmentIds": []
+    },
+    {
+      "term": "childlike creativity",
+      "weight": 8,
+      "segmentIds": []
     },
     {
       "term": "violence",
@@ -682,44 +725,6 @@
       ]
     },
     {
-      "term": "collective action",
-      "weight": 5,
-      "segmentIds": [
-        "day_2-s0186",
-        "day_2-s0866"
-      ]
-    },
-    {
-      "term": "community resilience",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
-      "term": "dialogue toward action",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
-      "term": "transformational healing",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
-      "term": "emotional discomfort",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
-      "term": "democracy in action",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
-      "term": "solar infrastructure",
-      "weight": 5,
-      "segmentIds": []
-    },
-    {
       "term": "connection",
       "weight": 4.8,
       "segmentIds": [
@@ -753,18 +758,6 @@
         "day_2-s0341",
         "day_2-s0344",
         "day_2-s0345"
-      ]
-    },
-    {
-      "term": "trying",
-      "weight": 4.8,
-      "segmentIds": [
-        "day_1-s0127",
-        "day_1-s0449",
-        "day_1-s0961",
-        "day_2-s0062",
-        "day_2-s0071",
-        "day_2-s0072"
       ]
     }
   ]

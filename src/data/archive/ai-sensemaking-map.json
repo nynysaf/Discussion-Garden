@@ -6,25 +6,25 @@
     {
       "id": "theme_1",
       "tier": "theme",
-      "label": "Presence and Engagement",
-      "weight": 5,
+      "label": "Dialogue Toward Action",
+      "weight": 8,
       "originSessionId": null,
-      "essay": "The dialogue emphasized the importance of being present and engaged in discussions, highlighting how this presence can lead to deeper connections and understanding within the community. Participants expressed a desire for genuine interaction, which fosters collaboration and collective action.",
+      "essay": "The festival dialogue emphasized the importance of transforming conversations into actionable steps. Participants expressed a desire for discussions that not only highlight issues but also lead to tangible solutions and community engagement.",
       "quoteIds": [
-        "day_2-s0115",
-        "day_2-s0861"
+        "day_1-s0851",
+        "day_2-s0187"
       ],
       "liveNodeIds": []
     },
     {
       "id": "theme_2",
       "tier": "theme",
-      "label": "Healing and Transformation",
-      "weight": 5,
+      "label": "Presence and Listening",
+      "weight": 8,
       "originSessionId": null,
-      "essay": "A recurring theme in the conversations was the need for healing and personal transformation. Participants shared their struggles with internal patterns and the desire to rebuild themselves, indicating a collective yearning for growth and change.",
+      "essay": "A recurring theme was the need for genuine presence and active listening in conversations. This focus on being fully engaged allows for deeper connections and more meaningful exchanges among participants.",
       "quoteIds": [
-        "day_1-s0563",
+        "day_2-s0115",
         "day_2-s0645"
       ],
       "liveNodeIds": []
@@ -32,74 +32,87 @@
     {
       "id": "theme_3",
       "tier": "theme",
-      "label": "Dialogue Toward Action",
-      "weight": 5,
+      "label": "Community and Healing",
+      "weight": 8,
       "originSessionId": null,
-      "essay": "The discussions revolved around the idea that dialogue should lead to actionable outcomes. Participants recognized the need for constructive conversations that not only address issues but also inspire collaborative efforts towards solutions.",
+      "essay": "The discussions highlighted the role of community in fostering healing and resilience. Participants shared insights on how collective experiences can lead to personal and communal growth, addressing shared challenges.",
       "quoteIds": [
-        "day_1-s0827",
-        "day_2-s0187"
+        "day_1-s0563",
+        "day_2-s0645"
       ],
       "liveNodeIds": []
     },
     {
       "id": "sprout_1",
       "tier": "sprout",
-      "label": "Community Resilience",
-      "weight": 3,
+      "label": "Framework for Collaboration",
+      "weight": 7,
       "originSessionId": null,
-      "essay": "The concept of community resilience emerged as participants discussed the role of infrastructure, like libraries, in supporting vibrant and sustainable communities. This highlights the interconnectedness of social structures and community well-being.",
+      "essay": "The idea of establishing frameworks for collaboration emerged as essential for effective dialogue. Participants recognized that structured approaches can enhance the quality of discussions and lead to better outcomes.",
       "quoteIds": [
-        "day_1-s0635"
+        "day_1-s0251",
+        "day_2-s0187"
       ],
       "liveNodeIds": []
     },
     {
       "id": "sprout_2",
       "tier": "sprout",
-      "label": "Collective Healing Practices",
-      "weight": 3,
+      "label": "Hacking Through Barriers",
+      "weight": 6,
       "originSessionId": null,
-      "essay": "Participants explored the idea of collective healing practices, suggesting that shared experiences and discussions can facilitate personal and communal healing. This reflects a growing recognition of the importance of mental and emotional well-being in community dynamics.",
+      "essay": "Participants discussed the metaphor of 'hacking through barriers' as a necessary process to achieve meaningful dialogue and collaboration. This concept reflects the challenges faced in breaking down existing structures that hinder progress.",
       "quoteIds": [
-        "day_1-s0467",
-        "day_2-s0645"
+        "day_2-s0259",
+        "day_2-s0356"
+      ],
+      "liveNodeIds": []
+    },
+    {
+      "id": "sprout_3",
+      "tier": "sprout",
+      "label": "Resilient Infrastructure",
+      "weight": 5,
+      "originSessionId": null,
+      "essay": "The conversation around libraries as infrastructure for resilient cities highlighted the importance of community resources in fostering collaboration and support. This concept underscores the role of physical spaces in nurturing dialogue and action.",
+      "quoteIds": [
+        "day_1-s0635"
       ],
       "liveNodeIds": []
     },
     {
       "id": "seed_1",
       "tier": "seed",
-      "label": "Democracy in Action",
-      "weight": 2,
+      "label": "Solarpump Vibe Coded App",
+      "weight": 4,
       "originSessionId": null,
-      "essay": "The dialogue touched on the potential for democracy to function more effectively through community engagement and discussion. This seed represents the idea that active participation can enhance democratic processes.",
+      "essay": "The mention of a 'Solarpump Vibe Coded app' symbolizes innovative approaches to community engagement and environmental sustainability. It represents a fusion of technology and grassroots initiatives aimed at fostering collaboration.",
       "quoteIds": [
-        "day_1-s0851"
+        "day_2-s0019"
       ],
       "liveNodeIds": []
     },
     {
       "id": "seed_2",
       "tier": "seed",
-      "label": "Solar Infrastructure",
-      "weight": 2,
+      "label": "Democracy in Action",
+      "weight": 4,
       "originSessionId": null,
-      "essay": "The mention of solar infrastructure as a visual and functional element in community planning illustrates the integration of sustainable practices into everyday life. This seed symbolizes the intersection of technology and environmental consciousness.",
+      "essay": "The call for a community-based discussion around democracy reflects a desire for participatory governance. This seed emphasizes the importance of involving diverse voices in decision-making processes.",
       "quoteIds": [
-        "day_1-s0971"
+        "day_1-s0827"
       ],
       "liveNodeIds": []
     },
     {
       "id": "seed_3",
       "tier": "seed",
-      "label": "Emotional Discomfort",
-      "weight": 2,
+      "label": "Childlike Rebuilding",
+      "weight": 3,
       "originSessionId": null,
-      "essay": "Participants acknowledged the role of emotional discomfort in prompting change and action. This seed highlights the importance of confronting uncomfortable feelings as a catalyst for growth and transformation.",
+      "essay": "The concept of 'rebuilding like a child' evokes a sense of creativity and openness to new possibilities. It encourages participants to approach challenges with a fresh perspective and a willingness to learn.",
       "quoteIds": [
-        "day_2-s0741"
+        "day_1-s0563"
       ],
       "liveNodeIds": []
     }
@@ -113,27 +126,33 @@
     },
     {
       "id": "vine_2",
-      "sourceId": "theme_2",
+      "sourceId": "theme_1",
       "targetId": "sprout_2",
       "kind": "grows_into"
     },
     {
       "id": "vine_3",
+      "sourceId": "theme_2",
+      "targetId": "sprout_3",
+      "kind": "grows_into"
+    },
+    {
+      "id": "vine_4",
       "sourceId": "theme_3",
       "targetId": "seed_1",
       "kind": "grows_into"
     },
     {
-      "id": "vine_4",
-      "sourceId": "sprout_1",
+      "id": "vine_5",
+      "sourceId": "theme_3",
       "targetId": "seed_2",
-      "kind": "relates_to"
+      "kind": "grows_into"
     },
     {
-      "id": "vine_5",
-      "sourceId": "sprout_2",
+      "id": "vine_6",
+      "sourceId": "theme_3",
       "targetId": "seed_3",
-      "kind": "relates_to"
+      "kind": "grows_into"
     }
   ]
 }

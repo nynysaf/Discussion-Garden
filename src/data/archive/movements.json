@@ -1,12 +1,12 @@
 {
-  "exportedAt": "2026-10-19T15:56:45.891Z",
+  "exportedAt": "2026-10-19T16:03:32.200Z",
   "enrichedWith": "gpt-4o-mini",
   "movements": [
     {
       "id": "day_1-m0",
       "day": "day_1",
       "title": "Designing Environments for Health and Well-Being",
-      "summary": "Participants discussed the importance of designing community spaces that promote health and social connection. They explored how elements like streetlights, sidewalks, and landscaping can influence daily perceptions and overall well-being. The conversation highlighted the need for thoughtful design to enhance community health outcomes.",
+      "summary": "Participants discussed how the design of our environments impacts health and well-being. The conversation highlighted the importance of integrating elements like walking paths and social spaces into community planning. Tensions arose around the effectiveness of current designs and the need for more inclusive approaches that consider diverse community needs.",
       "segmentIds": [
         "day_1-s0003",
         "day_1-s0004",
@@ -76,7 +76,7 @@
       "day": "day_1",
       "title": "Building Thriving Business Strategies",
       "inquiry": "How do we build businesses that lead to thriving?",
-      "summary": "The dialogue shifted to the concept of creating businesses that foster community well-being and resilience. Participants engaged in a meta conversation about the importance of honest feedback in business interactions, emphasizing the need for open communication to build trust and collaboration.",
+      "summary": "The dialogue focused on the foundational elements required for businesses to thrive within communities. Participants explored the significance of feedback and open communication in business relationships. Tensions emerged regarding the balance between constructive criticism and maintaining positive interactions.",
       "segmentIds": [
         "day_1-s0069",
         "day_1-s0070",
@@ -88,9 +88,9 @@
     {
       "id": "day_1-m2",
       "day": "day_1",
-      "title": "Setting the Stage for Authentic Conversations",
+      "title": "Setting Up for Authentic Conversations",
       "inquiry": "The meta conversation: how do we set up for a creat conversation?",
-      "summary": "Participants explored the dynamics of initiating authentic conversations, focusing on the importance of emotional check-ins and recognizing barriers to connection. The discussion highlighted the need for creating safe spaces where individuals can express their true feelings and experiences without fear of judgment.",
+      "summary": "This stretch explored the concept of 'meta conversations' and how to create spaces for authentic dialogue. Participants emphasized the need for honesty and vulnerability in discussions to foster deeper connections. The conversation revealed tensions between the desire for open communication and the fear of negative feedback.",
       "segmentIds": [
         "day_1-s0074",
         "day_1-s0075",
@@ -646,7 +646,7 @@
       "day": "day_1",
       "title": "Individual and Collective Resilience Dynamics",
       "inquiry": "How does individual resilience support/hinder collective reslience?",
-      "summary": "The conversation touched on the interplay between individual resilience and its impact on collective resilience within communities. Participants reflected on how personal strengths and challenges can either support or hinder group dynamics and community recovery.",
+      "summary": "Participants examined the relationship between individual resilience and its impact on collective resilience. The dialogue highlighted how personal struggles can both support and hinder group dynamics. Tensions surfaced around the varying capacities of individuals to contribute to collective efforts.",
       "segmentIds": []
     },
     {
@@ -654,7 +654,7 @@
       "day": "day_1",
       "title": "Identifying What to Release for Growth",
       "inquiry": "How will we know what we need to give up? To let go of?",
-      "summary": "This segment focused on the difficult process of identifying and letting go of things that no longer serve personal or community growth. Participants shared insights on the emotional challenges associated with release and the potential for new beginnings.",
+      "summary": "The conversation centered on the challenges of identifying what to let go of in order to foster personal and community growth. Participants reflected on the emotional weight of attachments and the fear of change. Tensions emerged around the difficulty of making these decisions and the potential consequences.",
       "segmentIds": []
     },
     {
@@ -662,7 +662,7 @@
       "day": "day_1",
       "title": "Finding Common Ground in Discomforts",
       "inquiry": "Where do our discomforts overlap, what are the inviting in us?",
-      "summary": "Participants discussed the discomforts they face and how these shared experiences can lead to deeper connections. The dialogue emphasized the importance of recognizing and addressing discomfort as a pathway to understanding and collaboration within the community.",
+      "summary": "Participants sought to explore shared discomforts and their implications for community building. The dialogue revealed insights about the importance of acknowledging discomfort as a pathway to connection. Tensions arose regarding the varying degrees of discomfort experienced by individuals and how to navigate them collectively.",
       "segmentIds": [
         "day_1-s0624",
         "day_1-s0625",
@@ -1048,7 +1048,7 @@
       "day": "day_1",
       "title": "Scaling Regenerative Eco-Villages",
       "inquiry": "How to scale regenerative eco villages?",
-      "summary": "The conversation revolved around strategies for scaling regenerative eco-villages and the challenges involved in creating sustainable communities. Participants shared ideas on integrating ecological practices into community planning and the importance of collaboration among diverse stakeholders.",
+      "summary": "This stretch focused on the strategies necessary for scaling regenerative eco-villages. Participants discussed the potential benefits and challenges of such initiatives. Tensions emerged around the feasibility of scaling while maintaining the core values of sustainability and community engagement.",
       "segmentIds": []
     },
     {
@@ -1056,7 +1056,7 @@
       "day": "day_1",
       "title": "Balancing Masculine and Feminine Energies",
       "inquiry": "How can we play with both masculine and feminine energy?",
-      "summary": "This stretch explored the interplay of masculine and feminine energies in community dynamics. Participants reflected on how these energies can be balanced to foster inclusivity and collaboration in various initiatives.",
+      "summary": "The dialogue explored the interplay between masculine and feminine energies in community dynamics. Participants reflected on how these energies manifest in conversations and decision-making processes. Tensions arose around societal expectations and the need for balance in leadership styles.",
       "segmentIds": []
     },
     {
@@ -1064,7 +1064,7 @@
       "day": "day_1",
       "title": "Intentional Disturbance in Environments",
       "inquiry": "How do we intentionally disturb our environments?",
-      "summary": "The discussion focused on the concept of intentionally disturbing environments to foster growth and innovation. Participants considered how disruption can lead to new opportunities and the importance of embracing change within community spaces.",
+      "summary": "Participants discussed the concept of intentionally disturbing environments to foster growth and change. The conversation highlighted the potential benefits of disruption in creating new opportunities. Tensions surfaced regarding the risks associated with disturbance and the comfort of maintaining the status quo.",
       "segmentIds": []
     },
     {
@@ -1072,7 +1072,7 @@
       "day": "day_1",
       "title": "Understanding Current Entanglements in the Garden",
       "inquiry": "What entanglement is happening in this garden right?",
-      "summary": "This segment examined the complex relationships and entanglements present in the community garden. Participants reflected on how these connections influence interactions and the overall health of the community.",
+      "summary": "This stretch focused on the complexities of relationships and entanglements within the community. Participants shared insights about the interconnectedness of various issues and how they impact collective efforts. Tensions emerged around the challenges of addressing these entanglements effectively.",
       "segmentIds": []
     },
     {
@@ -1080,7 +1080,7 @@
       "day": "day_1",
       "title": "Awakening to Our Emotional Landscape",
       "inquiry": "How do we wake up to our feelings?",
-      "summary": "Participants engaged in a dialogue about the importance of recognizing and understanding their emotional landscapes. The conversation emphasized the need for emotional awareness as a foundation for personal and community growth.",
+      "summary": "The dialogue centered on the importance of recognizing and understanding our emotions. Participants explored how emotional awareness can enhance personal and community interactions. Tensions arose regarding the difficulty of expressing emotions in a supportive manner.",
       "segmentIds": []
     },
     {
@@ -1088,7 +1088,7 @@
       "day": "day_1",
       "title": "Exploring the Roots of Compassionate Engagement",
       "inquiry": "Where does 'give-a-shit-ness' come from?",
-      "summary": "This stretch focused on the origins of compassion and engagement within the community. Participants shared insights on what motivates them to care for others and how these motivations can be nurtured.",
+      "summary": "Participants delved into the origins of compassionate engagement within communities. The conversation highlighted the significance of empathy and understanding in fostering connections. Tensions emerged around the barriers that prevent individuals from fully engaging with compassion.",
       "segmentIds": []
     },
     {
@@ -1096,7 +1096,7 @@
       "day": "day_2",
       "title": "Morning Reflections and Insights",
       "inquiry": "What is present for us this morning?",
-      "summary": "As the second day began, participants reflected on their experiences from the previous day and what was present for them in the moment. The conversation highlighted the energy and insights gained from ongoing discussions and the anticipation of new possibilities.",
+      "summary": "This stretch began with reflections on the previous day's discussions and insights gained. Participants shared personal experiences that connected to the festival's themes, emphasizing the power of collective learning. Tensions arose around the varying levels of engagement and energy among participants.",
       "segmentIds": [
         "day_2-s0001",
         "day_2-s0002",
@@ -1352,7 +1352,7 @@
       "day": "day_2",
       "title": "Leading with Love in Conversations",
       "inquiry": "How do we lead with love?",
-      "summary": "Participants explored the concept of leading conversations with love and compassion, emphasizing the importance of tone and intention. The dialogue highlighted the need for creating spaces where diverse voices can contribute to collective understanding.",
+      "summary": "The dialogue focused on the importance of leading conversations with love and compassion. Participants explored the dynamics of tone and intention in fostering open dialogue. Tensions emerged around the challenges of maintaining a loving approach in the face of conflict.",
       "segmentIds": [
         "day_2-s0248",
         "day_2-s0249",
@@ -1447,7 +1447,7 @@
       "day": "day_2",
       "title": "Responses to Violence in Community Spaces",
       "inquiry": "How do we relate/respond to voilence?",
-      "summary": "The conversation addressed how communities can respond to violence and its impact on individuals. Participants reflected on the complexities of navigating violence within community interactions and the need for supportive responses.",
+      "summary": "Participants discussed various responses to violence within community contexts. The conversation highlighted the need for strategies that promote healing and understanding. Tensions arose regarding differing perspectives on how to address violence effectively.",
       "segmentIds": []
     },
     {
@@ -1455,7 +1455,7 @@
       "day": "day_2",
       "title": "Co-Existence of Suffering and Joy",
       "inquiry": "If suffering and joy can co-exist, what is possible?",
-      "summary": "This segment examined the possibility of holding both suffering and joy in community experiences. Participants discussed how acknowledging both can lead to deeper connections and resilience.",
+      "summary": "The dialogue explored the complexities of experiencing suffering and joy simultaneously. Participants reflected on how these emotions can coexist and inform one another. Tensions emerged around the challenges of acknowledging both experiences in community narratives.",
       "segmentIds": []
     },
     {
@@ -1463,7 +1463,7 @@
       "day": "day_2",
       "title": "Homes as Portals for Self-Understanding",
       "inquiry": "How do we view our homes as a portal into deepening self understanding?",
-      "summary": "Participants reflected on how their homes can serve as spaces for deepening self-awareness and understanding. The conversation highlighted the significance of personal environments in shaping identity and community connections.",
+      "summary": "This stretch focused on how our homes can serve as spaces for deeper self-understanding. Participants shared insights about the emotional connections to their living environments. Tensions arose around the challenges of creating homes that reflect personal values.",
       "segmentIds": [
         "day_2-s0335",
         "day_2-s0336"
@@ -1474,7 +1474,7 @@
       "day": "day_2",
       "title": "Upgrading Educational Systems for Inclusivity",
       "inquiry": "How do we upgrade our education systems?",
-      "summary": "The dialogue centered on the need to reform educational systems to better accommodate diverse learning styles. Participants shared personal experiences with traditional education and the impact of grief and emotional burdens on learning.",
+      "summary": "Participants discussed the need for educational systems to be more inclusive and responsive to diverse learning styles. The conversation highlighted personal experiences of feeling marginalized within traditional educational frameworks. Tensions emerged around the systemic barriers that hinder inclusivity.",
       "segmentIds": [
         "day_2-s0337",
         "day_2-s0338",
@@ -1728,7 +1728,7 @@
       "day": "day_2",
       "title": "Reflections on the Festival's Impact",
       "inquiry": "What happened here at WCOF? What is possible from here?",
-      "summary": "Participants reflected on the overall impact of the festival and the themes that emerged from the discussions. The conversation emphasized the importance of connecting individual stories and insights to foster collective understanding.",
+      "summary": "This stretch reflected on the overall impact of the festival and its conversations. Participants shared insights about themes that emerged throughout the discussions and their potential for future action. Tensions arose around the need for continued engagement beyond the festival.",
       "segmentIds": [
         "day_2-s0583",
         "day_2-s0584",
@@ -2155,7 +2155,7 @@
       "day": "day_2",
       "title": "The Importance of Slowing Down",
       "inquiry": "What does it take to slow down?",
-      "summary": "This stretch focused on the necessity of slowing down in a fast-paced world. Participants discussed the benefits of taking time to reflect and engage deeply with community issues.",
+      "summary": "Participants explored the significance of slowing down in a fast-paced world. The conversation highlighted the benefits of mindfulness and reflection in personal and community contexts. Tensions emerged around the challenges of integrating slowing down into daily life.",
       "segmentIds": []
     }
   ]
