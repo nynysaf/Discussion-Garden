@@ -154,31 +154,55 @@ export function codeContact(text) {
 }
 
 const STOPWORDS = new Set(
-  `a about after again against all am an and any are as at be because been before being below between both but by can could did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with you your yours yourself yourselves like just really also get got yeah yes okay ok um uh`.split(
+  `a about after again against all am an and any are as at be because been before being below between both but by can could did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its it's itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there there's these they this those through to too under until up very was we were what when where which while who whom why will with you your yours yourself yourselves like really also get got yeah yes okay ok um uh i'm ive i've don't dont that's thats there's theres things thing something someone somehow going gonna kind kinda sort sorta maybe well right know think thinking thought thoughts people people feel feeling feels want wanted wants need needs lot lots way ways even still much many say says said talking talk gonna gonna stuff mean means meaning something`.split(
     /\s+/,
   ),
 );
 
-export function wordWeights(segments, limit = 80) {
+/** Prefer meaningful bigrams/trigrams over raw unigrams like "things" / "there's". */
+export function phraseWeights(segments, limit = 60) {
   const counts = new Map();
   const hits = new Map();
+
+  const add = (term, segId, weight = 1) => {
+    if (!term || term.length < 4) return;
+    counts.set(term, (counts.get(term) ?? 0) + weight);
+    if (!hits.has(term)) hits.set(term, []);
+    const list = hits.get(term);
+    if (list.length < 6 && !list.includes(segId)) list.push(segId);
+  };
+
   for (const seg of segments) {
     const words = seg.text
       .toLowerCase()
+      .replace(/\[name\]/gi, " ")
       .replace(/[^a-z0-9'\-\s]/g, " ")
       .split(/\s+/)
-      .filter((w) => w.length > 2 && !STOPWORDS.has(w) && w !== "[name]");
-    for (const w of words) {
-      counts.set(w, (counts.get(w) ?? 0) + 1);
-      if (!hits.has(w)) hits.set(w, []);
-      const list = hits.get(w);
-      if (list.length < 8 && !list.includes(seg.id)) list.push(seg.id);
+      .filter((w) => w.length > 1);
+    const content = words.filter((w) => !STOPWORDS.has(w) && w !== "name");
+    for (let i = 0; i < content.length - 1; i++) {
+      add(`${content[i]} ${content[i + 1]}`, seg.id, 2);
+      if (i < content.length - 2) add(`${content[i]} ${content[i + 1]} ${content[i + 2]}`, seg.id, 3);
+    }
+    for (const w of content) {
+      if (w.length >= 6) add(w, seg.id, 0.4);
     }
   }
+
   return [...counts.entries()]
+    .filter(([, weight]) => weight >= 2)
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
-    .map(([term, weight]) => ({ term, weight, segmentIds: hits.get(term) ?? [] }));
+    .map(([term, weight]) => ({
+      term,
+      weight: Math.round(weight * 10) / 10,
+      segmentIds: hits.get(term) ?? [],
+    }));
+}
+
+/** @deprecated use phraseWeights — kept for older call sites */
+export function wordWeights(segments, limit = 80) {
+  return phraseWeights(segments, limit);
 }
 
 export async function listRecordingTxt() {

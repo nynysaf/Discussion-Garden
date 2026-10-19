@@ -116,7 +116,7 @@ Copy these files into this repo and adapt them. **Do not** add Camp-CLAI as a de
 - Production URL: **https://discussion-garden.vercel.app** (Vercel project `discussion-garden`, deploys every push to `main`)
 
 ### Shipped
-- 2026-10-19 — **Phase 9 — post-festival archive / portfolio.** `FESTIVAL_LIVE` freeze (API 410s); portfolio `/`; dual-map `/explore` (live snapshot · AI · host); redacted transcript + movements + word cloud; glossary / tensions / facilitation / method / workshop; `scripts/archive/*` + `src/data/archive/*`; raw `Recordings & Transcripts/` gitignored. 234 unit tests; production build clean.
+- 2026-10-19 — **Phase 9 — post-festival archive / portfolio.** `FESTIVAL_LIVE` freeze; portfolio `/`; pan/zoom `/explore` dual maps; redacted transcript (grouped turns) + enriched movements + idea-phrase cloud; glossary / tensions; `archive:build` + `archive:enrich`. Facilitation / method / workshop pages removed from public nav.
 - 2026-09-30 — `prd-v0.2.md`, `DESIGN_GUIDE.md`, `dev-plan-v0.1.md`, `.cursorrules`, git repo initialized on `main`.
 - 2026-09-30 — Public repo https://github.com/nynysaf/Discussion-Garden connected; Next.js **16.3.8** + React 19.2 + Tailwind v4 scaffolded (`src/` dir, `@/*` alias, npm); `.env.example` (placeholders), README with secrets policy. Deepgram account + key created (key lives only in `.env.local`).
 - 2026-09-30 — **Caption pipeline (Phase 2A + 2B code):**
@@ -347,7 +347,8 @@ No fixed calendar — we build in this order as time allows and see how far we g
 - [x] Offline archive pipeline (`npm run archive:build`) — redact, movements, meta, wordcloud, AI map, host map, harvest JSON
 - [x] Freeze `/api/deepgram-token`, `/api/synthesis`, `/api/submissions` → 410 when not live; TV/audience “festival concluded” pages
 - [x] Portfolio home + `/explore` dual maps (live · AI · host) + transcript / movements / words
-- [x] Glossary, tensions, facilitation scorecard, method essay, workshop kit
+- [x] Glossary + tensions (facilitation / method / workshop pages cut from public IA)
+- [x] Pan/zoom explore canvas + semantic `archive:enrich` for AI map / movements / phrases
 - [x] PRD v0.2.15 + this §4/§5 update
 
 ### 5.9 Cut lines if behind

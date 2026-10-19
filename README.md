@@ -10,8 +10,9 @@ Live captions, schedule prompts, a live audience feed, and a growing "garden" of
 ## Public archive (Phase 9)
 - `/` — portfolio story · `/explore` — Festival / AI / Host garden lenses
 - `/explore/transcript` · `/explore/movements` · `/explore/words`
-- `/glossary` · `/tensions` · `/facilitation` · `/method` · `/workshop`
+- `/glossary` · `/tensions`
 - Rebuild archive JSON (local raw transcripts required): `npm run archive:build`
+- Semantic enrich (movements, AI map, phrases — needs `OPENAI_API_KEY`): `npm run archive:enrich`
 - Snapshot hosted garden: `npm run hosted -- scripts/archive/export-garden.mjs`
 - Leave `FESTIVAL_LIVE` unset or `false` in production. Set `true` only to re-enable Deepgram / OpenAI / audience writes.
 

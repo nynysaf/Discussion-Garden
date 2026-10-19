@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { groupConsecutiveTurns } from "@/lib/archive/group-turns";
 import type { ArchiveMovement, ArchiveSegment } from "@/lib/archive/types";
 
 type Props = {
@@ -21,21 +22,23 @@ export function TranscriptReader({
   const [voice, setVoice] = useState<string>("all");
   const [query, setQuery] = useState(initialTerm ?? "");
 
+  const turns = useMemo(() => groupConsecutiveTurns(segments), [segments]);
+
   const voices = useMemo(() => {
-    const set = new Set(segments.map((s) => s.voice));
+    const set = new Set(turns.map((t) => t.voice));
     return [...set].sort();
-  }, [segments]);
+  }, [turns]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return segments.filter((s) => {
-      if (day !== "all" && s.day !== day) return false;
-      if (movementId !== "all" && s.movementId !== movementId) return false;
-      if (voice !== "all" && s.voice !== voice) return false;
-      if (q && !s.text.toLowerCase().includes(q)) return false;
+    return turns.filter((t) => {
+      if (day !== "all" && t.day !== day) return false;
+      if (movementId !== "all" && t.movementId !== movementId) return false;
+      if (voice !== "all" && t.voice !== voice) return false;
+      if (q && !t.text.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [segments, day, movementId, voice, query]);
+  }, [turns, day, movementId, voice, query]);
 
   const dayMovements = movements.filter((m) => day === "all" || m.day === day);
 
@@ -99,26 +102,26 @@ export function TranscriptReader({
       </div>
 
       <p className="text-sm opacity-70">
-        Showing {filtered.length} of {segments.length} lines. Voices are garden animals only —
-        never real names. Sensitive lines were removed.
+        Showing {filtered.length} turns ({segments.length} caption lines grouped by consecutive
+        speaker). Voices are garden animals only — never real names.
       </p>
 
-      <ol className="max-h-[70vh] space-y-3 overflow-y-auto rounded-3xl border border-festival-green/60 bg-white/50 p-4 shadow-poster">
-        {filtered.map((s) => (
-          <li key={s.id} id={s.id} className="scroll-mt-24 border-b border-festival-green/30 pb-3 last:border-0">
+      <ol className="max-h-[70vh] space-y-4 overflow-y-auto rounded-3xl border border-festival-green/60 bg-white/50 p-4 shadow-poster">
+        {filtered.map((t) => (
+          <li key={t.id} id={t.id} className="scroll-mt-24 border-b border-festival-green/30 pb-4 last:border-0">
             <div className="flex flex-wrap items-baseline gap-x-2 text-xs font-semibold text-festival-forest">
-              <span>{s.day === "day_1" ? "Sat" : "Sun"}</span>
+              <span>{t.day === "day_1" ? "Sat" : "Sun"}</span>
               <span className="opacity-50">·</span>
-              <span>[{s.clock}]</span>
+              <span>[{t.clock}]</span>
               <span className="opacity-50">·</span>
-              <span>{s.voice}</span>
-              {s.redacted && <span className="font-normal opacity-60">(names redacted)</span>}
+              <span>{t.voice}</span>
+              {t.redacted && <span className="font-normal opacity-60">(names redacted)</span>}
             </div>
-            <p className="mt-1 text-base leading-relaxed">{s.text}</p>
+            <p className="mt-1 text-base leading-relaxed">{t.text}</p>
           </li>
         ))}
         {filtered.length === 0 && (
-          <li className="py-8 text-center opacity-60">No lines match these filters.</li>
+          <li className="py-8 text-center opacity-60">No turns match these filters.</li>
         )}
       </ol>
     </div>

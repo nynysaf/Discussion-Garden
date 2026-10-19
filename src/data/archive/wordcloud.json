@@ -1,1064 +1,109 @@
 {
-  "exportedAt": "2026-10-19T15:18:04.094Z",
+  "exportedAt": "2026-10-19T15:56:52.693Z",
+  "enrichedWith": "gpt-4o-mini",
   "words": [
     {
-      "term": "it's",
-      "weight": 149,
-      "segmentIds": [
-        "day_1-s0022",
-        "day_1-s0067",
-        "day_1-s0068",
-        "day_1-s0080",
-        "day_1-s0086",
-        "day_1-s0088",
-        "day_1-s0096",
-        "day_1-s0111"
-      ]
-    },
-    {
-      "term": "think",
-      "weight": 102,
-      "segmentIds": [
-        "day_1-s0006",
-        "day_1-s0063",
-        "day_1-s0144",
-        "day_1-s0172",
-        "day_1-s0225",
-        "day_1-s0262",
-        "day_1-s0279",
-        "day_1-s0339"
-      ]
-    },
-    {
-      "term": "i'm",
-      "weight": 101,
-      "segmentIds": [
-        "day_1-s0050",
-        "day_1-s0051",
-        "day_1-s0083",
-        "day_1-s0084",
-        "day_1-s0094",
-        "day_1-s0098",
-        "day_1-s0115",
-        "day_1-s0116"
-      ]
-    },
-    {
-      "term": "know",
-      "weight": 90,
-      "segmentIds": [
-        "day_1-s0042",
-        "day_1-s0043",
-        "day_1-s0051",
-        "day_1-s0084",
-        "day_1-s0098",
-        "day_1-s0102",
-        "day_1-s0146",
-        "day_1-s0147"
-      ]
-    },
-    {
-      "term": "people",
-      "weight": 71,
-      "segmentIds": [
-        "day_1-s0115",
-        "day_1-s0224",
-        "day_1-s0262",
-        "day_1-s0332",
-        "day_1-s0372",
-        "day_1-s0378",
-        "day_1-s0397",
-        "day_1-s0422"
-      ]
-    },
-    {
-      "term": "there's",
-      "weight": 67,
-      "segmentIds": [
-        "day_1-s0094",
-        "day_1-s0115",
-        "day_1-s0212",
-        "day_1-s0225",
-        "day_1-s0279",
-        "day_1-s0343",
-        "day_1-s0360",
-        "day_1-s0364"
-      ]
-    },
-    {
-      "term": "that's",
-      "weight": 63,
-      "segmentIds": [
-        "day_1-s0027",
-        "day_1-s0059",
-        "day_1-s0098",
-        "day_1-s0109",
-        "day_1-s0114",
-        "day_1-s0131",
-        "day_1-s0187",
-        "day_1-s0202"
-      ]
-    },
-    {
-      "term": "name",
-      "weight": 55,
-      "segmentIds": [
-        "day_1-s0024",
-        "day_1-s0025",
-        "day_1-s0042",
-        "day_1-s0115",
-        "day_1-s0161",
-        "day_1-s0162",
-        "day_1-s0163",
-        "day_1-s0164"
-      ]
-    },
-    {
-      "term": "we're",
-      "weight": 54,
+      "term": "little bit",
+      "weight": 30,
       "segmentIds": [
         "day_1-s0017",
-        "day_1-s0144",
-        "day_1-s0146",
-        "day_1-s0224",
-        "day_1-s0237",
-        "day_1-s0243",
-        "day_1-s0258",
-        "day_1-s0259"
-      ]
-    },
-    {
-      "term": "don't",
-      "weight": 48,
-      "segmentIds": [
-        "day_1-s0032",
-        "day_1-s0042",
-        "day_1-s0051",
-        "day_1-s0074",
+        "day_1-s0018",
+        "day_1-s0037",
         "day_1-s0098",
-        "day_1-s0102",
-        "day_1-s0103",
-        "day_1-s0105"
-      ]
-    },
-    {
-      "term": "sort",
-      "weight": 47,
-      "segmentIds": [
-        "day_1-s0142",
-        "day_1-s0144",
-        "day_1-s0226",
-        "day_1-s0286",
-        "day_1-s0364",
-        "day_1-s0384",
-        "day_1-s0445",
-        "day_1-s0447"
+        "day_1-s0146",
+        "day_1-s0625"
       ]
     },
     {
       "term": "conversation",
-      "weight": 46,
+      "weight": 18.4,
       "segmentIds": [
         "day_1-s0025",
         "day_1-s0072",
         "day_1-s0073",
         "day_1-s0078",
         "day_1-s0138",
-        "day_1-s0141",
-        "day_1-s0146",
-        "day_1-s0184"
+        "day_1-s0141"
       ]
     },
     {
-      "term": "something",
-      "weight": 45,
+      "term": "meta conversation",
+      "weight": 18,
       "segmentIds": [
-        "day_1-s0095",
-        "day_1-s0124",
-        "day_1-s0409",
-        "day_1-s0453",
-        "day_1-s0463",
-        "day_1-s0465",
-        "day_1-s0478",
-        "day_1-s0495"
-      ]
-    },
-    {
-      "term": "see",
-      "weight": 44,
-      "segmentIds": [
-        "day_1-s0003",
-        "day_1-s0019",
-        "day_1-s0031",
-        "day_1-s0032",
-        "day_1-s0043",
-        "day_1-s0094",
-        "day_1-s0097",
-        "day_1-s0098"
+        "day_1-s0072",
+        "day_1-s0073",
+        "day_1-s0138",
+        "day_1-s0243",
+        "day_1-s0245",
+        "day_1-s0291"
       ]
     },
     {
       "term": "different",
-      "weight": 44,
+      "weight": 17.6,
       "segmentIds": [
         "day_1-s0081",
         "day_1-s0276",
         "day_1-s0278",
         "day_1-s0287",
         "day_1-s0339",
-        "day_1-s0379",
-        "day_1-s0422",
-        "day_1-s0444"
+        "day_1-s0379"
       ]
     },
     {
       "term": "actually",
-      "weight": 43,
+      "weight": 17.2,
       "segmentIds": [
         "day_1-s0062",
         "day_1-s0090",
         "day_1-s0091",
         "day_1-s0106",
         "day_1-s0176",
-        "day_1-s0224",
-        "day_1-s0225",
-        "day_1-s0272"
-      ]
-    },
-    {
-      "term": "would",
-      "weight": 42,
-      "segmentIds": [
-        "day_1-s0040",
-        "day_1-s0076",
-        "day_1-s0081",
-        "day_1-s0176",
-        "day_1-s0339",
-        "day_1-s0386",
-        "day_1-s0447",
-        "day_1-s0496"
-      ]
-    },
-    {
-      "term": "right",
-      "weight": 42,
-      "segmentIds": [
-        "day_1-s0085",
-        "day_1-s0099",
-        "day_1-s0267",
-        "day_1-s0278",
-        "day_1-s0287",
-        "day_1-s0291",
-        "day_1-s0391",
-        "day_1-s0416"
-      ]
-    },
-    {
-      "term": "things",
-      "weight": 40,
-      "segmentIds": [
-        "day_1-s0008",
-        "day_1-s0031",
-        "day_1-s0121",
-        "day_1-s0124",
-        "day_1-s0138",
-        "day_1-s0160",
-        "day_1-s0256",
-        "day_1-s0332"
-      ]
-    },
-    {
-      "term": "now",
-      "weight": 37,
-      "segmentIds": [
-        "day_1-s0050",
-        "day_1-s0069",
-        "day_1-s0267",
-        "day_1-s0278",
-        "day_1-s0287",
-        "day_1-s0291",
-        "day_1-s0339",
-        "day_1-s0347"
-      ]
-    },
-    {
-      "term": "feel",
-      "weight": 37,
-      "segmentIds": [
-        "day_1-s0074",
-        "day_1-s0115",
-        "day_1-s0140",
-        "day_1-s0235",
-        "day_1-s0331",
-        "day_1-s0384",
-        "day_1-s0416",
-        "day_1-s0436"
-      ]
-    },
-    {
-      "term": "i've",
-      "weight": 37,
-      "segmentIds": [
-        "day_1-s0124",
-        "day_1-s0148",
-        "day_1-s0276",
-        "day_1-s0295",
-        "day_1-s0298",
-        "day_1-s0335",
-        "day_1-s0397",
-        "day_1-s0409"
-      ]
-    },
-    {
-      "term": "one",
-      "weight": 36,
-      "segmentIds": [
-        "day_1-s0030",
-        "day_1-s0080",
-        "day_1-s0140",
-        "day_1-s0157",
-        "day_1-s0330",
-        "day_1-s0367",
-        "day_1-s0394",
-        "day_1-s0563"
+        "day_1-s0224"
       ]
     },
     {
       "term": "you're",
-      "weight": 36,
+      "weight": 14.4,
       "segmentIds": [
         "day_1-s0078",
         "day_1-s0097",
         "day_1-s0100",
         "day_1-s0185",
         "day_1-s0394",
-        "day_1-s0465",
-        "day_1-s0506",
-        "day_1-s0624"
+        "day_1-s0465"
       ]
     },
     {
       "term": "question",
-      "weight": 34,
+      "weight": 13.6,
       "segmentIds": [
         "day_1-s0289",
         "day_1-s0290",
         "day_1-s0291",
         "day_1-s0317",
         "day_1-s0334",
-        "day_1-s0367",
-        "day_1-s0478",
-        "day_1-s0529"
-      ]
-    },
-    {
-      "term": "way",
-      "weight": 33,
-      "segmentIds": [
-        "day_1-s0080",
-        "day_1-s0096",
-        "day_1-s0106",
-        "day_1-s0190",
-        "day_1-s0224",
-        "day_1-s0225",
-        "day_1-s0324",
-        "day_1-s0402"
-      ]
-    },
-    {
-      "term": "lot",
-      "weight": 33,
-      "segmentIds": [
-        "day_1-s0135",
-        "day_1-s0225",
-        "day_1-s0345",
-        "day_1-s0372",
-        "day_1-s0519",
-        "day_1-s0576",
-        "day_1-s0577",
-        "day_1-s0582"
-      ]
-    },
-    {
-      "term": "kind",
-      "weight": 32,
-      "segmentIds": [
-        "day_1-s0082",
-        "day_1-s0088",
-        "day_1-s0222",
-        "day_1-s0224",
-        "day_1-s0278",
-        "day_1-s0437",
-        "day_1-s0576",
-        "day_1-s0582"
+        "day_1-s0367"
       ]
     },
     {
       "term": "little",
-      "weight": 31,
+      "weight": 12.4,
       "segmentIds": [
         "day_1-s0017",
         "day_1-s0018",
         "day_1-s0037",
         "day_1-s0089",
         "day_1-s0098",
-        "day_1-s0146",
-        "day_1-s0264",
-        "day_1-s0283"
+        "day_1-s0146"
       ]
     },
     {
-      "term": "gonna",
-      "weight": 30,
-      "segmentIds": [
-        "day_1-s0076",
-        "day_1-s0090",
-        "day_1-s0237",
-        "day_1-s0242",
-        "day_1-s0258",
-        "day_1-s0365",
-        "day_1-s0366",
-        "day_1-s0394"
-      ]
-    },
-    {
-      "term": "well",
-      "weight": 29,
-      "segmentIds": [
-        "day_1-s0021",
-        "day_1-s0089",
-        "day_1-s0346",
-        "day_1-s0440",
-        "day_1-s0477",
-        "day_1-s0488",
-        "day_1-s0546",
-        "day_1-s0547"
-      ]
-    },
-    {
-      "term": "thing",
-      "weight": 28,
-      "segmentIds": [
-        "day_1-s0088",
-        "day_1-s0287",
-        "day_1-s0422",
-        "day_1-s0501",
-        "day_1-s0504",
-        "day_1-s0552",
-        "day_1-s0555",
-        "day_1-s0577"
-      ]
-    },
-    {
-      "term": "what's",
-      "weight": 27,
-      "segmentIds": [
-        "day_1-s0144",
-        "day_1-s0228",
-        "day_1-s0333",
-        "day_1-s0649",
-        "day_1-s0771",
-        "day_1-s0772",
-        "day_1-s0799",
-        "day_1-s0800"
-      ]
-    },
-    {
-      "term": "good",
-      "weight": 26,
-      "segmentIds": [
-        "day_1-s0026",
-        "day_1-s0039",
-        "day_1-s0063",
-        "day_1-s0187",
-        "day_1-s0189",
-        "day_1-s0240",
-        "day_1-s0241",
-        "day_1-s0327"
-      ]
-    },
-    {
-      "term": "say",
-      "weight": 26,
-      "segmentIds": [
-        "day_1-s0095",
-        "day_1-s0111",
-        "day_1-s0251",
-        "day_1-s0256",
-        "day_1-s0452",
-        "day_1-s0460",
-        "day_1-s0464",
-        "day_1-s0492"
-      ]
-    },
-    {
-      "term": "want",
-      "weight": 25,
-      "segmentIds": [
-        "day_1-s0007",
-        "day_1-s0027",
-        "day_1-s0074",
-        "day_1-s0256",
-        "day_1-s0353",
-        "day_1-s0428",
-        "day_1-s0452",
-        "day_1-s0460"
-      ]
-    },
-    {
-      "term": "maybe",
-      "weight": 25,
-      "segmentIds": [
-        "day_1-s0095",
-        "day_1-s0146",
-        "day_1-s0147",
-        "day_1-s0167",
-        "day_1-s0319",
-        "day_1-s0463",
-        "day_1-s0478",
-        "day_1-s0530"
-      ]
-    },
-    {
-      "term": "come",
-      "weight": 24,
-      "segmentIds": [
-        "day_1-s0055",
-        "day_1-s0224",
-        "day_1-s0262",
-        "day_1-s0506",
-        "day_1-s0530",
-        "day_1-s0586",
-        "day_1-s0591",
-        "day_1-s0629"
-      ]
-    },
-    {
-      "term": "they're",
-      "weight": 24,
-      "segmentIds": [
-        "day_1-s0098",
-        "day_1-s0357",
-        "day_1-s0591",
-        "day_1-s0592",
-        "day_1-s0615",
-        "day_1-s0635",
-        "day_1-s0643",
-        "day_1-s0718"
-      ]
-    },
-    {
-      "term": "work",
-      "weight": 24,
-      "segmentIds": [
-        "day_1-s0383",
-        "day_1-s0402",
-        "day_1-s0417",
-        "day_1-s0465",
-        "day_1-s0477",
-        "day_1-s0576",
-        "day_1-s0583",
-        "day_1-s0595"
-      ]
-    },
-    {
-      "term": "even",
-      "weight": 23,
-      "segmentIds": [
-        "day_1-s0044",
-        "day_1-s0073",
-        "day_1-s0078",
-        "day_1-s0098",
-        "day_1-s0341",
-        "day_1-s0431",
-        "day_1-s0460",
-        "day_1-s0496"
-      ]
-    },
-    {
-      "term": "mean",
-      "weight": 23,
-      "segmentIds": [
-        "day_1-s0100",
-        "day_1-s0117",
-        "day_1-s0124",
-        "day_1-s0157",
-        "day_1-s0181",
-        "day_1-s0335",
-        "day_1-s0340",
-        "day_1-s0345"
-      ]
-    },
-    {
-      "term": "space",
-      "weight": 22,
-      "segmentIds": [
-        "day_1-s0048",
-        "day_1-s0090",
-        "day_1-s0095",
-        "day_1-s0115",
-        "day_1-s0184",
-        "day_1-s0221",
-        "day_1-s0262",
-        "day_1-s0382"
-      ]
-    },
-    {
-      "term": "much",
-      "weight": 22,
-      "segmentIds": [
-        "day_1-s0054",
-        "day_1-s0055",
-        "day_1-s0059",
-        "day_1-s0060",
-        "day_1-s0098",
-        "day_1-s0115",
-        "day_1-s0131",
-        "day_1-s0239"
-      ]
-    },
-    {
-      "term": "around",
-      "weight": 21,
-      "segmentIds": [
-        "day_1-s0008",
-        "day_1-s0354",
-        "day_1-s0397",
-        "day_1-s0467",
-        "day_1-s0531",
-        "day_1-s0566",
-        "day_1-s0592",
-        "day_1-s0827"
-      ]
-    },
-    {
-      "term": "bit",
-      "weight": 21,
-      "segmentIds": [
-        "day_1-s0017",
-        "day_1-s0018",
-        "day_1-s0037",
-        "day_1-s0098",
-        "day_1-s0146",
-        "day_1-s0184",
-        "day_1-s0495",
-        "day_1-s0625"
-      ]
-    },
-    {
-      "term": "wanna",
-      "weight": 20,
-      "segmentIds": [
-        "day_1-s0181",
-        "day_1-s0286",
-        "day_1-s0289",
-        "day_1-s0332",
-        "day_1-s0500",
-        "day_1-s0574",
-        "day_1-s0601",
-        "day_1-s0788"
-      ]
-    },
-    {
-      "term": "take",
-      "weight": 20,
-      "segmentIds": [
-        "day_1-s0181",
-        "day_1-s0372",
-        "day_1-s0511",
-        "day_1-s0547",
-        "day_1-s0563",
-        "day_1-s0743",
-        "day_1-s0754",
-        "day_1-s0755"
-      ]
-    },
-    {
-      "term": "great",
-      "weight": 19,
-      "segmentIds": [
-        "day_1-s0046",
-        "day_1-s0047",
-        "day_1-s0096",
-        "day_1-s0178",
-        "day_1-s0206",
-        "day_1-s0292",
-        "day_1-s0849",
-        "day_1-s0919"
-      ]
-    },
-    {
-      "term": "mhmm",
-      "weight": 19,
-      "segmentIds": [
-        "day_1-s0077",
-        "day_1-s0126",
-        "day_1-s0130",
-        "day_1-s0132",
-        "day_1-s0300",
-        "day_1-s0424",
-        "day_1-s0429",
-        "day_1-s0455"
-      ]
-    },
-    {
-      "term": "years",
-      "weight": 19,
-      "segmentIds": [
-        "day_1-s0134",
-        "day_1-s0341",
-        "day_1-s0409",
-        "day_1-s0433",
-        "day_1-s0434",
-        "day_1-s0450",
-        "day_1-s0517",
-        "day_1-s0809"
-      ]
-    },
-    {
-      "term": "many",
-      "weight": 19,
-      "segmentIds": [
-        "day_1-s0160",
-        "day_1-s0256",
-        "day_1-s0343",
-        "day_1-s0360",
-        "day_1-s0421",
-        "day_1-s0426",
-        "day_1-s0463",
-        "day_1-s0543"
-      ]
-    },
-    {
-      "term": "thinking",
-      "weight": 19,
-      "segmentIds": [
-        "day_1-s0303",
-        "day_1-s0374",
-        "day_1-s0828",
-        "day_1-s0971",
-        "day_2-s0102",
-        "day_2-s0173",
-        "day_2-s0213",
-        "day_2-s0237"
-      ]
-    },
-    {
-      "term": "time",
-      "weight": 18,
-      "segmentIds": [
-        "day_1-s0030",
-        "day_1-s0043",
-        "day_1-s0335",
-        "day_1-s0345",
-        "day_1-s0440",
-        "day_1-s0513",
-        "day_1-s0528",
-        "day_1-s0734"
-      ]
-    },
-    {
-      "term": "today",
-      "weight": 18,
-      "segmentIds": [
-        "day_1-s0084",
-        "day_1-s0259",
-        "day_1-s0260",
-        "day_1-s0328",
-        "day_1-s0356",
-        "day_1-s0720",
-        "day_2-s0018",
-        "day_2-s0035"
-      ]
-    },
-    {
-      "term": "love",
-      "weight": 18,
-      "segmentIds": [
-        "day_1-s0214",
-        "day_1-s0284",
-        "day_1-s0449",
-        "day_1-s0464",
-        "day_1-s0469",
-        "day_1-s0649",
-        "day_2-s0237",
-        "day_2-s0246"
-      ]
-    },
-    {
-      "term": "violence",
-      "weight": 18,
-      "segmentIds": [
-        "day_1-s0582",
-        "day_2-s0035",
-        "day_2-s0239",
-        "day_2-s0240",
-        "day_2-s0290",
-        "day_2-s0291",
-        "day_2-s0294",
-        "day_2-s0295"
-      ]
-    },
-    {
-      "term": "going",
-      "weight": 17,
-      "segmentIds": [
-        "day_1-s0017",
-        "day_1-s0099",
-        "day_1-s0324",
-        "day_1-s0427",
-        "day_1-s0461",
-        "day_1-s0465",
-        "day_1-s0478",
-        "day_1-s0649"
-      ]
-    },
-    {
-      "term": "feels",
-      "weight": 17,
-      "segmentIds": [
-        "day_1-s0095",
-        "day_1-s0415",
-        "day_1-s0439",
-        "day_1-s0463",
-        "day_1-s0704",
-        "day_2-s0062",
-        "day_2-s0118",
-        "day_2-s0119"
-      ]
-    },
-    {
-      "term": "two",
-      "weight": 17,
-      "segmentIds": [
-        "day_1-s0096",
-        "day_1-s0138",
-        "day_1-s0147",
-        "day_1-s0342",
-        "day_1-s0434",
-        "day_1-s0475",
-        "day_1-s0664",
-        "day_1-s0758"
-      ]
-    },
-    {
-      "term": "every",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0009",
-        "day_1-s0081",
-        "day_1-s0283",
-        "day_1-s0556",
-        "day_1-s0650",
-        "day_1-s0734",
-        "day_1-s0809",
-        "day_1-s0810"
-      ]
-    },
-    {
-      "term": "discussion",
-      "weight": 16,
+      "term": "discussion garden",
+      "weight": 12,
       "segmentIds": [
         "day_1-s0045",
         "day_1-s0046",
-        "day_1-s0652",
-        "day_1-s0662",
-        "day_1-s0753",
-        "day_1-s0827",
-        "day_1-s0836",
-        "day_1-s0912"
-      ]
-    },
-    {
-      "term": "live",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0069",
-        "day_1-s0080",
-        "day_1-s0290",
-        "day_1-s0291",
-        "day_1-s0558",
-        "day_1-s0625",
-        "day_1-s0689",
-        "day_1-s0703"
-      ]
-    },
-    {
-      "term": "sure",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0084",
-        "day_1-s0139",
-        "day_1-s0167",
-        "day_1-s0321",
-        "day_1-s0383",
-        "day_1-s0627",
-        "day_1-s0819",
-        "day_2-s0055"
-      ]
-    },
-    {
-      "term": "together",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0146",
-        "day_1-s0302",
-        "day_1-s0436",
-        "day_1-s0613",
-        "day_2-s0004",
-        "day_2-s0072",
-        "day_2-s0176",
-        "day_2-s0181"
-      ]
-    },
-    {
-      "term": "thank",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0154",
-        "day_1-s0232",
-        "day_1-s0411",
-        "day_1-s0413",
-        "day_1-s0640",
-        "day_1-s0815",
-        "day_1-s0882",
-        "day_1-s0903"
-      ]
-    },
-    {
-      "term": "part",
-      "weight": 16,
-      "segmentIds": [
-        "day_1-s0517",
-        "day_1-s0528",
-        "day_2-s0033",
-        "day_2-s0118",
-        "day_2-s0121",
-        "day_2-s0176",
-        "day_2-s0177",
-        "day_2-s0237"
-      ]
-    },
-    {
-      "term": "cool",
-      "weight": 15,
-      "segmentIds": [
-        "day_1-s0005",
-        "day_1-s0006",
-        "day_1-s0144",
-        "day_1-s0186",
-        "day_1-s0226",
-        "day_1-s0227",
-        "day_1-s0825",
-        "day_1-s0952"
-      ]
-    },
-    {
-      "term": "point",
-      "weight": 15,
-      "segmentIds": [
-        "day_1-s0041",
-        "day_1-s0076",
-        "day_1-s0122",
-        "day_1-s0145",
-        "day_1-s0222",
-        "day_1-s0272",
-        "day_1-s0354",
-        "day_1-s0431"
-      ]
-    },
-    {
-      "term": "create",
-      "weight": 15,
-      "segmentIds": [
-        "day_1-s0045",
-        "day_1-s0222",
-        "day_1-s0484",
-        "day_1-s0747",
-        "day_1-s0964",
-        "day_2-s0062",
-        "day_2-s0320",
-        "day_2-s0372"
-      ]
-    },
-    {
-      "term": "person",
-      "weight": 15,
-      "segmentIds": [
-        "day_1-s0073",
-        "day_1-s0095",
-        "day_1-s0176",
-        "day_1-s0226",
-        "day_1-s0227",
-        "day_1-s0353",
-        "day_1-s0591",
-        "day_1-s0638"
-      ]
-    },
-    {
-      "term": "said",
-      "weight": 15,
-      "segmentIds": [
-        "day_1-s0450",
-        "day_1-s0478",
-        "day_1-s0603",
-        "day_1-s0612",
-        "day_1-s0747",
-        "day_1-s0768",
-        "day_1-s0805",
-        "day_1-s0806"
-      ]
-    },
-    {
-      "term": "look",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0009",
-        "day_1-s0090",
-        "day_1-s0432",
-        "day_1-s0444",
-        "day_1-s0512",
-        "day_1-s0513",
-        "day_1-s0538",
-        "day_1-s0582"
-      ]
-    },
-    {
-      "term": "interesting",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0023",
-        "day_1-s0134",
-        "day_1-s0273",
-        "day_1-s0274",
-        "day_1-s0332",
-        "day_1-s0529",
-        "day_2-s0031",
-        "day_2-s0056"
-      ]
-    },
-    {
-      "term": "still",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0036",
-        "day_1-s0044",
-        "day_1-s0342",
-        "day_1-s0367",
-        "day_1-s0556",
-        "day_1-s0591",
-        "day_1-s0855",
-        "day_1-s0923"
-      ]
-    },
-    {
-      "term": "garden",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0045",
-        "day_1-s0046",
-        "day_1-s0184",
-        "day_1-s0283",
         "day_1-s0652",
         "day_1-s0662",
         "day_1-s0912",
@@ -1066,339 +111,660 @@
       ]
     },
     {
+      "term": "twelve hour",
+      "weight": 12,
+      "segmentIds": [
+        "day_1-s0259",
+        "day_1-s0631",
+        "day_1-s0632",
+        "day_2-s0008",
+        "day_2-s0157",
+        "day_2-s0722"
+      ]
+    },
+    {
+      "term": "i'd love hear",
+      "weight": 12,
+      "segmentIds": [
+        "day_1-s0649",
+        "day_2-s0293",
+        "day_2-s0294",
+        "day_2-s0370"
+      ]
+    },
+    {
+      "term": "what's",
+      "weight": 10.8,
+      "segmentIds": [
+        "day_1-s0144",
+        "day_1-s0228",
+        "day_1-s0333",
+        "day_1-s0649",
+        "day_1-s0771",
+        "day_1-s0772"
+      ]
+    },
+    {
+      "term": "create futures",
+      "weight": 10,
+      "segmentIds": [
+        "day_1-s0045",
+        "day_1-s0222",
+        "day_1-s0747",
+        "day_2-s0613"
+      ]
+    },
+    {
+      "term": "i'd love",
+      "weight": 10,
+      "segmentIds": [
+        "day_1-s0649",
+        "day_2-s0293",
+        "day_2-s0294",
+        "day_2-s0370",
+        "day_2-s0996"
+      ]
+    },
+    {
+      "term": "around table",
+      "weight": 10,
+      "segmentIds": [
+        "day_1-s0836",
+        "day_2-s0172",
+        "day_2-s0391",
+        "day_2-s0396",
+        "day_2-s0833"
+      ]
+    },
+    {
+      "term": "they're",
+      "weight": 9.6,
+      "segmentIds": [
+        "day_1-s0098",
+        "day_1-s0357",
+        "day_1-s0591",
+        "day_1-s0592",
+        "day_1-s0615",
+        "day_1-s0635"
+      ]
+    },
+    {
+      "term": "around",
+      "weight": 8.4,
+      "segmentIds": [
+        "day_1-s0008",
+        "day_1-s0354",
+        "day_1-s0397",
+        "day_1-s0467",
+        "day_1-s0531",
+        "day_1-s0566"
+      ]
+    },
+    {
+      "term": "clothing swap",
+      "weight": 8,
+      "segmentIds": [
+        "day_1-s0185",
+        "day_1-s0730",
+        "day_1-s0740",
+        "day_1-s0745"
+      ]
+    },
+    {
+      "term": "love hear",
+      "weight": 8,
+      "segmentIds": [
+        "day_1-s0649",
+        "day_2-s0293",
+        "day_2-s0294",
+        "day_2-s0370"
+      ]
+    },
+    {
+      "term": "city council",
+      "weight": 8,
+      "segmentIds": [
+        "day_1-s0821",
+        "day_1-s0825",
+        "day_1-s0845",
+        "day_1-s0866"
+      ]
+    },
+    {
+      "term": "violence",
+      "weight": 7.2,
+      "segmentIds": [
+        "day_1-s0582",
+        "day_2-s0035",
+        "day_2-s0239",
+        "day_2-s0240",
+        "day_2-s0290",
+        "day_2-s0291"
+      ]
+    },
+    {
+      "term": "discussion",
+      "weight": 6.4,
+      "segmentIds": [
+        "day_1-s0045",
+        "day_1-s0046",
+        "day_1-s0652",
+        "day_1-s0662",
+        "day_1-s0753",
+        "day_1-s0827"
+      ]
+    },
+    {
+      "term": "together",
+      "weight": 6.4,
+      "segmentIds": [
+        "day_1-s0146",
+        "day_1-s0302",
+        "day_1-s0436",
+        "day_1-s0613",
+        "day_2-s0004",
+        "day_2-s0072"
+      ]
+    },
+    {
+      "term": "create",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0045",
+        "day_1-s0222",
+        "day_1-s0484",
+        "day_1-s0747",
+        "day_1-s0964",
+        "day_2-s0062"
+      ]
+    },
+    {
+      "term": "person",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0073",
+        "day_1-s0095",
+        "day_1-s0176",
+        "day_1-s0226",
+        "day_1-s0227",
+        "day_1-s0353"
+      ]
+    },
+    {
+      "term": "race car",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0097",
+        "day_2-s0268",
+        "day_2-s0271"
+      ]
+    },
+    {
+      "term": "haven't done",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0142",
+        "day_1-s0143",
+        "day_2-s0867"
+      ]
+    },
+    {
+      "term": "haven't done yet",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0142",
+        "day_1-s0143"
+      ]
+    },
+    {
+      "term": "you're you're",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0185",
+        "day_1-s0465",
+        "day_2-s0346"
+      ]
+    },
+    {
+      "term": "person cool idea",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0226",
+        "day_1-s0227"
+      ]
+    },
+    {
+      "term": "we're we're",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0237",
+        "day_1-s0702",
+        "day_2-s0477"
+      ]
+    },
+    {
+      "term": "twelve hour conversation",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0259",
+        "day_2-s0722"
+      ]
+    },
+    {
+      "term": "six hours",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0260",
+        "day_2-s0008"
+      ]
+    },
+    {
+      "term": "see question",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0290",
+        "day_2-s0490",
+        "day_2-s0832"
+      ]
+    },
+    {
+      "term": "4th floor",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0290",
+        "day_2-s0010",
+        "day_2-s0616"
+      ]
+    },
+    {
+      "term": "question matters",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0317",
+        "day_1-s0478",
+        "day_2-s0388"
+      ]
+    },
+    {
+      "term": "long time",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0335",
+        "day_1-s0513",
+        "day_1-s0528"
+      ]
+    },
+    {
+      "term": "ten years",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0341",
+        "day_1-s0450",
+        "day_2-s0166"
+      ]
+    },
+    {
+      "term": "cause harm",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0573",
+        "day_1-s0574",
+        "day_2-s0328"
+      ]
+    },
+    {
+      "term": "they're they're",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0615",
+        "day_2-s0813"
+      ]
+    },
+    {
+      "term": "live mic",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0625",
+        "day_1-s0703",
+        "day_1-s0794"
+      ]
+    },
+    {
+      "term": "twelve hour evolving",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0632",
+        "day_2-s0157"
+      ]
+    },
+    {
+      "term": "join discussion",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0652",
+        "day_1-s0662",
+        "day_1-s0753"
+      ]
+    },
+    {
+      "term": "join discussion garden",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0652",
+        "day_1-s0662"
+      ]
+    },
+    {
+      "term": "live mic recording",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0703",
+        "day_1-s0794"
+      ]
+    },
+    {
+      "term": "voting every four",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0809",
+        "day_1-s0810"
+      ]
+    },
+    {
+      "term": "every four years",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0809",
+        "day_1-s0810"
+      ]
+    },
+    {
+      "term": "four years",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0809",
+        "day_1-s0810",
+        "day_2-s0167"
+      ]
+    },
+    {
+      "term": "allowing corner stores",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0848"
+      ]
+    },
+    {
+      "term": "three years",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0865",
+        "day_1-s0923",
+        "day_2-s0906"
+      ]
+    },
+    {
+      "term": "can't tell",
+      "weight": 6,
+      "segmentIds": [
+        "day_1-s0946",
+        "day_2-s0004"
+      ]
+    },
+    {
+      "term": "greater possibilities beyond",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0123"
+      ]
+    },
+    {
+      "term": "possibilities beyond current",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0123"
+      ]
+    },
+    {
+      "term": "beyond current imaginations",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0123"
+      ]
+    },
+    {
+      "term": "gets us",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0125",
+        "day_2-s0126"
+      ]
+    },
+    {
+      "term": "race car driver",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0268",
+        "day_2-s0271"
+      ]
+    },
+    {
+      "term": "actions create harm",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0320"
+      ]
+    },
+    {
+      "term": "create harm",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0320"
+      ]
+    },
+    {
+      "term": "actions cause",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0328"
+      ]
+    },
+    {
+      "term": "first word comes",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0402",
+        "day_2-s0424"
+      ]
+    },
+    {
+      "term": "word comes mind",
+      "weight": 6,
+      "segmentIds": [
+        "day_2-s0402",
+        "day_2-s0424"
+      ]
+    },
+    {
+      "term": "interesting",
+      "weight": 5.6,
+      "segmentIds": [
+        "day_1-s0023",
+        "day_1-s0134",
+        "day_1-s0273",
+        "day_1-s0274",
+        "day_1-s0332",
+        "day_1-s0529"
+      ]
+    },
+    {
+      "term": "garden",
+      "weight": 5.6,
+      "segmentIds": [
+        "day_1-s0045",
+        "day_1-s0046",
+        "day_1-s0184",
+        "day_1-s0283",
+        "day_1-s0652",
+        "day_1-s0662"
+      ]
+    },
+    {
       "term": "dialogue",
-      "weight": 14,
+      "weight": 5.6,
       "segmentIds": [
         "day_1-s0047",
         "day_1-s0224",
         "day_1-s0495",
         "day_1-s0953",
         "day_2-s0125",
-        "day_2-s0157",
-        "day_2-s0173",
-        "day_2-s0180"
-      ]
-    },
-    {
-      "term": "talking",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0098",
-        "day_1-s0111",
-        "day_1-s0124",
-        "day_1-s0224",
-        "day_1-s0275",
-        "day_1-s0617",
-        "day_1-s0635",
-        "day_1-s0797"
+        "day_2-s0157"
       ]
     },
     {
       "term": "yesterday",
-      "weight": 14,
+      "weight": 5.6,
       "segmentIds": [
         "day_1-s0198",
         "day_1-s0199",
         "day_1-s0201",
         "day_1-s0733",
         "day_2-s0009",
-        "day_2-s0018",
-        "day_2-s0030",
-        "day_2-s0048"
-      ]
-    },
-    {
-      "term": "word",
-      "weight": 14,
-      "segmentIds": [
-        "day_1-s0254",
-        "day_1-s0386",
-        "day_1-s0467",
-        "day_1-s0484",
-        "day_2-s0353",
-        "day_2-s0402",
-        "day_2-s0424",
-        "day_2-s0447"
+        "day_2-s0018"
       ]
     },
     {
       "term": "moment",
-      "weight": 14,
+      "weight": 5.6,
       "segmentIds": [
         "day_1-s0319",
         "day_1-s0428",
         "day_1-s0531",
         "day_1-s0538",
         "day_1-s0754",
-        "day_2-s0028",
-        "day_2-s0201",
-        "day_2-s0229"
+        "day_2-s0028"
       ]
     },
     {
       "term": "experience",
-      "weight": 14,
+      "weight": 5.6,
       "segmentIds": [
         "day_1-s0339",
         "day_1-s0502",
         "day_1-s0746",
         "day_1-s0842",
         "day_1-s0943",
-        "day_2-s0339",
-        "day_2-s0381",
-        "day_2-s0395"
+        "day_2-s0339"
       ]
     },
     {
       "term": "collapse",
-      "weight": 14,
+      "weight": 5.6,
       "segmentIds": [
         "day_1-s0427",
         "day_1-s0428",
         "day_1-s0432",
         "day_1-s0500",
         "day_1-s0506",
-        "day_1-s0533",
-        "day_1-s0563",
-        "day_1-s0613"
-      ]
-    },
-    {
-      "term": "day",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0009",
-        "day_1-s0097",
-        "day_1-s0513",
-        "day_1-s0556",
-        "day_1-s0623",
-        "day_1-s0650",
-        "day_1-s0773",
-        "day_1-s0866"
-      ]
-    },
-    {
-      "term": "six",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0041",
-        "day_1-s0042",
-        "day_1-s0259",
-        "day_1-s0260",
-        "day_1-s0336",
-        "day_2-s0008",
-        "day_2-s0157",
-        "day_2-s0158"
-      ]
-    },
-    {
-      "term": "make",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0044",
-        "day_1-s0054",
-        "day_1-s0073",
-        "day_1-s0095",
-        "day_1-s0296",
-        "day_1-s0496",
-        "day_1-s0580",
-        "day_1-s0592"
-      ]
-    },
-    {
-      "term": "place",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0047",
-        "day_1-s0129",
-        "day_1-s0339",
-        "day_1-s0447",
-        "day_1-s0517",
-        "day_2-s0253",
-        "day_2-s0259",
-        "day_2-s0477"
+        "day_1-s0533"
       ]
     },
     {
       "term": "saying",
-      "weight": 13,
+      "weight": 5.2,
       "segmentIds": [
         "day_1-s0072",
         "day_1-s0078",
         "day_1-s0094",
         "day_1-s0115",
         "day_1-s0705",
-        "day_1-s0743",
-        "day_1-s0978",
-        "day_2-s0369"
+        "day_1-s0743"
       ]
     },
     {
-      "term": "idea",
-      "weight": 13,
+      "term": "collective action",
+      "weight": 5,
       "segmentIds": [
-        "day_1-s0073",
-        "day_1-s0226",
-        "day_1-s0227",
-        "day_1-s0279",
-        "day_1-s0283",
-        "day_1-s0825",
-        "day_1-s0849",
-        "day_2-s0036"
+        "day_2-s0186",
+        "day_2-s0866"
       ]
     },
     {
-      "term": "feeling",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0094",
-        "day_1-s0319",
-        "day_1-s0327",
-        "day_1-s0585",
-        "day_1-s0620",
-        "day_2-s0066",
-        "day_2-s0067",
-        "day_2-s0289"
-      ]
+      "term": "community resilience",
+      "weight": 5,
+      "segmentIds": []
     },
     {
-      "term": "we've",
-      "weight": 13,
-      "segmentIds": [
-        "day_1-s0287",
-        "day_1-s0428",
-        "day_1-s0482",
-        "day_1-s0625",
-        "day_1-s0765",
-        "day_1-s0854",
-        "day_1-s0908",
-        "day_1-s0921"
-      ]
+      "term": "dialogue toward action",
+      "weight": 5,
+      "segmentIds": []
     },
     {
-      "term": "need",
-      "weight": 12,
-      "segmentIds": [
-        "day_1-s0008",
-        "day_1-s0144",
-        "day_1-s0395",
-        "day_1-s0526",
-        "day_1-s0570",
-        "day_1-s0720",
-        "day_1-s0789",
-        "day_1-s0853"
-      ]
+      "term": "transformational healing",
+      "weight": 5,
+      "segmentIds": []
+    },
+    {
+      "term": "emotional discomfort",
+      "weight": 5,
+      "segmentIds": []
+    },
+    {
+      "term": "democracy in action",
+      "weight": 5,
+      "segmentIds": []
+    },
+    {
+      "term": "solar infrastructure",
+      "weight": 5,
+      "segmentIds": []
     },
     {
       "term": "connection",
-      "weight": 12,
+      "weight": 4.8,
       "segmentIds": [
         "day_1-s0008",
         "day_1-s0048",
         "day_1-s0111",
         "day_1-s0119",
         "day_1-s0262",
-        "day_2-s0120",
-        "day_2-s0388",
-        "day_2-s0658"
+        "day_2-s0120"
       ]
     },
     {
       "term": "change",
-      "weight": 12,
+      "weight": 4.8,
       "segmentIds": [
         "day_1-s0051",
         "day_1-s0269",
         "day_1-s0342",
         "day_1-s0377",
         "day_1-s0386",
-        "day_1-s0468",
-        "day_1-s0487",
-        "day_2-s0184"
+        "day_1-s0468"
       ]
     },
     {
       "term": "information",
-      "weight": 12,
+      "weight": 4.8,
       "segmentIds": [
         "day_1-s0086",
         "day_1-s0867",
         "day_2-s0340",
         "day_2-s0341",
         "day_2-s0344",
-        "day_2-s0345",
-        "day_2-s0355",
-        "day_2-s0360"
-      ]
-    },
-    {
-      "term": "bring",
-      "weight": 12,
-      "segmentIds": [
-        "day_1-s0090",
-        "day_1-s0372",
-        "day_1-s0392",
-        "day_1-s0393",
-        "day_1-s0638",
-        "day_1-s0753",
-        "day_1-s0935",
-        "day_2-s0250"
+        "day_2-s0345"
       ]
     },
     {
       "term": "trying",
-      "weight": 12,
+      "weight": 4.8,
       "segmentIds": [
         "day_1-s0127",
         "day_1-s0449",
         "day_1-s0961",
         "day_2-s0062",
         "day_2-s0071",
-        "day_2-s0072",
-        "day_2-s0220",
-        "day_2-s0648"
-      ]
-    },
-    {
-      "term": "city",
-      "weight": 12,
-      "segmentIds": [
-        "day_1-s0222",
-        "day_1-s0821",
-        "day_1-s0825",
-        "day_1-s0845",
-        "day_1-s0858",
-        "day_1-s0863",
-        "day_1-s0866",
-        "day_2-s0162"
-      ]
-    },
-    {
-      "term": "energy",
-      "weight": 12,
-      "segmentIds": [
-        "day_1-s0341",
-        "day_1-s0385",
-        "day_1-s0386",
-        "day_1-s0397",
-        "day_1-s0711",
-        "day_2-s0031",
-        "day_2-s0100",
-        "day_2-s0122"
-      ]
-    },
-    {
-      "term": "coming",
-      "weight": 11,
-      "segmentIds": [
-        "day_1-s0032",
-        "day_1-s0212",
-        "day_1-s0379",
-        "day_1-s0646",
-        "day_1-s0830",
-        "day_2-s0604",
-        "day_2-s0638",
-        "day_2-s0761"
+        "day_2-s0072"
       ]
     }
   ]

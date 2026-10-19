@@ -1,4 +1,5 @@
 import {
+  forceCollide,
   forceLink,
   forceManyBody,
   forceSimulation,
@@ -8,6 +9,9 @@ import {
 } from "d3-force";
 import { stableIndex } from "./sprites";
 import type { GardenNode, GardenVine, Tier } from "./types";
+
+/** Virtual world size for the explore / portfolio canvas (pan + zoom). */
+export const EXPLORE_WORLD = { width: 2200, height: 1600 } as const;
 
 /** Vertical centre of each band, as a fraction of the canvas height (sky → soil). */
 export const TIER_BAND: Record<Tier, number> = { theme: 0.2, sprout: 0.5, seed: 0.8 };
@@ -203,6 +207,94 @@ export function layoutGarden({
   for (let i = 0; i < 40; i += 1) {
     separateFootprints(sim, 1);
     keepOnCanvas();
+  }
+
+  for (const node of sim) placed.set(node.id, { id: node.id, x: node.x, y: node.y, r: node.r });
+  return placed;
+}
+
+/**
+ * Explore layout: larger world, stronger repulsion + collide (Clara-style),
+ * looser tier bands so plants spread instead of stacking in three rows.
+ */
+export function layoutExploreGarden({
+  nodes,
+  vines,
+  labels,
+  width = EXPLORE_WORLD.width,
+  height = EXPLORE_WORLD.height,
+}: {
+  nodes: GardenNode[];
+  vines: GardenVine[];
+  labels?: Map<string, string[]>;
+  width?: number;
+  height?: number;
+}): Map<string, PlacedNode> {
+  const placed = new Map<string, PlacedNode>();
+  if (nodes.length === 0 || width <= 0 || height <= 0) return placed;
+
+  // Fixed scale so explore world doesn't shrink sprites when crowded.
+  const scale = 1.15;
+  const marginX = 80;
+  const ids = new Set(nodes.map((n) => n.id));
+  const links = vines
+    .filter((v) => ids.has(v.sourceId) && ids.has(v.targetId))
+    .map((v) => ({ source: v.sourceId, target: v.targetId, kind: v.kind }));
+
+  const sim: SimNode[] = nodes.map((node) => {
+    const r = nodeRadius(node.tier, node.weight, scale);
+    const fp = footprint(node.tier, r, labels?.get(node.id), scale);
+    const spread = stableIndex(node.id, 1000) / 1000;
+    const bandY = TIER_BAND[node.tier] * height;
+    return {
+      id: node.id,
+      tier: node.tier,
+      r,
+      ...fp,
+      x: marginX + spread * (width - 2 * marginX),
+      y: bandY + (stableIndex(`${node.id}:y`, 100) / 100 - 0.5) * 120,
+    };
+  });
+
+  const simulation = forceSimulation(sim)
+    .randomSource(seededRandom(nodes.length * 7919 + links.length + 17))
+    .force(
+      "link",
+      forceLink<SimNode, (typeof links)[number]>(links)
+        .id((d) => d.id)
+        .distance((l) => (l.kind === "grows_into" ? 160 : 220))
+        .strength(0.2),
+    )
+    .force("charge", forceManyBody<SimNode>().strength(-280))
+    .force(
+      "collide",
+      forceCollide<SimNode>().radius((d) => Math.max(d.halfWidth, d.r) + 18).strength(0.9),
+    )
+    .force(
+      "band",
+      forceY<SimNode>((d) => TIER_BAND[d.tier] * height).strength(0.08),
+    )
+    .force("centre", forceX<SimNode>(width / 2).strength(0.015))
+    .alpha(1)
+    .stop();
+
+  const keepInWorld = () => {
+    for (const node of sim) {
+      node.x = Math.min(width - marginX - node.halfWidth, Math.max(marginX + node.halfWidth, node.x));
+      node.y = Math.min(height - 40 - node.down, Math.max(40 + node.up, node.y));
+    }
+  };
+
+  for (let i = 0; i < 400; i += 1) {
+    simulation.tick();
+    if (i % 4 === 0) {
+      separateFootprints(sim, 0.7);
+      keepInWorld();
+    }
+  }
+  for (let i = 0; i < 60; i += 1) {
+    separateFootprints(sim, 1);
+    keepInWorld();
   }
 
   for (const node of sim) placed.set(node.id, { id: node.id, x: node.x, y: node.y, r: node.r });

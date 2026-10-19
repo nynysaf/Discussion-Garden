@@ -8,9 +8,6 @@ const LINKS = [
   { href: "/explore/movements", label: "Movements" },
   { href: "/glossary", label: "Glossary" },
   { href: "/tensions", label: "Tensions" },
-  { href: "/facilitation", label: "Facilitation" },
-  { href: "/method", label: "Method" },
-  { href: "/workshop", label: "Workshop" },
 ] as const;
 
 export function ArchiveNav({ current }: { current?: string }) {

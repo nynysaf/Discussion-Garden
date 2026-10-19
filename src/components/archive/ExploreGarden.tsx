@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GardenCanvas } from "@/components/garden/GardenCanvas";
+import { PanZoomGarden } from "@/components/archive/PanZoomGarden";
 import type { ArchiveMapLayer, ArchiveSegment, ArchiveThemeMap } from "@/lib/archive/types";
 import { themeMapToGarden } from "@/lib/archive/types";
 import type { Garden } from "@/lib/garden/types";
@@ -65,10 +65,10 @@ export function ExploreGarden({
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-      <div className="min-h-[420px] flex-1 rounded-3xl border border-festival-green bg-white/50 shadow-poster lg:min-h-[560px]">
-        <GardenCanvas
+      <div className="min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-green bg-white/50 shadow-poster lg:min-h-[calc(100vh-12rem)]">
+        <PanZoomGarden
           garden={garden}
-          className="h-full min-h-[420px] w-full lg:min-h-[560px]"
+          className="h-full min-h-[70vh] w-full lg:min-h-[calc(100vh-12rem)]"
           selectedId={selectedId}
           onSelectNode={setSelectedId}
         />

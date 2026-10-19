@@ -32,10 +32,10 @@ export default function Home() {
           Explore the gardens
         </Link>
         <Link
-          href="/method"
+          href="/explore/movements"
           className="rounded-full border border-festival-forest px-6 py-3 font-semibold text-festival-forest transition hover:bg-white/50"
         >
-          How it worked
+          Read the movements
         </Link>
       </div>
 
@@ -67,7 +67,7 @@ export default function Home() {
         <p>
           This site is the harvest: a carefully redacted transcript, three contrastable maps
           (the festival garden, an AI reading of the full corpus, and themes the host found most
-          meaningful), plus a glossary, tension map, facilitation scorecard, and workshop kit.
+          meaningful), plus a glossary and tension map.
         </p>
         <p>
           Live tools that spend API credit are turned off. You can explore freely without a login.
@@ -87,14 +87,14 @@ export default function Home() {
             body: "Browse dialogue by day, movement, and garden-animal voice.",
           },
           {
-            href: "/facilitation",
-            title: "Facilitation scorecard",
-            body: "Which live inquiries opened space — and which went quiet.",
+            href: "/explore/movements",
+            title: "Movements",
+            body: "Sections of the weekend, each with a sense-making summary.",
           },
           {
-            href: "/workshop",
-            title: "Workshop kit",
-            body: "Run your own discussion garden: constraints, threshold, hybrid AI.",
+            href: "/glossary",
+            title: "Glossary & tensions",
+            body: "Key concepts and productive disagreements from the room.",
           },
         ].map((card) => (
           <li key={card.href}>

@@ -1,11 +1,12 @@
 {
-  "exportedAt": "2026-10-19T15:18:04.070Z",
+  "exportedAt": "2026-10-19T15:56:45.891Z",
+  "enrichedWith": "gpt-4o-mini",
   "movements": [
     {
       "id": "day_1-m0",
       "day": "day_1",
-      "title": "Saturday threshold & warm-up",
-      "summary": "Talk before the first live inquiry of the day.",
+      "title": "Designing Environments for Health and Well-Being",
+      "summary": "Participants discussed the importance of designing community spaces that promote health and social connection. They explored how elements like streetlights, sidewalks, and landscaping can influence daily perceptions and overall well-being. The conversation highlighted the need for thoughtful design to enhance community health outcomes.",
       "segmentIds": [
         "day_1-s0003",
         "day_1-s0004",
@@ -73,9 +74,9 @@
     {
       "id": "day_1-m1",
       "day": "day_1",
-      "title": "How do we build businesses that",
+      "title": "Building Thriving Business Strategies",
       "inquiry": "How do we build businesses that lead to thriving?",
-      "summary": "Live inquiry on the TVs: “How do we build businesses that lead to thriving?”",
+      "summary": "The dialogue shifted to the concept of creating businesses that foster community well-being and resilience. Participants engaged in a meta conversation about the importance of honest feedback in business interactions, emphasizing the need for open communication to build trust and collaboration.",
       "segmentIds": [
         "day_1-s0069",
         "day_1-s0070",
@@ -87,9 +88,9 @@
     {
       "id": "day_1-m2",
       "day": "day_1",
-      "title": "The meta conversation: how do we",
+      "title": "Setting the Stage for Authentic Conversations",
       "inquiry": "The meta conversation: how do we set up for a creat conversation?",
-      "summary": "Live inquiry on the TVs: “The meta conversation: how do we set up for a creat conversation?”",
+      "summary": "Participants explored the dynamics of initiating authentic conversations, focusing on the importance of emotional check-ins and recognizing barriers to connection. The discussion highlighted the need for creating safe spaces where individuals can express their true feelings and experiences without fear of judgment.",
       "segmentIds": [
         "day_1-s0074",
         "day_1-s0075",
@@ -643,25 +644,25 @@
     {
       "id": "day_1-m3",
       "day": "day_1",
-      "title": "How does individual resilience support/h…",
+      "title": "Individual and Collective Resilience Dynamics",
       "inquiry": "How does individual resilience support/hinder collective reslience?",
-      "summary": "Live inquiry on the TVs: “How does individual resilience support/hinder collective reslience?”",
+      "summary": "The conversation touched on the interplay between individual resilience and its impact on collective resilience within communities. Participants reflected on how personal strengths and challenges can either support or hinder group dynamics and community recovery.",
       "segmentIds": []
     },
     {
       "id": "day_1-m4",
       "day": "day_1",
-      "title": "How will we know what we",
+      "title": "Identifying What to Release for Growth",
       "inquiry": "How will we know what we need to give up? To let go of?",
-      "summary": "Live inquiry on the TVs: “How will we know what we need to give up? To let go of?”",
+      "summary": "This segment focused on the difficult process of identifying and letting go of things that no longer serve personal or community growth. Participants shared insights on the emotional challenges associated with release and the potential for new beginnings.",
       "segmentIds": []
     },
     {
       "id": "day_1-m5",
       "day": "day_1",
-      "title": "Where do our discomforts overlap, what",
+      "title": "Finding Common Ground in Discomforts",
       "inquiry": "Where do our discomforts overlap, what are the inviting in us?",
-      "summary": "Live inquiry on the TVs: “Where do our discomforts overlap, what are the inviting in us?”",
+      "summary": "Participants discussed the discomforts they face and how these shared experiences can lead to deeper connections. The dialogue emphasized the importance of recognizing and addressing discomfort as a pathway to understanding and collaboration within the community.",
       "segmentIds": [
         "day_1-s0624",
         "day_1-s0625",
@@ -1045,57 +1046,57 @@
     {
       "id": "day_1-m6",
       "day": "day_1",
-      "title": "How to scale regenerative eco villages",
+      "title": "Scaling Regenerative Eco-Villages",
       "inquiry": "How to scale regenerative eco villages?",
-      "summary": "Live inquiry on the TVs: “How to scale regenerative eco villages?”",
+      "summary": "The conversation revolved around strategies for scaling regenerative eco-villages and the challenges involved in creating sustainable communities. Participants shared ideas on integrating ecological practices into community planning and the importance of collaboration among diverse stakeholders.",
       "segmentIds": []
     },
     {
       "id": "day_1-m7",
       "day": "day_1",
-      "title": "How can we play with both",
+      "title": "Balancing Masculine and Feminine Energies",
       "inquiry": "How can we play with both masculine and feminine energy?",
-      "summary": "Live inquiry on the TVs: “How can we play with both masculine and feminine energy?”",
+      "summary": "This stretch explored the interplay of masculine and feminine energies in community dynamics. Participants reflected on how these energies can be balanced to foster inclusivity and collaboration in various initiatives.",
       "segmentIds": []
     },
     {
       "id": "day_1-m8",
       "day": "day_1",
-      "title": "How do we intentionally disturb our",
+      "title": "Intentional Disturbance in Environments",
       "inquiry": "How do we intentionally disturb our environments?",
-      "summary": "Live inquiry on the TVs: “How do we intentionally disturb our environments?”",
+      "summary": "The discussion focused on the concept of intentionally disturbing environments to foster growth and innovation. Participants considered how disruption can lead to new opportunities and the importance of embracing change within community spaces.",
       "segmentIds": []
     },
     {
       "id": "day_1-m9",
       "day": "day_1",
-      "title": "What entanglement is happening in this",
+      "title": "Understanding Current Entanglements in the Garden",
       "inquiry": "What entanglement is happening in this garden right?",
-      "summary": "Live inquiry on the TVs: “What entanglement is happening in this garden right?”",
+      "summary": "This segment examined the complex relationships and entanglements present in the community garden. Participants reflected on how these connections influence interactions and the overall health of the community.",
       "segmentIds": []
     },
     {
       "id": "day_1-m10",
       "day": "day_1",
-      "title": "How do we wake up to",
+      "title": "Awakening to Our Emotional Landscape",
       "inquiry": "How do we wake up to our feelings?",
-      "summary": "Live inquiry on the TVs: “How do we wake up to our feelings?”",
+      "summary": "Participants engaged in a dialogue about the importance of recognizing and understanding their emotional landscapes. The conversation emphasized the need for emotional awareness as a foundation for personal and community growth.",
       "segmentIds": []
     },
     {
       "id": "day_1-m11",
       "day": "day_1",
-      "title": "Where does 'give-a-shit-ness' come from",
+      "title": "Exploring the Roots of Compassionate Engagement",
       "inquiry": "Where does 'give-a-shit-ness' come from?",
-      "summary": "Live inquiry on the TVs: “Where does 'give-a-shit-ness' come from?”",
+      "summary": "This stretch focused on the origins of compassion and engagement within the community. Participants shared insights on what motivates them to care for others and how these motivations can be nurtured.",
       "segmentIds": []
     },
     {
       "id": "day_2-m1",
       "day": "day_2",
-      "title": "What is present for us this",
+      "title": "Morning Reflections and Insights",
       "inquiry": "What is present for us this morning?",
-      "summary": "Live inquiry on the TVs: “What is present for us this morning?”",
+      "summary": "As the second day began, participants reflected on their experiences from the previous day and what was present for them in the moment. The conversation highlighted the energy and insights gained from ongoing discussions and the anticipation of new possibilities.",
       "segmentIds": [
         "day_2-s0001",
         "day_2-s0002",
@@ -1349,9 +1350,9 @@
     {
       "id": "day_2-m2",
       "day": "day_2",
-      "title": "How do we lead with love",
+      "title": "Leading with Love in Conversations",
       "inquiry": "How do we lead with love?",
-      "summary": "Live inquiry on the TVs: “How do we lead with love?”",
+      "summary": "Participants explored the concept of leading conversations with love and compassion, emphasizing the importance of tone and intention. The dialogue highlighted the need for creating spaces where diverse voices can contribute to collective understanding.",
       "segmentIds": [
         "day_2-s0248",
         "day_2-s0249",
@@ -1444,25 +1445,25 @@
     {
       "id": "day_2-m3",
       "day": "day_2",
-      "title": "How do we relate/respond to voilence",
+      "title": "Responses to Violence in Community Spaces",
       "inquiry": "How do we relate/respond to voilence?",
-      "summary": "Live inquiry on the TVs: “How do we relate/respond to voilence?”",
+      "summary": "The conversation addressed how communities can respond to violence and its impact on individuals. Participants reflected on the complexities of navigating violence within community interactions and the need for supportive responses.",
       "segmentIds": []
     },
     {
       "id": "day_2-m4",
       "day": "day_2",
-      "title": "If suffering and joy can co-exist,",
+      "title": "Co-Existence of Suffering and Joy",
       "inquiry": "If suffering and joy can co-exist, what is possible?",
-      "summary": "Live inquiry on the TVs: “If suffering and joy can co-exist, what is possible?”",
+      "summary": "This segment examined the possibility of holding both suffering and joy in community experiences. Participants discussed how acknowledging both can lead to deeper connections and resilience.",
       "segmentIds": []
     },
     {
       "id": "day_2-m5",
       "day": "day_2",
-      "title": "How do we view our homes",
+      "title": "Homes as Portals for Self-Understanding",
       "inquiry": "How do we view our homes as a portal into deepening self understanding?",
-      "summary": "Live inquiry on the TVs: “How do we view our homes as a portal into deepening self understanding?”",
+      "summary": "Participants reflected on how their homes can serve as spaces for deepening self-awareness and understanding. The conversation highlighted the significance of personal environments in shaping identity and community connections.",
       "segmentIds": [
         "day_2-s0335",
         "day_2-s0336"
@@ -1471,9 +1472,9 @@
     {
       "id": "day_2-m6",
       "day": "day_2",
-      "title": "How do we upgrade our education",
+      "title": "Upgrading Educational Systems for Inclusivity",
       "inquiry": "How do we upgrade our education systems?",
-      "summary": "Live inquiry on the TVs: “How do we upgrade our education systems?”",
+      "summary": "The dialogue centered on the need to reform educational systems to better accommodate diverse learning styles. Participants shared personal experiences with traditional education and the impact of grief and emotional burdens on learning.",
       "segmentIds": [
         "day_2-s0337",
         "day_2-s0338",
@@ -1725,9 +1726,9 @@
     {
       "id": "day_2-m7",
       "day": "day_2",
-      "title": "What happened here at WCOF",
+      "title": "Reflections on the Festival's Impact",
       "inquiry": "What happened here at WCOF? What is possible from here?",
-      "summary": "Live inquiry on the TVs: “What happened here at WCOF? What is possible from here?”",
+      "summary": "Participants reflected on the overall impact of the festival and the themes that emerged from the discussions. The conversation emphasized the importance of connecting individual stories and insights to foster collective understanding.",
       "segmentIds": [
         "day_2-s0583",
         "day_2-s0584",
@@ -2152,9 +2153,9 @@
     {
       "id": "day_2-m8",
       "day": "day_2",
-      "title": "What does it take to slow",
+      "title": "The Importance of Slowing Down",
       "inquiry": "What does it take to slow down?",
-      "summary": "Live inquiry on the TVs: “What does it take to slow down?”",
+      "summary": "This stretch focused on the necessity of slowing down in a fast-paced world. Participants discussed the benefits of taking time to reflect and engage deeply with community issues.",
       "segmentIds": []
     }
   ]

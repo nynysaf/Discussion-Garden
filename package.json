@@ -20,7 +20,8 @@
     "garden:demo": "node --env-file=.env.local scripts/garden-demo.mjs",
     "transcript:demo": "node --env-file=.env.local scripts/transcript-demo.mjs",
     "archive:garden": "node --env-file=.env.local scripts/archive/export-garden.mjs",
-    "archive:build": "node scripts/archive/build-archive.mjs"
+    "archive:build": "node scripts/archive/build-archive.mjs",
+    "archive:enrich": "node --env-file=.env.local scripts/archive/enrich-with-ai.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

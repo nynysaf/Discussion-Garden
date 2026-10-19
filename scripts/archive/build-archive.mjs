@@ -17,7 +17,7 @@ import {
   redactText,
   root,
   shouldDropSegment,
-  wordWeights,
+  phraseWeights,
   writeJson,
 } from "./lib.mjs";
 
@@ -99,9 +99,11 @@ for (const day of ["day_1", "day_2"]) {
     return {
       id: `${day}-m${i + 1}`,
       day,
-      title: shortenTitle(inq.body),
+      title: inq.body.replace(/\?$/, "").trim() || inq.body,
       inquiry: inq.body,
-      summary: `Live inquiry on the TVs: “${inq.body}”`,
+      summary:
+        `This stretch opened under the live inquiry “${inq.body}”. ` +
+        `Run npm run archive:enrich to replace this stub with a full paragraph summary of what the room actually explored.`,
       segmentIds,
     };
   });
@@ -118,8 +120,9 @@ for (const day of ["day_1", "day_2"]) {
     movements.push({
       id: `${day}-m0`,
       day,
-      title: day === "day_1" ? "Saturday threshold & warm-up" : "Sunday arrival",
-      summary: "Talk before the first live inquiry of the day.",
+      title: day === "day_1" ? "Saturday threshold and warm-up" : "Sunday arrival",
+      summary:
+        "Opening talk before the first live inquiry of the day. Run archive:enrich for a full paragraph on what this stretch held.",
       segmentIds: prefaceIds,
     });
   }
@@ -183,67 +186,30 @@ const meta = {
 };
 
 await writeJson(join(publicArchiveDir, "meta.json"), meta);
+
+// Phrase cloud (bigrams/trigrams). Prefer `npm run archive:enrich` for semantic phrases.
 await writeJson(join(publicArchiveDir, "wordcloud.json"), {
   exportedAt: new Date().toISOString(),
-  words: wordWeights(transcriptWithMovements, 100),
+  words: phraseWeights(transcriptWithMovements, 80),
 });
 
-// AI sensemaking map — cluster around inquiries + high-weight terms as themes/sprouts/seeds
-const aiNodes = [];
+// Placeholder AI map from inquiry themes only — enrich-with-ai replaces with semantic reading.
+const aiNodes = allInquiries.slice(0, 10).map((inq, i) => ({
+  id: `ai-theme-${i + 1}`,
+  tier: "theme",
+  label: ideaLabel(inq.body),
+  weight: 4,
+  originSessionId: inq.day,
+  essay: `Placeholder from the live inquiry “${inq.body}”. Run archive:enrich for a full semantic reading.`,
+  quoteIds: pickQuotes(transcriptWithMovements, inq.body.split(/\s+/).slice(0, 2).join(" "), 2),
+  liveNodeIds: [],
+}));
 const aiVines = [];
-const themeInquiries = allInquiries.slice(0, 12);
-themeInquiries.forEach((inq, i) => {
-  const id = `ai-theme-${i + 1}`;
-  const related = transcriptWithMovements
-    .filter((s) => s.text.toLowerCase().includes(inq.body.toLowerCase().slice(0, 24).split(/\s+/)[0] ?? ""))
-    .slice(0, 5)
-    .map((s) => s.id);
-  const quotes = pickQuotes(transcriptWithMovements, inq.body, 3);
-  aiNodes.push({
-    id,
-    tier: "theme",
-    label: shortenTitle(inq.body, 6),
-    weight: 3 + Math.min(4, Math.floor(quotes.length)),
-    originSessionId: inq.day,
-    essay: `AI reading of the inquiry “${inq.body}” across the weekend corpus — patterns near this prompt.`,
-    quoteIds: quotes,
-    liveNodeIds: [],
-  });
-});
-
-const topWords = wordWeights(transcriptWithMovements, 24);
-topWords.forEach((w, i) => {
-  if (w.term.length < 5) return;
-  const id = `ai-sprout-${i + 1}`;
-  aiNodes.push({
-    id,
-    tier: i < 8 ? "sprout" : "seed",
-    label: titleCase(w.term),
-    weight: Math.max(1, Math.min(5, Math.round(w.weight / 8))),
-    originSessionId: null,
-    essay: `Recurring term in the redacted transcript (${w.weight} mentions).`,
-    quoteIds: w.segmentIds.slice(0, 3),
-    liveNodeIds: [],
-  });
-  // Vine toward nearest theme by shared day / first theme
-  const theme = aiNodes.find((n) => n.tier === "theme");
-  if (theme) {
-    aiVines.push({
-      id: `ai-vine-${aiVines.length + 1}`,
-      sourceId: id,
-      targetId: theme.id,
-      kind: i % 3 === 0 ? "relates_to" : "grows_into",
-    });
-  }
-});
-
-// Connect consecutive themes
-const themes = aiNodes.filter((n) => n.tier === "theme");
-for (let i = 0; i < themes.length - 1; i++) {
+for (let i = 0; i < aiNodes.length - 1; i++) {
   aiVines.push({
     id: `ai-theme-vine-${i + 1}`,
-    sourceId: themes[i].id,
-    targetId: themes[i + 1].id,
+    sourceId: aiNodes[i].id,
+    targetId: aiNodes[i + 1].id,
     kind: "relates_to",
   });
 }
@@ -252,7 +218,7 @@ await writeJson(join(publicArchiveDir, "ai-sensemaking-map.json"), {
   layer: "ai",
   title: "AI sensemaking",
   caption:
-    "A fresh offline reading of the full redacted corpus — clusters around live inquiries and recurring language. Provocations, not verdicts.",
+    "Run npm run archive:enrich (with OPENAI_API_KEY) for a semantic reading of ideas — not stopword clusters.",
   nodes: aiNodes,
   vines: aiVines,
 });
@@ -476,43 +442,18 @@ const tensions = [
 
 await writeJson(join(publicArchiveDir, "tensions.json"), { pairs: tensions });
 
-const facilitation = allInquiries.map((inq, i) => {
-  const mov = movements.find((m) => m.inquiry === inq.body);
-  const n = mov?.segmentIds.length ?? 0;
-  let opened = "mixed";
-  if (n >= 40) opened = "opened";
-  else if (n > 0 && n < 12) opened = "quiet";
-  else if (n === 0) opened = "quiet";
-  return {
-    id: `fac-${i + 1}`,
-    inquiry: inq.body,
-    day: inq.day,
-    opened,
-    note:
-      opened === "opened"
-        ? "Many lines followed this inquiry on the TVs — the prompt seemed to hold space."
-        : opened === "quiet"
-          ? "Little talk landed after this marker (or it was posted in a cluster at day’s end)."
-          : "Moderate stretch of dialogue after this inquiry.",
-  };
-});
-
-await writeJson(join(publicArchiveDir, "facilitation.json"), { rows: facilitation });
-
 console.log(
   `Archive built: ${transcriptWithMovements.length} public segments (dropped ${dropped}), ${movements.length} movements, ${aiNodes.length} AI nodes.`,
 );
+console.log(`Next: npm run archive:enrich  (needs OPENAI_API_KEY for semantic titles, summaries, AI map, phrases)`);
 console.log(`Public JSON → ${publicArchiveDir}`);
 console.log(`Private raw → ${privateDir}`);
 
-function shortenTitle(body, maxWords = 6) {
-  const words = body.replace(/[?].*$/, "").trim().split(/\s+/);
-  const cut = words.slice(0, maxWords).join(" ");
-  return cut.length > 42 ? cut.slice(0, 40) + "…" : cut;
-}
-
-function titleCase(w) {
-  return w.charAt(0).toUpperCase() + w.slice(1);
+/** Short idea label from an inquiry — keep the meaning, drop trailing ? */
+function ideaLabel(body) {
+  const cleaned = body.replace(/\?+$/, "").trim();
+  if (cleaned.length <= 48) return cleaned;
+  return cleaned.slice(0, 45).replace(/\s+\S*$/, "") + "…";
 }
 
 function pickQuotes(segments, needle, n) {

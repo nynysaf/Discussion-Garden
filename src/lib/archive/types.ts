@@ -93,14 +93,6 @@ export type TensionPair = {
   quoteIds: string[];
 };
 
-export type FacilitationRow = {
-  id: string;
-  inquiry: string;
-  day: "day_1" | "day_2";
-  opened: "opened" | "quiet" | "mixed";
-  note: string;
-};
-
 export type ArchiveBundle = {
   garden: Garden;
   transcript: ArchiveSegment[];
@@ -111,7 +103,6 @@ export type ArchiveBundle = {
   meta: ArchiveMeta;
   glossary: GlossaryEntry[];
   tensions: TensionPair[];
-  facilitation: FacilitationRow[];
 };
 
 /** Convert a theme map into the Garden shape GardenCanvas expects. */

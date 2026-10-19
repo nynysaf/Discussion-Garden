@@ -16,8 +16,8 @@ export default function WordsPage() {
         Word cloud
       </h1>
       <p className="mt-3 max-w-2xl text-lg opacity-85">
-        Frequent terms from the redacted corpus (stopwords removed). Click a word to jump into
-        matching transcript lines.
+        Idea phrases from the weekend — multi-word concepts, not filler like “it&apos;s” or
+        “thinking.” Click a phrase to jump into matching transcript turns.
       </p>
       <div className="mt-10">
         <WordCloud words={loadWordcloud()} />

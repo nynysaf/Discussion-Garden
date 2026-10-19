@@ -5,7 +5,6 @@ import type {
   ArchiveSegment,
   ArchiveThemeMap,
   ArchiveWord,
-  FacilitationRow,
   GlossaryEntry,
   TensionPair,
 } from "./types";
@@ -20,7 +19,6 @@ import wordcloudJson from "@/data/archive/wordcloud.json";
 import metaJson from "@/data/archive/meta.json";
 import glossaryJson from "@/data/archive/glossary.json";
 import tensionsJson from "@/data/archive/tensions.json";
-import facilitationJson from "@/data/archive/facilitation.json";
 
 export function loadLiveGarden(): Garden {
   return {
@@ -80,10 +78,6 @@ export function loadGlossary(): GlossaryEntry[] {
 
 export function loadTensions(): TensionPair[] {
   return tensionsJson.pairs as TensionPair[];
-}
-
-export function loadFacilitation(): FacilitationRow[] {
-  return facilitationJson.rows as FacilitationRow[];
 }
 
 export function gardenForLayer(layer: "live" | "ai" | "host"): Garden {
