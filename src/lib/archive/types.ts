@@ -1,6 +1,6 @@
 import type { Garden, Tier, VineKind } from "@/lib/garden/types";
 
-/** One of the three contrastable garden lenses on /explore. */
+/** Garden lenses. `/explore` shows live + AI; host remains in the archive JSON. */
 export type ArchiveMapLayer = "live" | "ai" | "host";
 
 export type ArchiveSegment = {

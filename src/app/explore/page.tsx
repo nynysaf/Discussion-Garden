@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import { ArchiveNav } from "@/components/archive/ArchiveNav";
 import { ExploreGarden } from "@/components/archive/ExploreGarden";
-import {
-  loadAiMap,
-  loadHostMap,
-  loadLiveGarden,
-  loadLiveNodeDescriptions,
-  loadTranscript,
-} from "@/lib/archive/load";
+import { loadAiMap, loadLiveGarden, loadLiveNodeDescriptions, loadTranscript } from "@/lib/archive/load";
 
 export const metadata: Metadata = {
   title: "Explore",
-  description: "Interactive Discussion Garden — festival, AI, and host readings.",
+  description: "Explore the garden of our thinking — festival garden and AI reading.",
 };
 
 export default function ExplorePage() {
@@ -25,15 +19,14 @@ export default function ExplorePage() {
         Explore the gardens
       </h1>
       <p className="mt-3 max-w-2xl text-lg opacity-85">
-        Three lenses on one weekend. Pan and zoom the paper; drag plants to pin them (double-click to
-        release). The AI reading grows Clara-style — many ideas per movement, merged into one web.
+        Explore the garden of our thinking. A web of interconnected ideas that we planted and grew
+        through dialogue.
       </p>
       <div className="mt-8">
         <ExploreGarden
           liveGarden={loadLiveGarden()}
           liveDescriptions={loadLiveNodeDescriptions()}
           aiMap={loadAiMap()}
-          hostMap={loadHostMap()}
           segmentsById={segmentsById}
         />
       </div>

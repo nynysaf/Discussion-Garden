@@ -1,12 +1,11 @@
 "use client";
 
 import {
+  forceCenter,
   forceCollide,
   forceLink,
   forceManyBody,
   forceSimulation,
-  forceX,
-  forceY,
   type Simulation,
   type SimulationNodeDatum,
 } from "d3-force";
@@ -14,13 +13,14 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import { MapWallpaper } from "@/components/archive/MapWallpaper";
 import { curvedPath } from "@/lib/garden/curves";
 import { labelledNodeIds, wrapLabel } from "@/lib/garden/labels";
-import { labelFontSize, nodeRadius, TIER_BAND } from "@/lib/garden/layout";
+import { labelFontSize, nodeRadius } from "@/lib/garden/layout";
 import { adjacencyFromVines, neighborhoodIds, vineInFocus } from "@/lib/garden/neighborhood";
 import { spriteUrl } from "@/lib/garden/sprites";
 import { PLANT_PALETTE } from "@/lib/garden/topo";
 import type { Garden, Tier } from "@/lib/garden/types";
 import {
-  fitView,
+  EXPLORE_VIEW_MIN_K,
+  fitBounds,
   type ViewTransform,
   zoomAroundPoint,
 } from "@/lib/garden/view-transform";
@@ -44,12 +44,16 @@ function reducedMotionServer() {
   return false;
 }
 
-/** Larger world + stronger forces → less overlap. */
-const WORLD = { width: 3200, height: 2400 };
+/**
+ * Clara-style: a large paper the graph can grow across. The first view is a
+ * reading zoom on the centre — not a fit of the whole web.
+ */
+const WORLD = { width: 4800, height: 3600 };
 const SCALE = 1.05;
 const PAN_ARM_PX = 4;
 const FADED = 0.12;
 const LIT = 1;
+const GLYPH_WIDTH = 0.56;
 
 type SimNode = SimulationNodeDatum & {
   id: string;
@@ -57,11 +61,29 @@ type SimNode = SimulationNodeDatum & {
   label: string;
   weight: number;
   r: number;
+  collideR: number;
   x: number;
   y: number;
   fx: number | null;
   fy: number | null;
 };
+
+function collideRadius(tier: Tier, r: number, lines: string[] | undefined): number {
+  const font = labelFontSize(tier, SCALE);
+  const textW = lines?.length ? Math.max(...lines.map((l) => l.length)) * font * GLYPH_WIDTH : 0;
+  const labelDown = lines?.length ? font * 0.3 + lines.length * font * 1.15 : 0;
+  const halfW = Math.max(r, textW / 2) + 18;
+  const halfH = r + 10 + labelDown / 2;
+  return Math.sqrt(halfW * halfW + halfH * halfH);
+}
+
+function readingView(viewW: number, viewH: number): ViewTransform {
+  return {
+    k: 1,
+    x: viewW / 2 - WORLD.width / 2,
+    y: viewH / 2 - WORLD.height / 2,
+  };
+}
 
 type Props = {
   garden: Garden;
@@ -108,6 +130,32 @@ export function ForceGarden({
     id: string;
     moved: boolean;
   } | null>(null);
+  const pointerPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  function nodeAtPointer(clientX: number, clientY: number): string | null {
+    const box = boxRef.current;
+    if (!box) return null;
+    const rect = box.getBoundingClientRect();
+    const v = viewRef.current;
+    const worldX = (clientX - rect.left - v.x) / v.k;
+    const worldY = (clientY - rect.top - v.y) / v.k;
+    let bestId: string | null = null;
+    let bestD = Infinity;
+    for (const node of nodesRef.current) {
+      const d = Math.hypot(node.x - worldX, node.y - worldY);
+      if (d <= node.r + 10 && d < bestD) {
+        bestId = node.id;
+        bestD = d;
+      }
+    }
+    return bestId;
+  }
+
+  function syncHover(clientX: number, clientY: number) {
+    pointerPosRef.current = { x: clientX, y: clientY };
+    const id = nodeAtPointer(clientX, clientY);
+    setHoveredId((h) => (h === id ? h : id));
+  }
 
   const labels = useMemo(() => {
     const ids = labelledNodeIds(garden.nodes, { crowdedAt: 140, recentSeeds: 40 });
@@ -125,11 +173,11 @@ export function ForceGarden({
 
   const adj = useMemo(() => adjacencyFromVines(garden.vines), [garden.vines]);
 
+  // Neighbourhood fade follows the pointer only — a click should not keep the web dimmed.
   const focusIds = useMemo(() => {
-    const root = hoveredId ?? selectedId;
-    if (!root) return null;
-    return neighborhoodIds(adj, root, 2);
-  }, [adj, hoveredId, selectedId]);
+    if (!hoveredId) return null;
+    return neighborhoodIds(adj, hoveredId, 2);
+  }, [adj, hoveredId]);
 
   const topologyKey =
     garden.nodes.map((n) => n.id).join(",") +
@@ -144,45 +192,64 @@ export function ForceGarden({
       setSize({ width: Math.round(width), height: Math.round(height) });
     });
     observer.observe(box);
+    box.onselectstart = () => false;
     return () => observer.disconnect();
   }, []);
 
-  // Fit only when the garden topology changes or the box first gets a size — not on every zoom.
-  const fittedKey = useRef("");
+  // Centre a reading zoom on first size / map change. Size-only (fullscreen) keeps the same world point.
+  const viewTopoRef = useRef("");
+  const sizeRef = useRef(size);
   useEffect(() => {
     if (size.width <= 0 || size.height <= 0) return;
-    const key = `${topologyKey}|${size.width}x${size.height}`;
-    // Re-fit when topology changes; when only size changes (e.g. fullscreen), fit once per size bucket.
-    const topoOnly = topologyKey;
-    if (fittedKey.current.startsWith(topoOnly) && fittedKey.current !== key) {
-      // size change after we already fitted this topology — refit for fullscreen
-      fittedKey.current = key;
-      setView(fitView(WORLD.width, WORLD.height, size.width, size.height, 48));
-      return;
+    if (viewTopoRef.current !== topologyKey) {
+      viewTopoRef.current = topologyKey;
+      setView(readingView(size.width, size.height));
+    } else {
+      const prev = sizeRef.current;
+      if (prev.width > 0 && prev.height > 0 && (prev.width !== size.width || prev.height !== size.height)) {
+        setView((v) => {
+          const worldX = (prev.width / 2 - v.x) / v.k;
+          const worldY = (prev.height / 2 - v.y) / v.k;
+          return {
+            k: v.k,
+            x: size.width / 2 - worldX * v.k,
+            y: size.height / 2 - worldY * v.k,
+          };
+        });
+      }
     }
-    if (fittedKey.current === key) return;
-    fittedKey.current = key;
-    setView(fitView(WORLD.width, WORLD.height, size.width, size.height, 48));
-  }, [topologyKey, size.width, size.height]);
+    sizeRef.current = size;
+  }, [topologyKey, size]);
 
   useEffect(() => {
     const prevById = new Map(nodesRef.current.map((n) => [n.id, n]));
     const simNodes: SimNode[] = garden.nodes.map((node, i) => {
       const r = nodeRadius(node.tier, node.weight, SCALE);
+      const collideR = collideRadius(node.tier, r, labels.get(node.id));
       const prev = prevById.get(node.id);
       if (prev) {
-        return { ...prev, tier: node.tier, label: node.label, weight: node.weight, r };
+        return {
+          ...prev,
+          tier: node.tier,
+          label: node.label,
+          weight: node.weight,
+          r,
+          collideR,
+        };
       }
+      // Sunflower spiral — already spaced, so links can pull friends into clusters
+      // instead of the whole web cooling as one packed clump.
       const angle = i * 2.399963;
-      const dist = 80 + (i % 20) * 36;
+      const dist = 120 * Math.sqrt(i + 1);
       return {
         id: node.id,
         tier: node.tier,
         label: node.label,
         weight: node.weight,
         r,
+        collideR,
         x: WORLD.width / 2 + Math.cos(angle) * dist,
-        y: TIER_BAND[node.tier] * WORLD.height + Math.sin(angle) * dist * 0.45,
+        y: WORLD.height / 2 + Math.sin(angle) * dist,
         fx: null,
         fy: null,
         vx: 0,
@@ -200,31 +267,45 @@ export function ForceGarden({
         "link",
         forceLink<(typeof simNodes)[number], (typeof links)[number]>(links)
           .id((d) => d.id)
-          .distance((l) => (l.kind === "grows_into" ? 200 : 260))
-          .strength(0.16),
+          .distance((l) => (l.kind === "grows_into" ? 280 : 380))
+          .strength(0.07),
       )
-      .force("charge", forceManyBody<SimNode>().strength(-420).distanceMax(900))
+      .force("charge", forceManyBody<SimNode>().strength(-820).distanceMin(40))
       .force(
         "collide",
         forceCollide<SimNode>()
-          .radius((d) => d.r + 36)
-          .strength(0.95)
+          .radius((d) => d.collideR)
+          .strength(0.85)
           .iterations(2),
       )
-      .force("band", forceY<SimNode>((d) => TIER_BAND[d.tier] * WORLD.height).strength(0.04))
-      .force("centre", forceX<SimNode>(WORLD.width / 2).strength(0.008))
-      .alpha(prevById.size > 0 ? 0.4 : 1)
-      .alphaDecay(0.018);
+      .force("center", forceCenter(WORLD.width / 2, WORLD.height / 2).strength(0.05))
+      .velocityDecay(0.28)
+      .alpha(1)
+      .alphaDecay(0.012)
+      .alphaTarget(0.2);
 
     nodesRef.current = simNodes;
     simRef.current = sim;
-    sim.on("tick", () => setTick((t) => t + 1));
+    sim.on("tick", () => {
+      const pos = pointerPosRef.current;
+      if (pos) {
+        const id = nodeAtPointer(pos.x, pos.y);
+        setHoveredId((h) => (h === id ? h : id));
+      }
+      setTick((t) => t + 1);
+    });
+
+    // Same extra heat you get from dragging a plant — lets the web unfold, then cool.
+    const bloom = window.setTimeout(() => {
+      sim.alphaTarget(0);
+    }, 2400);
 
     return () => {
+      window.clearTimeout(bloom);
       sim.stop();
       simRef.current = null;
     };
-  }, [topologyKey, garden.nodes, garden.vines]);
+  }, [topologyKey, garden.nodes, garden.vines, labels]);
 
   const nodes = nodesRef.current;
   void tick;
@@ -257,24 +338,43 @@ export function ForceGarden({
 
   function onWheel(e: React.WheelEvent) {
     e.preventDefault();
-    const intensity = Math.min(Math.abs(e.deltaY), 100) / 100;
-    const step = 0.008 + intensity * 0.01;
-    const factor = e.deltaY > 0 ? 1 - step : 1 + step;
+    const dy = Math.max(-240, Math.min(240, e.deltaY));
+    const factor = Math.exp(-dy * 0.0018);
     const pt = clientToLocal(e.clientX, e.clientY);
-    setView((current) => zoomAroundPoint(current, pt.x, pt.y, current.k * factor));
+    setView((current) =>
+      zoomAroundPoint(current, pt.x, pt.y, current.k * factor, EXPLORE_VIEW_MIN_K),
+    );
   }
 
   function zoomBy(factor: number) {
     setView((current) => {
       const cx = size.width / 2;
       const cy = size.height / 2;
-      return zoomAroundPoint(current, cx, cy, current.k * factor);
+      return zoomAroundPoint(current, cx, cy, current.k * factor, EXPLORE_VIEW_MIN_K);
     });
   }
 
-  function fitToWorld() {
+  function fitToNodes() {
     if (size.width <= 0 || size.height <= 0) return;
-    setView(fitView(WORLD.width, WORLD.height, size.width, size.height, 48));
+    const live = nodesRef.current;
+    if (live.length === 0) {
+      setView(readingView(size.width, size.height));
+      return;
+    }
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const node of live) {
+      const pad = node.collideR ?? node.r + 40;
+      minX = Math.min(minX, node.x - pad);
+      minY = Math.min(minY, node.y - pad);
+      maxX = Math.max(maxX, node.x + pad);
+      maxY = Math.max(maxY, node.y + pad);
+    }
+    setView(
+      fitBounds(minX, minY, maxX, maxY, size.width, size.height, 56, EXPLORE_VIEW_MIN_K),
+    );
   }
 
   function isChrome(target: EventTarget | null) {
@@ -284,6 +384,8 @@ export function ForceGarden({
   function onViewportPointerDown(e: React.PointerEvent) {
     if (e.button !== 0) return;
     if (isChrome(e.target)) return;
+    // Stop the browser selecting the +/−/Fit labels (or anything else in the pane).
+    e.preventDefault();
     if ((e.target as Element).closest?.("[data-garden-hit]")) return;
     panRef.current = {
       pointerId: e.pointerId,
@@ -295,8 +397,14 @@ export function ForceGarden({
   }
 
   function onViewportPointerMove(e: React.PointerEvent) {
+    if (!panRef.current?.armed && !dragRef.current) {
+      syncHover(e.clientX, e.clientY);
+    } else {
+      pointerPosRef.current = { x: e.clientX, y: e.clientY };
+    }
     const drag = dragRef.current;
     if (drag && drag.pointerId === e.pointerId) {
+      e.preventDefault();
       const local = clientToLocal(e.clientX, e.clientY);
       const world = screenToWorld(local.x, local.y);
       const node = nodesRef.current.find((n) => n.id === drag.id);
@@ -318,7 +426,10 @@ export function ForceGarden({
     if (!pan.armed) {
       if (Math.hypot(dx, dy) < PAN_ARM_PX) return;
       pan.armed = true;
+      setHoveredId(null);
     }
+    e.preventDefault();
+    window.getSelection()?.removeAllRanges();
     setView((c) => ({ ...c, x: c.x + dx, y: c.y + dy }));
   }
 
@@ -342,6 +453,7 @@ export function ForceGarden({
   function startNodeDrag(e: React.PointerEvent, id: string) {
     e.stopPropagation();
     if (e.button !== 0) return;
+    e.preventDefault();
     dragRef.current = { pointerId: e.pointerId, id, moved: false };
     boxRef.current?.setPointerCapture(e.pointerId);
   }
@@ -359,17 +471,23 @@ export function ForceGarden({
   return (
     <div
       ref={boxRef}
-      className={`relative touch-none overflow-hidden ${className}`}
-      style={{ backgroundColor: PLANT_PALETTE.base }}
+      className={`relative touch-none overflow-hidden overscroll-none select-none ${className}`}
+      style={{ backgroundColor: PLANT_PALETTE.base, userSelect: "none", WebkitUserSelect: "none" }}
       onWheel={onWheel}
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
       onPointerUp={onViewportPointerUp}
       onPointerCancel={onViewportPointerUp}
+      onPointerLeave={() => {
+        if (dragRef.current) return;
+        pointerPosRef.current = null;
+        setHoveredId(null);
+      }}
+      onDragStart={(e) => e.preventDefault()}
     >
       <div
         data-garden-chrome
-        className="absolute right-3 top-3 z-20 flex gap-2"
+        className="absolute right-3 top-3 z-20 flex select-none gap-2"
         onPointerDown={(e) => e.stopPropagation()}
       >
         <ChromeButton label="Zoom in" onClick={() => zoomBy(1.25)}>
@@ -378,7 +496,7 @@ export function ForceGarden({
         <ChromeButton label="Zoom out" onClick={() => zoomBy(1 / 1.25)}>
           −
         </ChromeButton>
-        <ChromeButton label="Fit garden" onClick={fitToWorld}>
+        <ChromeButton label="Fit garden" onClick={fitToNodes}>
           Fit
         </ChromeButton>
       </div>
@@ -397,7 +515,7 @@ export function ForceGarden({
               ? "The garden is empty"
               : `Garden with ${garden.nodes.length} ideas${themes.length ? `. Themes: ${themes.slice(0, 8).join(", ")}` : ""}`
           }
-          className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
+          className="absolute inset-0 z-0 cursor-grab select-none active:cursor-grabbing"
         >
           <rect width={size.width} height={size.height} fill={PLANT_PALETTE.base} />
 
@@ -446,9 +564,8 @@ export function ForceGarden({
                   data-garden-node={node.id}
                   opacity={opacity}
                   style={{ transform: `translate(${node.x}px, ${node.y}px)` }}
-                  className="transition-opacity duration-150"
                 >
-                  {/* Hit target: sprite circle only — labels do not capture clicks */}
+                  {/* Hit target: sprite circle only — hover is hit-tested on the pane */}
                   <circle
                     data-garden-hit={node.id}
                     r={node.r + 6}
@@ -459,10 +576,6 @@ export function ForceGarden({
                     aria-pressed={selected}
                     aria-label={`${node.label}${pinned ? " (pinned)" : ""}`}
                     onPointerDown={(e) => startNodeDrag(e, node.id)}
-                    onPointerEnter={() => setHoveredId(node.id)}
-                    onPointerLeave={() =>
-                      setHoveredId((h) => (h === node.id ? null : h))
-                    }
                     onDoubleClick={(e) => {
                       e.stopPropagation();
                       unpinNode(node.id);
@@ -558,7 +671,7 @@ function ChromeButton({
         onClick();
       }}
       onPointerDown={(e) => e.stopPropagation()}
-      className="rounded-full border border-festival-forest bg-white/95 px-3 py-1.5 text-sm font-semibold text-festival-forest shadow-poster hover:bg-white"
+      className="select-none rounded-full border border-festival-forest bg-white/95 px-3 py-1.5 text-sm font-semibold text-festival-forest shadow-poster hover:bg-white"
     >
       {children}
     </button>

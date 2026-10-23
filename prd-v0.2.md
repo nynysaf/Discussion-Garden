@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.15  
-**Last updated:** 2026-10-19  
+**Version:** 0.2.16  
+**Last updated:** 2026-10-21  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00 (concluded) · **Post-festival:** public archive / portfolio on the same site  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.16 (2026-10-21):** `/explore` shows two maps (festival garden · AI reading). Host reading stays in archive JSON but is off the public toggle. Map options sit above the canvas. Clara-style spread: reading zoom on the centre, Fit frames the whole web. Hover fade clears with the pointer; scroll zoom is stronger; Meta conversation(s) merged; layout blooms instead of starting as a clump.
 - **v0.2.15 (2026-10-19):** **Phase 9 — post-festival archive.** Homepage is a portfolio story. Public explore routes (`/explore` with pan/zoom, transcript with grouped turns, movements with paragraph summaries, words as idea phrases) plus glossary and tensions. Three contrastable garden lenses: live festival snapshot, AI sensemaking map (offline semantic enrich), host-seeded themes. `FESTIVAL_LIVE=false` by default — Deepgram / synthesis / submissions return **410**. Raw recordings stay local; only redacted/derived archive data is committed.
 - **v0.2.14 (2026-10-16):** Session **`day_0` (Friday Oct 16)** added so opening-night captions, transcript download, and garden planting file under Friday. Still one shared garden; Sat/Sun unchanged.
 - **v0.2.13 (2026-10-16):** Schedule **shows** the venue calendar day; day buttons only **edit** that day's list (do not switch TVs). Now · Next spans both days by clock (e.g. Friday shows Saturday morning as UP NEXT). Captions/transcript day follows the calendar (`active_session_id` syncs from the clock on `/admin`), not which day is open in the editor.
@@ -29,7 +30,7 @@
 ---
 
 ## 1. Executive Summary
-**Discussion Garden** began as a lightweight, real-time web application for the *We Create Our Futures* festival: live room captions upstairs → downstairs TVs, schedule prompts, audience questions via QR, and an interactive **digital garden** of emerging topics. After the weekend (Oct 17–18, 2026) the same deployment is a **public archive / portfolio** — redacted transcript, dual-map explore (festival · AI · host), and harvest pages — with live spendy APIs frozen unless `FESTIVAL_LIVE=true`.
+**Discussion Garden** began as a lightweight, real-time web application for the *We Create Our Futures* festival: live room captions upstairs → downstairs TVs, schedule prompts, audience questions via QR, and an interactive **digital garden** of emerging topics. After the weekend (Oct 17–18, 2026) the same deployment is a **public archive / portfolio** — redacted transcript, dual-map explore (festival garden · AI reading), and harvest pages — with live spendy APIs frozen unless `FESTIVAL_LIVE=true`.
 
 > **Key Architectural Principle:** Always-On Cloud Transcription + Toggleable AI Synthesis.  
 > The speech-to-text feed stays continuously active for closed captions. The garden can switch between manual host entry, AI drafts approved by the host (Hybrid), and fully automatic AI — and **captions must never depend on the AI pipeline**.

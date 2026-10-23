@@ -65,9 +65,9 @@ export default function Home() {
           garden that grew as people talked.
         </p>
         <p>
-          This site is the harvest: a carefully redacted transcript, three contrastable maps
-          (the festival garden, an AI reading of the full corpus, and themes the host found most
-          meaningful), plus a glossary and tension map.
+          This site is the harvest: a carefully redacted transcript, two maps of the same weekend
+          (the festival garden planted live, and an AI reading of the full corpus), plus a glossary
+          and tension map.
         </p>
         <p>
           Live tools that spend API credit are turned off. You can explore freely without a login.
@@ -78,8 +78,8 @@ export default function Home() {
         {[
           {
             href: "/explore",
-            title: "Dual maps",
-            body: "Toggle Festival · AI · Host readings of the same weekend.",
+            title: "Explore the gardens",
+            body: "Toggle the festival garden and the AI reading of the same weekend.",
           },
           {
             href: "/explore/transcript",

@@ -25,12 +25,22 @@ const byId = new Map(segments.map((s) => [s.id, s]));
 
 const TIER_RANK = { seed: 1, sprout: 2, theme: 3 };
 
+function stemWord(word) {
+  if (word.length > 4 && word.endsWith("ies")) return `${word.slice(0, -3)}y`;
+  if (word.length > 3 && word.endsWith("s") && !word.endsWith("ss")) return word.slice(0, -1);
+  return word;
+}
+
 function normalizeLabel(label) {
   return label
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
-    .trim();
+    .trim()
+    .split(" ")
+    .filter(Boolean)
+    .map(stemWord)
+    .join(" ");
 }
 
 const extractSchema = {

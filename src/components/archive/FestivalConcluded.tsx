@@ -19,7 +19,7 @@ export function FestivalConcluded({ formerRole }: Props) {
         captions, audience sharing, and AI synthesis are turned off so API keys stay safe.
       </p>
       <p className="mt-3 text-lg opacity-80">
-        The public archive is ready: explore the garden of ideas, the dual readings, and a
+        The public archive is ready: explore the garden of ideas, the AI reading, and a
         carefully redacted transcript.
       </p>
       <Link

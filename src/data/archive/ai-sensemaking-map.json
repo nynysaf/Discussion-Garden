@@ -1,20 +1,22 @@
 {
   "layer": "ai",
   "title": "AI sensemaking",
-  "caption": "Clara-style reading: up to six ideas per dialogue movement, merged when labels match. Drag plants to pin; double-click to release.",
+  "caption": "A reading of the full weekend, grown from the redacted transcript.",
   "nodes": [
     {
       "id": "ai-meta-conversations",
       "tier": "sprout",
-      "label": "meta conversations",
-      "weight": 10,
-      "originSessionId": "day_1",
-      "essay": "Meta conversations highlight the importance of discussing the nature and structure of dialogue itself to foster authenticity.",
+      "label": "Meta conversations",
+      "weight": 13,
+      "originSessionId": null,
+      "essay": "Meta conversations highlight the importance of discussing the nature and structure of dialogue itself — how we communicate and connect meaningfully in shared spaces — to foster authenticity.",
       "quoteIds": [
         "day_1-s0138",
         "day_1-s0243",
         "day_1-s0245",
-        "day_1-s0291"
+        "day_1-s0291",
+        "day_2-s0636",
+        "day_2-s0637"
       ],
       "liveNodeIds": []
     },
@@ -1363,19 +1365,6 @@
       "quoteIds": [
         "day_2-s0527",
         "day_2-s0528"
-      ],
-      "liveNodeIds": []
-    },
-    {
-      "id": "ai-meta-conversation",
-      "tier": "sprout",
-      "label": "Meta conversation",
-      "weight": 3,
-      "originSessionId": "day_2",
-      "essay": "This concept refers to discussions about how to communicate effectively and connect meaningfully in shared spaces.",
-      "quoteIds": [
-        "day_2-s0636",
-        "day_2-s0637"
       ],
       "liveNodeIds": []
     },
@@ -3396,7 +3385,7 @@
     {
       "id": "ai-vine-158",
       "sourceId": "ai-creating-spaces-for-neurodivergent-folks",
-      "targetId": "ai-meta-conversation",
+      "targetId": "ai-meta-conversations",
       "kind": "relates_to"
     },
     {
@@ -3419,14 +3408,14 @@
     },
     {
       "id": "ai-vine-162",
-      "sourceId": "ai-meta-conversation",
+      "sourceId": "ai-meta-conversations",
       "targetId": "ai-connection-and-belonging",
       "kind": "grows_into"
     },
     {
       "id": "ai-vine-163",
       "sourceId": "ai-role-of-discomfort-in-growth",
-      "targetId": "ai-meta-conversation",
+      "targetId": "ai-meta-conversations",
       "kind": "grows_into"
     },
     {
