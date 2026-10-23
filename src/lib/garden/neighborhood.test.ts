@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { adjacencyFromVines, neighborhoodIds } from "./neighborhood";
+import { adjacencyFromVines, islandNodeIds, neighborhoodIds } from "./neighborhood";
 
 describe("neighborhood", () => {
   const vines = [
@@ -15,5 +15,12 @@ describe("neighborhood", () => {
     expect(n.has("b")).toBe(true);
     expect(n.has("c")).toBe(true);
     expect(n.has("d")).toBe(false);
+  });
+
+  it("marks nodes outside the largest web as islands", () => {
+    const islands = islandNodeIds(["a", "b", "c", "d", "lonely"], vines);
+    expect(islands.has("lonely")).toBe(true);
+    expect(islands.has("a")).toBe(false);
+    expect(islandNodeIds(["a", "b", "c", "d"], vines).size).toBe(0);
   });
 });

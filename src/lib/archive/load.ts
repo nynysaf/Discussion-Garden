@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { Garden } from "@/lib/garden/types";
 import type {
   ArchiveMeta,
@@ -9,6 +11,7 @@ import type {
   TensionPair,
 } from "./types";
 import { themeMapToGarden } from "./types";
+import { applyLabelBridges, parseNaryanMap, type LabelBridge } from "./naryan-map";
 
 import gardenSnapshot from "@/data/archive/garden-snapshot.json";
 import transcriptJson from "@/data/archive/transcript-redacted.json";
@@ -19,6 +22,7 @@ import wordcloudJson from "@/data/archive/wordcloud.json";
 import metaJson from "@/data/archive/meta.json";
 import glossaryJson from "@/data/archive/glossary.json";
 import tensionsJson from "@/data/archive/tensions.json";
+import aiBridgesJson from "@/data/archive/ai-island-bridges.json";
 
 export function loadLiveGarden(): Garden {
   return {
@@ -57,7 +61,12 @@ export function loadMovements(): ArchiveMovement[] {
 }
 
 export function loadAiMap(): ArchiveThemeMap {
-  return aiMapJson as ArchiveThemeMap;
+  return applyLabelBridges(aiMapJson as ArchiveThemeMap, aiBridgesJson as LabelBridge[]);
+}
+
+export function loadNaryanMap(): ArchiveThemeMap {
+  const raw = readFileSync(join(process.cwd(), "src/data/archive/naryan-map.md"), "utf8");
+  return parseNaryanMap(raw);
 }
 
 export function loadHostMap(): ArchiveThemeMap {
@@ -80,9 +89,10 @@ export function loadTensions(): TensionPair[] {
   return tensionsJson.pairs as TensionPair[];
 }
 
-export function gardenForLayer(layer: "live" | "ai" | "host"): Garden {
+export function gardenForLayer(layer: "live" | "ai" | "host" | "naryan"): Garden {
   if (layer === "live") return loadLiveGarden();
   if (layer === "ai") return themeMapToGarden(loadAiMap());
+  if (layer === "naryan") return themeMapToGarden(loadNaryanMap());
   return themeMapToGarden(loadHostMap());
 }
 

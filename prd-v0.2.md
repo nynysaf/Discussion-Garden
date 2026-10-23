@@ -1,13 +1,14 @@
 # Product Requirements Document
 ## **Discussion Garden** | *We Create Our Futures Festival*
 
-**Version:** 0.2.17  
+**Version:** 0.2.18  
 **Last updated:** 2026-10-23  
 **Festival:** Oct 16–18, 2026 · **Discussion Garden live:** Sat Oct 17 & Sun Oct 18, 11:00–17:00 (concluded) · **Post-festival:** public archive / portfolio on the same site  
 **Supersedes:** `Discussion_Garden_PRD_and_Design_Guide.md` (v0.1 — kept for reference)  
 **Companion docs:** `DESIGN_GUIDE.md` (visual system) · `dev-plan-v0.1.md` (build roadmap + progress log)
 
 ### Changelog
+- **v0.2.18 (2026-10-23):** Naryan's Map is a host-authored graph from `src/data/archive/naryan-map.md` (edit headings, essays, quotes, vines; refresh `/explore`). The Miro screenshot sits under that map. AI's Map joins obvious floating islands by label; leftover islands get a light centre tether so they do not drift off the main web.
 - **v0.2.17 (2026-10-23):** `/explore` tabs are **Naryan's Map** and **AI's Map**. A Tighter–Looser density slider (0–100%, default 50) sits beside them and retunes gravity/repulsion. Opening view is a bit more zoomed out; 100% is the previous loose layout.
 - **v0.2.16 (2026-10-21):** `/explore` shows two maps (festival garden · AI reading). Host reading stays in archive JSON but is off the public toggle. Map options sit above the canvas. Clara-style spread: reading zoom on the centre, Fit frames the whole web. Hover fade clears with the pointer; scroll zoom is stronger; Meta conversation(s) merged; layout blooms instead of starting as a clump.
 - **v0.2.15 (2026-10-19):** **Phase 9 — post-festival archive.** Homepage is a portfolio story. Public explore routes (`/explore` with pan/zoom, transcript with grouped turns, movements with paragraph summaries, words as idea phrases) plus glossary and tensions. Three contrastable garden lenses: live festival snapshot, AI sensemaking map (offline semantic enrich), host-seeded themes. `FESTIVAL_LIVE=false` by default — Deepgram / synthesis / submissions return **410**. Raw recordings stay local; only redacted/derived archive data is committed.

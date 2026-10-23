@@ -47,3 +47,37 @@ export function vineInFocus(
   if (!focus) return true;
   return focus.has(sourceId) && focus.has(targetId);
 }
+
+/**
+ * Nodes that are not in the largest connected web (true isolates and small
+ * islands). The explore canvas can tether these without changing physics for
+ * the main graph.
+ */
+export function islandNodeIds(nodeIds: string[], vines: GardenVine[]): Set<string> {
+  const adj = adjacencyFromVines(vines);
+  const remaining = new Set(nodeIds);
+  let largest = new Set<string>();
+
+  while (remaining.size > 0) {
+    const start = remaining.values().next().value as string;
+    const comp = new Set<string>();
+    const stack = [start];
+    remaining.delete(start);
+    while (stack.length > 0) {
+      const id = stack.pop()!;
+      comp.add(id);
+      for (const n of adj.get(id) ?? []) {
+        if (!remaining.has(n)) continue;
+        remaining.delete(n);
+        stack.push(n);
+      }
+    }
+    if (comp.size > largest.size) largest = comp;
+  }
+
+  const islands = new Set<string>();
+  for (const id of nodeIds) {
+    if (!largest.has(id)) islands.add(id);
+  }
+  return islands;
+}

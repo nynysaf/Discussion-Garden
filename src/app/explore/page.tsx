@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArchiveNav } from "@/components/archive/ArchiveNav";
 import { ExploreGarden } from "@/components/archive/ExploreGarden";
-import { loadAiMap, loadLiveGarden, loadLiveNodeDescriptions, loadTranscript } from "@/lib/archive/load";
+import { loadAiMap, loadNaryanMap, loadTranscript } from "@/lib/archive/load";
 
 export const metadata: Metadata = {
   title: "Explore",
@@ -24,8 +24,7 @@ export default function ExplorePage() {
       </p>
       <div className="mt-8">
         <ExploreGarden
-          liveGarden={loadLiveGarden()}
-          liveDescriptions={loadLiveNodeDescriptions()}
+          naryanMap={loadNaryanMap()}
           aiMap={loadAiMap()}
           segmentsById={segmentsById}
         />

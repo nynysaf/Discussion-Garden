@@ -6,10 +6,14 @@ import {
   forceLink,
   forceManyBody,
   forceSimulation,
+  forceX,
+  forceY,
   type ForceCenter,
   type ForceCollide,
   type ForceLink,
   type ForceManyBody,
+  type ForceX,
+  type ForceY,
   type Simulation,
   type SimulationNodeDatum,
 } from "d3-force";
@@ -19,7 +23,12 @@ import { curvedPath } from "@/lib/garden/curves";
 import { labelledNodeIds, wrapLabel } from "@/lib/garden/labels";
 import { DENSITY_DEFAULT, forcesForDensity } from "@/lib/garden/density";
 import { labelFontSize, nodeRadius } from "@/lib/garden/layout";
-import { adjacencyFromVines, neighborhoodIds, vineInFocus } from "@/lib/garden/neighborhood";
+import {
+  adjacencyFromVines,
+  islandNodeIds,
+  neighborhoodIds,
+  vineInFocus,
+} from "@/lib/garden/neighborhood";
 import { spriteUrl } from "@/lib/garden/sprites";
 import { PLANT_PALETTE } from "@/lib/garden/topo";
 import type { Garden, Tier } from "@/lib/garden/types";
@@ -95,9 +104,20 @@ function readingView(viewW: number, viewH: number): ViewTransform {
 
 type SimLink = { source: string | SimNode; target: string | SimNode; kind: string };
 
-function applyDensityForces(sim: Simulation<SimNode, undefined>, density: number) {
+function islandCharge(charge: number, isIsland: boolean): number {
+  if (!isIsland || charge >= 0) return charge;
+  return Math.max(charge, -90);
+}
+
+function applyDensityForces(
+  sim: Simulation<SimNode, undefined>,
+  density: number,
+  islands: Set<string>,
+) {
   const f = forcesForDensity(density);
-  (sim.force("charge") as ForceManyBody<SimNode> | undefined)?.strength(f.charge);
+  (sim.force("charge") as ForceManyBody<SimNode> | undefined)?.strength((d) =>
+    islandCharge(f.charge, islands.has(d.id)),
+  );
   const link = sim.force("link") as ForceLink<SimNode, SimLink> | undefined;
   link
     ?.distance((l) => (l.kind === "grows_into" ? f.linkGrow : f.linkRelate))
@@ -106,6 +126,9 @@ function applyDensityForces(sim: Simulation<SimNode, undefined>, density: number
   (sim.force("collide") as ForceCollide<SimNode> | undefined)?.radius(
     (d) => d.collideR * f.collideScale,
   );
+  const tether = (d: SimNode) => (islands.has(d.id) ? 0.2 : 0);
+  (sim.force("islandX") as ForceX<SimNode> | undefined)?.strength(tether);
+  (sim.force("islandY") as ForceY<SimNode> | undefined)?.strength(tether);
 }
 
 type Props = {
@@ -291,6 +314,10 @@ export function ForceGarden({
       .map((v) => ({ source: v.sourceId, target: v.targetId, kind: v.kind }));
 
     const f = forcesForDensity(densityRef.current);
+    const islands = islandNodeIds(
+      simNodes.map((n) => n.id),
+      garden.vines,
+    );
     const sim = forceSimulation(simNodes)
       .force(
         "link",
@@ -299,7 +326,12 @@ export function ForceGarden({
           .distance((l) => (l.kind === "grows_into" ? f.linkGrow : f.linkRelate))
           .strength(f.linkStrength),
       )
-      .force("charge", forceManyBody<SimNode>().strength(f.charge).distanceMin(40))
+      .force(
+        "charge",
+        forceManyBody<SimNode>()
+          .strength((d) => islandCharge(f.charge, islands.has(d.id)))
+          .distanceMin(40),
+      )
       .force(
         "collide",
         forceCollide<SimNode>()
@@ -308,6 +340,14 @@ export function ForceGarden({
           .iterations(2),
       )
       .force("center", forceCenter(WORLD.width / 2, WORLD.height / 2).strength(f.center))
+      .force(
+        "islandX",
+        forceX<SimNode>(WORLD.width / 2).strength((d) => (islands.has(d.id) ? 0.2 : 0)),
+      )
+      .force(
+        "islandY",
+        forceY<SimNode>(WORLD.height / 2).strength((d) => (islands.has(d.id) ? 0.2 : 0)),
+      )
       .velocityDecay(0.28)
       .alpha(1)
       .alphaDecay(0.012)
@@ -345,7 +385,14 @@ export function ForceGarden({
     }
     const sim = simRef.current;
     if (!sim) return;
-    applyDensityForces(sim, density);
+    applyDensityForces(
+      sim,
+      density,
+      islandNodeIds(
+        nodesRef.current.map((n) => n.id),
+        garden.vines,
+      ),
+    );
     sim.alpha(0.45).restart();
   }, [density]);
 

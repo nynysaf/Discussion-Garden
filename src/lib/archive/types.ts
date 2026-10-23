@@ -1,7 +1,7 @@
 import type { Garden, Tier, VineKind } from "@/lib/garden/types";
 
-/** Garden lenses. `/explore` shows live + AI; host remains in the archive JSON. */
-export type ArchiveMapLayer = "live" | "ai" | "host";
+/** Garden lenses. `/explore` shows Naryan's Map + AI; host JSON stays in the archive. */
+export type ArchiveMapLayer = "live" | "ai" | "host" | "naryan";
 
 export type ArchiveSegment = {
   id: string;
@@ -56,6 +56,9 @@ export type ArchiveThemeMap = {
   layer: "ai" | "host";
   title: string;
   caption: string;
+  /** Optional screenshot shown under Naryan's Map. */
+  image?: string;
+  imageIntro?: string;
   nodes: ArchiveThemeNode[];
   vines: ArchiveThemeVine[];
 };

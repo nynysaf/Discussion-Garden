@@ -6,51 +6,29 @@ import { ForceGarden } from "@/components/archive/ForceGarden";
 import type { ArchiveSegment, ArchiveThemeMap } from "@/lib/archive/types";
 import { themeMapToGarden } from "@/lib/archive/types";
 import { DENSITY_DEFAULT } from "@/lib/garden/density";
-import type { Garden } from "@/lib/garden/types";
 
-type ExploreLayer = "live" | "ai";
+type ExploreLayer = "naryan" | "ai";
 
 const LAYERS: { id: ExploreLayer; label: string }[] = [
-  { id: "live", label: "Naryan's Map" },
+  { id: "naryan", label: "Naryan's Map" },
   { id: "ai", label: "AI's Map" },
 ];
 
 type Props = {
-  liveGarden: Garden;
-  liveDescriptions: Record<string, string>;
+  naryanMap: ArchiveThemeMap;
   aiMap: ArchiveThemeMap;
   segmentsById: Record<string, ArchiveSegment>;
 };
 
-function originLabel(id: string | null): string {
-  if (!id) return "shared";
-  if (id === "day_0" || id === "day_1" || id === "day_2") return id;
-  return "festival";
-}
-
-export function ExploreGarden({
-  liveGarden,
-  liveDescriptions,
-  aiMap,
-  segmentsById,
-}: Props) {
-  const [layer, setLayer] = useState<ExploreLayer>("ai");
+export function ExploreGarden({ naryanMap, aiMap, segmentsById }: Props) {
+  const [layer, setLayer] = useState<ExploreLayer>("naryan");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [density, setDensity] = useState(DENSITY_DEFAULT);
 
-  const garden = useMemo(
-    () => (layer === "live" ? liveGarden : themeMapToGarden(aiMap)),
-    [layer, liveGarden, aiMap],
-  );
-
-  const caption =
-    layer === "live"
-      ? "Ideas planted live during the festival under host approval (Hybrid / Manual)."
-      : aiMap.caption;
-
-  const themeNode = layer === "ai" ? aiMap.nodes.find((n) => n.id === selectedId) : null;
-  const liveNode = layer === "live" ? liveGarden.nodes.find((n) => n.id === selectedId) : null;
+  const themeMap = layer === "naryan" ? naryanMap : aiMap;
+  const garden = useMemo(() => themeMapToGarden(themeMap), [themeMap]);
+  const themeNode = themeMap.nodes.find((n) => n.id === selectedId) ?? null;
 
   const quotes = (themeNode?.quoteIds ?? [])
     .map((id) => segmentsById[id])
@@ -85,11 +63,9 @@ export function ExploreGarden({
 
   const notes = (
     <NotesPanel
-      caption={caption}
+      caption={themeMap.caption}
       selectedId={selectedId}
-      liveNode={liveNode}
       themeNode={themeNode}
-      liveDescriptions={liveDescriptions}
       quotes={quotes}
     />
   );
@@ -103,6 +79,8 @@ export function ExploreGarden({
       density={density}
     />
   );
+
+  const miro = layer === "naryan" ? <NaryanMiro map={naryanMap} /> : null;
 
   if (fullscreen) {
     return (
@@ -130,9 +108,13 @@ export function ExploreGarden({
           </button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-          <div className="relative min-h-0 min-w-0 flex-1 select-none">{gardenPane}</div>
+          <div className="relative min-h-0 min-w-0 flex-1 overflow-y-auto">
+            <div className="h-[70vh] min-h-[280px] lg:h-full">{gardenPane}</div>
+            {miro ? <div className="p-4 lg:hidden">{miro}</div> : null}
+          </div>
           <aside className="max-h-[40vh] w-full overflow-y-auto border-t border-festival-green/40 p-4 lg:max-h-none lg:w-96 lg:border-l lg:border-t-0 lg:p-6">
             {notes}
+            {miro ? <div className="mt-6 hidden lg:block">{miro}</div> : null}
           </aside>
         </div>
       </div>
@@ -143,21 +125,41 @@ export function ExploreGarden({
     <div className="flex flex-col gap-4">
       {layerTabs}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-        <div className="relative min-h-[70vh] flex-1 overflow-hidden rounded-3xl border border-festival-forest/30 shadow-poster select-none lg:min-h-[calc(100vh-12rem)]">
-          <button
-            type="button"
-            onClick={() => setFullscreen(true)}
-            className="absolute left-3 top-3 z-20 inline-flex select-none items-center gap-2 rounded-full border border-festival-forest bg-white/95 px-3 py-1.5 text-sm font-semibold text-festival-forest shadow-poster hover:bg-white"
-          >
-            <Maximize2 className="h-4 w-4" aria-hidden />
-            Fullscreen
-          </button>
-          <div className="h-full min-h-[70vh] w-full lg:min-h-[calc(100vh-12rem)]">{gardenPane}</div>
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <div className="relative min-h-[70vh] overflow-hidden rounded-3xl border border-festival-forest/30 shadow-poster select-none lg:min-h-[calc(100vh-12rem)]">
+            <button
+              type="button"
+              onClick={() => setFullscreen(true)}
+              className="absolute left-3 top-3 z-20 inline-flex select-none items-center gap-2 rounded-full border border-festival-forest bg-white/95 px-3 py-1.5 text-sm font-semibold text-festival-forest shadow-poster hover:bg-white"
+            >
+              <Maximize2 className="h-4 w-4" aria-hidden />
+              Fullscreen
+            </button>
+            <div className="h-full min-h-[70vh] w-full lg:min-h-[calc(100vh-12rem)]">{gardenPane}</div>
+          </div>
+          {miro}
         </div>
 
         <aside className="flex w-full flex-col gap-4 lg:w-80 lg:shrink-0">{notes}</aside>
       </div>
     </div>
+  );
+}
+
+function NaryanMiro({ map }: { map: ArchiveThemeMap }) {
+  if (!map.image) return null;
+  return (
+    <figure className="rounded-3xl border border-festival-green/70 bg-white/70 p-4 shadow-poster">
+      {map.imageIntro ? (
+        <p className="text-sm leading-relaxed opacity-85">{map.imageIntro}</p>
+      ) : null}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={map.image}
+        alt="Miro screenshot of Naryan's map of the weekend's dialogue"
+        className="mt-3 w-full rounded-2xl border border-festival-forest/20"
+      />
+    </figure>
   );
 }
 
@@ -227,16 +229,12 @@ function MapToolbar({
 function NotesPanel({
   caption,
   selectedId,
-  liveNode,
   themeNode,
-  liveDescriptions,
   quotes,
 }: {
   caption: string;
   selectedId: string | null;
-  liveNode: Garden["nodes"][number] | null | undefined;
   themeNode: ArchiveThemeMap["nodes"][number] | null | undefined;
-  liveDescriptions: Record<string, string>;
   quotes: ArchiveSegment[];
 }) {
   return (
@@ -247,17 +245,6 @@ function NotesPanel({
           <p className="font-display text-xl italic opacity-70">
             Click a plant to read its story. Hover to see its web of connections.
           </p>
-        )}
-        {liveNode && (
-          <>
-            <p className="text-xs font-semibold uppercase tracking-widest text-festival-forest">
-              {liveNode.tier} · {originLabel(liveNode.originSessionId)}
-            </p>
-            <h2 className="mt-1 font-display text-3xl font-semibold">{liveNode.label}</h2>
-            <p className="mt-2 text-sm opacity-80">
-              {liveDescriptions[liveNode.id] || "Planted during the live festival garden."}
-            </p>
-          </>
         )}
         {themeNode && (
           <>
