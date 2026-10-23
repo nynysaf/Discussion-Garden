@@ -66,8 +66,8 @@ export default function Home() {
         </p>
         <p>
           This site is the harvest: a carefully redacted transcript, two maps of the same weekend
-          (the festival garden planted live, and an AI reading of the full corpus), plus a glossary
-          and tension map.
+          (Naryan’s Map planted live, and AI’s Map of the full corpus), plus a glossary and tension
+          map.
         </p>
         <p>
           Live tools that spend API credit are turned off. You can explore freely without a login.
@@ -79,7 +79,7 @@ export default function Home() {
           {
             href: "/explore",
             title: "Explore the gardens",
-            body: "Toggle the festival garden and the AI reading of the same weekend.",
+            body: "Toggle Naryan’s Map and AI’s Map of the same weekend.",
           },
           {
             href: "/explore/transcript",

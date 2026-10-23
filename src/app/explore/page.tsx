@@ -5,7 +5,7 @@ import { loadAiMap, loadLiveGarden, loadLiveNodeDescriptions, loadTranscript } f
 
 export const metadata: Metadata = {
   title: "Explore",
-  description: "Explore the garden of our thinking — festival garden and AI reading.",
+  description: "Explore the garden of our thinking — Naryan's Map and AI's Map.",
 };
 
 export default function ExplorePage() {

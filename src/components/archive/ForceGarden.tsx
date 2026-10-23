@@ -6,6 +6,10 @@ import {
   forceLink,
   forceManyBody,
   forceSimulation,
+  type ForceCenter,
+  type ForceCollide,
+  type ForceLink,
+  type ForceManyBody,
   type Simulation,
   type SimulationNodeDatum,
 } from "d3-force";
@@ -13,6 +17,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import { MapWallpaper } from "@/components/archive/MapWallpaper";
 import { curvedPath } from "@/lib/garden/curves";
 import { labelledNodeIds, wrapLabel } from "@/lib/garden/labels";
+import { DENSITY_DEFAULT, forcesForDensity } from "@/lib/garden/density";
 import { labelFontSize, nodeRadius } from "@/lib/garden/layout";
 import { adjacencyFromVines, neighborhoodIds, vineInFocus } from "@/lib/garden/neighborhood";
 import { spriteUrl } from "@/lib/garden/sprites";
@@ -77,12 +82,30 @@ function collideRadius(tier: Tier, r: number, lines: string[] | undefined): numb
   return Math.sqrt(halfW * halfW + halfH * halfH);
 }
 
+/** A little more zoomed-out than 1:1 so more of the web is in the first view. */
+const START_K = 0.72;
+
 function readingView(viewW: number, viewH: number): ViewTransform {
   return {
-    k: 1,
-    x: viewW / 2 - WORLD.width / 2,
-    y: viewH / 2 - WORLD.height / 2,
+    k: START_K,
+    x: viewW / 2 - (WORLD.width / 2) * START_K,
+    y: viewH / 2 - (WORLD.height / 2) * START_K,
   };
+}
+
+type SimLink = { source: string | SimNode; target: string | SimNode; kind: string };
+
+function applyDensityForces(sim: Simulation<SimNode, undefined>, density: number) {
+  const f = forcesForDensity(density);
+  (sim.force("charge") as ForceManyBody<SimNode> | undefined)?.strength(f.charge);
+  const link = sim.force("link") as ForceLink<SimNode, SimLink> | undefined;
+  link
+    ?.distance((l) => (l.kind === "grows_into" ? f.linkGrow : f.linkRelate))
+    .strength(f.linkStrength);
+  (sim.force("center") as ForceCenter<SimNode> | undefined)?.strength(f.center);
+  (sim.force("collide") as ForceCollide<SimNode> | undefined)?.radius(
+    (d) => d.collideR * f.collideScale,
+  );
 }
 
 type Props = {
@@ -90,6 +113,8 @@ type Props = {
   selectedId?: string | null;
   onSelectNode?: (id: string) => void;
   className?: string;
+  /** 0 = clumped, 100 = as loose as the pre-slider garden. */
+  density?: number;
 };
 
 /**
@@ -101,6 +126,7 @@ export function ForceGarden({
   selectedId = null,
   onSelectNode,
   className = "",
+  density = DENSITY_DEFAULT,
 }: Props) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -131,6 +157,8 @@ export function ForceGarden({
     moved: boolean;
   } | null>(null);
   const pointerPosRef = useRef<{ x: number; y: number } | null>(null);
+  const densityRef = useRef(density);
+  densityRef.current = density;
 
   function nodeAtPointer(clientX: number, clientY: number): string | null {
     const box = boxRef.current;
@@ -240,7 +268,7 @@ export function ForceGarden({
       // Sunflower spiral — already spaced, so links can pull friends into clusters
       // instead of the whole web cooling as one packed clump.
       const angle = i * 2.399963;
-      const dist = 120 * Math.sqrt(i + 1);
+      const dist = forcesForDensity(densityRef.current).seedSpread * Math.sqrt(i + 1);
       return {
         id: node.id,
         tier: node.tier,
@@ -258,27 +286,28 @@ export function ForceGarden({
     });
 
     const idSet = new Set(simNodes.map((n) => n.id));
-    const links = garden.vines
+    const links: SimLink[] = garden.vines
       .filter((v) => idSet.has(v.sourceId) && idSet.has(v.targetId))
       .map((v) => ({ source: v.sourceId, target: v.targetId, kind: v.kind }));
 
+    const f = forcesForDensity(densityRef.current);
     const sim = forceSimulation(simNodes)
       .force(
         "link",
-        forceLink<(typeof simNodes)[number], (typeof links)[number]>(links)
+        forceLink<SimNode, SimLink>(links)
           .id((d) => d.id)
-          .distance((l) => (l.kind === "grows_into" ? 280 : 380))
-          .strength(0.07),
+          .distance((l) => (l.kind === "grows_into" ? f.linkGrow : f.linkRelate))
+          .strength(f.linkStrength),
       )
-      .force("charge", forceManyBody<SimNode>().strength(-820).distanceMin(40))
+      .force("charge", forceManyBody<SimNode>().strength(f.charge).distanceMin(40))
       .force(
         "collide",
         forceCollide<SimNode>()
-          .radius((d) => d.collideR)
+          .radius((d) => d.collideR * f.collideScale)
           .strength(0.85)
           .iterations(2),
       )
-      .force("center", forceCenter(WORLD.width / 2, WORLD.height / 2).strength(0.05))
+      .force("center", forceCenter(WORLD.width / 2, WORLD.height / 2).strength(f.center))
       .velocityDecay(0.28)
       .alpha(1)
       .alphaDecay(0.012)
@@ -306,6 +335,19 @@ export function ForceGarden({
       simRef.current = null;
     };
   }, [topologyKey, garden.nodes, garden.vines, labels]);
+
+  // Slider: retune live forces and reheat — keep pinned plants where they are.
+  const densityReady = useRef(false);
+  useEffect(() => {
+    if (!densityReady.current) {
+      densityReady.current = true;
+      return;
+    }
+    const sim = simRef.current;
+    if (!sim) return;
+    applyDensityForces(sim, density);
+    sim.alpha(0.45).restart();
+  }, [density]);
 
   const nodes = nodesRef.current;
   void tick;

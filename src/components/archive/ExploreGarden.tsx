@@ -5,13 +5,14 @@ import { useEffect, useMemo, useState } from "react";
 import { ForceGarden } from "@/components/archive/ForceGarden";
 import type { ArchiveSegment, ArchiveThemeMap } from "@/lib/archive/types";
 import { themeMapToGarden } from "@/lib/archive/types";
+import { DENSITY_DEFAULT } from "@/lib/garden/density";
 import type { Garden } from "@/lib/garden/types";
 
 type ExploreLayer = "live" | "ai";
 
 const LAYERS: { id: ExploreLayer; label: string }[] = [
-  { id: "live", label: "Festival garden" },
-  { id: "ai", label: "AI reading" },
+  { id: "live", label: "Naryan's Map" },
+  { id: "ai", label: "AI's Map" },
 ];
 
 type Props = {
@@ -36,6 +37,7 @@ export function ExploreGarden({
   const [layer, setLayer] = useState<ExploreLayer>("ai");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
+  const [density, setDensity] = useState(DENSITY_DEFAULT);
 
   const garden = useMemo(
     () => (layer === "live" ? liveGarden : themeMapToGarden(aiMap)),
@@ -70,12 +72,14 @@ export function ExploreGarden({
   }, [fullscreen]);
 
   const layerTabs = (
-    <LayerTabs
+    <MapToolbar
       layer={layer}
-      onChange={(id) => {
+      density={density}
+      onLayerChange={(id) => {
         setLayer(id);
         setSelectedId(null);
       }}
+      onDensityChange={setDensity}
     />
   );
 
@@ -96,6 +100,7 @@ export function ExploreGarden({
       className="h-full min-h-[280px] w-full"
       selectedId={selectedId}
       onSelectNode={setSelectedId}
+      density={density}
     />
   );
 
@@ -156,34 +161,65 @@ export function ExploreGarden({
   );
 }
 
-function LayerTabs({
+function MapToolbar({
   layer,
-  onChange,
+  density,
+  onLayerChange,
+  onDensityChange,
 }: {
   layer: ExploreLayer;
-  onChange: (id: ExploreLayer) => void;
+  density: number;
+  onLayerChange: (id: ExploreLayer) => void;
+  onDensityChange: (value: number) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2" role="tablist" aria-label="Garden lens">
-      {LAYERS.map((item) => {
-        const active = layer === item.id;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(item.id)}
-            className={
-              active
-                ? "rounded-full bg-festival-forest px-4 py-2 text-sm font-semibold text-festival-cream"
-                : "rounded-full border border-festival-forest/40 px-4 py-2 text-sm font-semibold text-festival-forest"
-            }
-          >
-            {item.label}
-          </button>
-        );
-      })}
+    <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Garden lens">
+        {LAYERS.map((item) => {
+          const active = layer === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onLayerChange(item.id)}
+              className={
+                active
+                  ? "rounded-full bg-festival-forest px-4 py-2 text-sm font-semibold text-festival-cream"
+                  : "rounded-full border border-festival-forest/40 px-4 py-2 text-sm font-semibold text-festival-forest"
+              }
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+      <label className="flex min-w-[16rem] flex-1 items-center gap-3 sm:max-w-md">
+        <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-festival-forest">
+          Tighter
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={density}
+          onChange={(e) => onDensityChange(Number(e.target.value))}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={density}
+          aria-valuetext={`${density} percent, ${density < 50 ? "tighter" : density > 50 ? "looser" : "default"}`}
+          aria-label="Map density"
+          className="h-2 w-full cursor-pointer accent-festival-forest"
+        />
+        <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-festival-forest">
+          Looser
+        </span>
+        <span className="w-10 shrink-0 text-right text-sm font-semibold tabular-nums text-festival-forest">
+          {density}%
+        </span>
+      </label>
     </div>
   );
 }
